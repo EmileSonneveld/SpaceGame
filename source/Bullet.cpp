@@ -5,7 +5,7 @@
 
 extern MainClass& g_mainClass;
 
-Bullet::Bullet(sf::Vector2f pos) : sf::Sprite(), m_radius(2.0f), m_damage(40.0)
+Bullet::Bullet(sf::Vector2f pos, float angle) : sf::Sprite(), m_radius(2.0f), m_damage(40.0), m_lifeTime(10)
 {
     b2BodyDef bd;
     bd.type = b2_dynamicBody;
@@ -13,7 +13,7 @@ Bullet::Bullet(sf::Vector2f pos) : sf::Sprite(), m_radius(2.0f), m_damage(40.0)
     bd.awake=false;
     bd.userData= new UserData();
     m_b2Body = sltn::getInst().m_world->CreateBody(&bd);
-
+    m_b2Body->SetTransform(to_b2Vec2(pos), angle); // b2Vec2()
     b2CircleShape shape;
     shape.m_radius= m_radius/2;
     //b2PolygonShape shape;
@@ -30,6 +30,7 @@ Bullet::~Bullet()
 
 void Bullet::Tick(float dt) // 0.0166
 {
+
     if( m_b2Body ){
         auto pos= m_b2Body->GetPosition();
         setPosition(pos.x, pos.y);
@@ -37,6 +38,13 @@ void Bullet::Tick(float dt) // 0.0166
         Sprite::setRotation(angle);
         // sltn::getInst().m_world->DestroyBody(m_b2Body);
         // m_b2Body=nullptr;
+
+        m_lifeTime-= dt;
+        if( m_lifeTime <0 ){
+            sltn::getInst().m_world->DestroyBody(m_b2Body);
+            m_b2Body= nullptr;
+        }
+
     }
 }
 

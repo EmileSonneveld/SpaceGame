@@ -6,7 +6,7 @@ class b2Body;
 class Bullet : public sf::Sprite
 {
 public:
-	Bullet(sf::Vector2f pos);
+	Bullet(sf::Vector2f pos, float angle);
 	virtual ~Bullet();
 
 	void Tick(float dt);
@@ -17,5 +17,6 @@ private:
 	b2Body* m_b2Body;
     float m_damage;
 	float m_radius;
+    float m_lifeTime;
 };
 

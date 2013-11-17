@@ -1,6 +1,5 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "Bolleke.h"
 #include "Ball.h"
 #include "Player.h"
 #include "sltn.h"
@@ -23,6 +22,7 @@ MainClass::MainClass():
     m_window(sf::RenderWindow(sf::VideoMode(1280, 720), "SFML Space game By Emile"))
     ,m_player(Player(sf::Vector2f(50,50), this))
     ,m_View(sf::FloatRect(0, 0, 100, 60))
+    ,m_mouseTimer(0)
 {
 
     m_window.setVerticalSyncEnabled(true);
@@ -34,17 +34,17 @@ MainClass::MainClass():
 
     //texture.setRepeated(true); tiled
     backgroundSpr.setTexture(sltn::getInst().GetTexture("resources/space.jpg"));
+    backgroundSpr.setScale(0.2f,0.2f);
     backgroundSpr.setPosition(sf::Vector2f(0, 0));
 
-    bollekesVec.reserve(3000);
-    for (unsigned int i = 0; i < 3000; i++)
+    m_bollekesVec.reserve(3000);
+    for (unsigned int i = 0; i < 1000; i++)
     {
         auto pos= sf::Vector2f((float)(rand()%sltn::getInst().m_ScreenSize.x/8) , 
             (float)(rand()%sltn::getInst().m_ScreenSize.y));
         auto object= Ball(pos);
         object.setTexture(sltn::getInst().GetTexture("resources/blue-sphere_512.png"));
-        //object.setPosition();
-        bollekesVec.push_back( object );
+        m_bollekesVec.push_back( object );
     }
 
     m_player.setTexture(sltn::getInst().GetTexture("resources/Wheatley.png"));
@@ -131,11 +131,14 @@ unsigned int CountJoints(b2Body* body){
 }
 
 struct ChosenBody{
+    ChosenBody():bodyA(nullptr), bodyB(nullptr), distanceSquared(108888.0f), numOfJoints(0)
+    {}
     ChosenBody(
         b2Body* bodyA,
+        b2Body* bodyB,
         float distanceA
         //unsigned int numOfJointsA
-        ):	bodyA(bodyA), distanceSquared(distanceA), numOfJoints(0)
+        ):	bodyA(bodyA),bodyB(bodyB), distanceSquared(distanceA), numOfJoints(0)
     {
         if( bodyA )
             numOfJoints= CountJoints(bodyA);
@@ -143,7 +146,7 @@ struct ChosenBody{
     b2Body* bodyA;
     b2Body* bodyB;
     float distanceSquared;
-    unsigned int numOfJoints; // get calculated
+    unsigned int numOfJoints; // get calculated for A
 };
 
 bool CCW(b2Vec2 p1, b2Vec2 p2, b2Vec2 p3) {
@@ -162,10 +165,15 @@ bool isIntersect(b2Vec2 p1, b2Vec2 p2, b2Vec2 q3, b2Vec2 q4) {
 }
 
 void ConnectBodys(b2Body* bodyA, b2Body* bodyB){
+    if( AreLinqued(bodyB, bodyA) ) return;
+    if( AreLinqued(bodyA, bodyB) ) return;
+
     auto diffVec= (bodyA->GetPosition()-bodyB->GetPosition());
     b2WeldJointDef jd; //b2RevoluteJointDef b2WeldJoint  b2DistanceJointDef
     jd.bodyA = bodyA;
     jd.bodyB = bodyB;
+    //jd.referenceAngle= std::atan2f(diffVec.y, diffVec.x); // radialen
+    jd.referenceAngle= bodyB->GetAngle();
     //jd.localAnchorA.Set(0,0);//+sqrt(squared)/2);
     jd.localAnchorB.Set(diffVec.x, diffVec.y);//-sqrt(squared)/2);
     //jd.localAnchorA.Set(bodyB->GetPosition().x, bodyB->GetPosition().y);//+sqrt(squared)/2);
@@ -186,29 +194,14 @@ void ConnectBodys(b2Body* bodyA, b2Body* bodyB){
 
 bool MainClass::TryConnect()
 {
-    for (auto& ball : bollekesVec){
-        b2Body* bodyA= m_player.GetB2Body(); // m_player
-        b2Body* bodyB= ball.GetB2Body(); // ball
-        if( bodyB == nullptr ) break;
-        auto diffVec= (bodyA->GetPosition()-bodyB->GetPosition());
-        auto squared= diffVec.LengthSquared();
 
-        //if( ((UserData*)bodyA->GetUserData() )->isConectedToCluster == true ) continue;
-        if( ((UserData*)bodyB->GetUserData() )->isConectedToCluster == true ) 				continue;
-
-        if ( AreLinqued(bodyA, bodyB) ) continue;
-        if( CountJoints(bodyA) >10 ) continue;
-        if(  squared>50) continue;
-
-        ConnectBodys(bodyA,bodyB);
-    }
 
     vector<ChosenBody> chosenBodys;
-    for (auto& ballA : bollekesVec){
+    for (auto& ballA : m_bollekesVec){
         b2Body* bodyA= ballA.GetB2Body(); 
         if( ((UserData*)bodyA->GetUserData() )->isConectedToCluster != true ) continue;
 
-        for (auto& ballB : bollekesVec){
+        for (auto& ballB : m_bollekesVec){
 
             b2Body* bodyB= ballB.GetB2Body(); 
             auto diffVec= (bodyA->GetPosition()-bodyB->GetPosition());
@@ -216,17 +209,9 @@ bool MainClass::TryConnect()
 
             //if( ((UserData*)bodyB->GetUserData() )->isConectedToCluster == true ) continue;
 
-            if ( AreLinqued(bodyB, bodyA) ) 
-                continue;
-            
-            if ( AreLinqued(bodyA, bodyB) ) 
-                continue;
-            
+            if( squared>50 && squared<30) continue;
 
-            if( squared>50) continue;
-            if( squared<30) continue;
-            auto chosenBody = ChosenBody( bodyA, squared );
-            chosenBody.bodyB= bodyB;
+            auto chosenBody = ChosenBody( bodyA, bodyB, squared );
             if( chosenBody.numOfJoints >4 ) continue;
 
             chosenBodys.push_back(chosenBody);
@@ -237,7 +222,7 @@ bool MainClass::TryConnect()
 
     // if( chosenBodys.size()<2 ) 
     float minDistance= 9999999.0f;
-    ChosenBody cb= ChosenBody(nullptr, 99999);
+    ChosenBody cb= ChosenBody();
     for( auto chosenBody : chosenBodys )
     {
         auto distanceSqr= chosenBody.distanceSquared;
@@ -247,36 +232,73 @@ bool MainClass::TryConnect()
         }
     }
     ConnectBodys(cb.bodyA, cb.bodyB);
-
+    return true;
 }
 
-void MainClass::Tick(float deltaTime){
+void Connect(b2Body* bodyA, b2Body* bodyB){
+
+    //b2Body* bodyA= m_player.GetB2Body(); // m_playe
+    //b2Body* bodyB= m_bollekesVec[m_bollekesVec.size()-1].GetB2Body(); // ball
+
+    if( bodyB == nullptr ) return;
+
+    auto diffVec= (bodyA->GetPosition()-bodyB->GetPosition());
+    auto squared= diffVec.LengthSquared();
+    if( squared>50) return;
+
+    if( CountJoints(bodyA) >10 ) return;
+
+    ConnectBodys(bodyA,bodyB);
+}
+void MainClass::Tick(const float deltaTime){
     //if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)){
     //    if( m_player.GetB2Body() ==nullptr ) return;
     //    sltn::getInst().m_world->DestroyJoint(
     //        m_player.GetB2Body()->GetJointList()->joint);
     //    m_player.GetB2Body()->GetJointList()->joint = nullptr;
     //}
+    m_mouseTimer+= deltaTime;
 
-    if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-
-
+    if( m_mouseTimer>0.05f && sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+        m_mouseTimer= 0;
         auto worldPos = m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window));
 
         // - sf::Vector2i( viewrect.x, viewrect.y);
         auto force= to_b2Vec2(worldPos) - b2Vec2(m_player.getPosition().x, m_player.getPosition().y);
-        //force= force / force.Length();
-        force*=800.0f;
+        auto len= force.Length();
+        force.x /= len;
+        force.y /= len;
+        //force*=10.0f;
 
-
-        m_bulletVec.push_back( Bullet(m_player.getPosition()+(worldPos-m_player.getPosition())/2.0f) );
+        
+        m_bulletVec.push_back( Bullet(m_player.getPosition() + to_Vector2( force )
+            , atan2(force.y, force.x) ));
+        force*=55000.0f;
         m_bulletVec[m_bulletVec.size()-1].GetB2Body()->ApplyForceToCenter( force );
-        m_bulletVec[m_bulletVec.size()-1].GetB2Body()->SetAngularVelocity(5.0f);
+    }
+    if( m_mouseTimer>0.5f && sf::Mouse::isButtonPressed(sf::Mouse::Right)){
+        m_mouseTimer= 0;
+        auto worldPos = m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window));
+
+        m_bollekesVec.push_back(Ball(worldPos));
+        m_bollekesVec[m_bollekesVec.size()-1].setTexture( 
+            sltn::getInst().GetTexture("resources/blue-sphere_512.png"));
+
+        Connect(m_player.GetB2Body(), m_bollekesVec[m_bollekesVec.size()-1].GetB2Body() );
+
+        for( auto ball1 : m_bollekesVec){
+            //if( ( (UserData*)ball1.GetB2Body()->GetUserData() )->isConectedToCluster == false ) continue;
+            Connect(ball1.GetB2Body(), m_bollekesVec[m_bollekesVec.size()-1].GetB2Body() );
+        }
+
+        //b2Body* bodyA= m_player.GetB2Body(); // m_playe
+        //b2Body* bodyB= m_bollekesVec[m_bollekesVec.size()-1].GetB2Body(); // ball
+
     }
 
     m_player.Tick(deltaTime);
 
-    for (auto& object : bollekesVec)
+    for (auto& object : m_bollekesVec)
         object.Tick(deltaTime);
 
     for (auto& object : m_bulletVec)
@@ -290,13 +312,14 @@ void MainClass::Tick(float deltaTime){
 
 void MainClass::Paint(sf::RenderWindow& window)
 {
+    //sf::RenderTexture* texture= new sf::RenderTexture(); texture->create(4096, 2048);
     m_window.draw(backgroundSpr);
 
     m_window.setView(m_View);
 
     // Debug draw the connections
     unsigned int bCount= sltn::getInst().m_world->GetBodyCount();
-    sf::VertexArray vertexArray(sf::Lines, bCount);
+    sf::VertexArray vertexArray(sf::Lines, bCount*2);
     for (b2Body* body = sltn::getInst().m_world->GetBodyList(); body; body = body->GetNext()){
         for(b2JointEdge* j =body->GetJointList(); j; j=j->next ){
             vertexArray.append(sf::Vertex(
@@ -315,7 +338,7 @@ void MainClass::Paint(sf::RenderWindow& window)
     //}
     m_window.draw(vertexArray);
 
-    for (auto& object : bollekesVec)
+    for (auto& object : m_bollekesVec)
         m_window.draw(object);
 
 

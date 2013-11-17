@@ -31,7 +31,7 @@ private:
 
     sf::Sprite backgroundSpr;
     Player m_player;
-    std::vector<Ball> bollekesVec;
+    std::vector<Ball> m_bollekesVec;
     std::vector<Bullet> m_bulletVec;
 
     sf::RenderWindow  m_window;
@@ -40,6 +40,8 @@ private:
     void MainClass::DrawShape(b2Fixture* fixture, const b2Transform& xf, const b2Color& color);
 
     sf::View m_View;
+
+    double m_mouseTimer;
 
     //const MainClass* m_MainClass;
 
