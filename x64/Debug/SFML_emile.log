@@ -1,8 +1,18 @@
-﻿Build started 17/11/2013 4:09:15.
+﻿Build started 21/11/2013 1:33:42.
      1>Project "C:\C_ImportantStuffUnited\_DAE_\3DAE_GD_13\Portefolio\EmileS_SpaceGame\SFML_emile.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\CL.exe /c /I"D:\groteFolders\GeekStuff\SFML-2.1\include" /ID:\groteFolders\GeekStuff\Box2D_v2.2.1 /Zi /nologo /W3 /WX- /Od /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc110.pdb" /Gd /TP /errorReport:prompt source\main.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\CL.exe /c /I"D:\groteFolders\GeekStuff\SFML-2.1\include" /ID:\groteFolders\GeekStuff\Box2D_v2.2.1 /Zi /nologo /W3 /WX- /Od /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc110.pdb" /Gd /TP /errorReport:prompt source\Ball.cpp source\Bullet.cpp source\Gameplay.cpp source\Player.cpp source\main.cpp source\sltn.cpp
          main.cpp
+         Player.cpp
+         Generating Code...
+         Compiling...
+         sltn.cpp
+         Gameplay.cpp
+         Bullet.cpp
+     1>source\Bullet.cpp(58): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
+         Ball.cpp
+     1>source\Ball.cpp(57): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
+         Generating Code...
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\C_ImportantStuffUnited\_DAE_\3DAE_GD_13\Portefolio\EmileS_SpaceGame\SFML_emile_debug.exe" /INCREMENTAL /NOLOGO /LIBPATH:".\SFML-2.1\lib" "sfml-audio-d.lib" "sfml-graphics-d.lib" "sfml-main-d.lib" "sfml-network-d.lib" "sfml-system-d.lib" "sfml-window-d.lib" Box2D.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\C_ImportantStuffUnited\_DAE_\3DAE_GD_13\Portefolio\EmileS_SpaceGame\SFML_emile_debug.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\C_ImportantStuffUnited\_DAE_\3DAE_GD_13\Portefolio\EmileS_SpaceGame\SFML_emile_debug.lib" /MACHINE:X64 x64\Debug\b2BroadPhase.obj
          x64\Debug\b2CollideCircle.obj
@@ -49,6 +59,7 @@
          x64\Debug\b2WeldJoint.obj
          x64\Debug\b2WheelJoint.obj
          x64\Debug\b2Rope.obj
+         x64\Debug\Gameplay.obj
          x64\Debug\Ball.obj
          x64\Debug\Bullet.obj
          x64\Debug\main.obj
@@ -59,4 +70,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.88
+Time Elapsed 00:00:06.45

@@ -1,9 +1,10 @@
 #pragma once
-#include <SFML/Graphics.hpp>
+#include "entityBase.h"
+
 
 class b2Body;
 
-class Bullet : public sf::Sprite
+class Bullet: public entityBase
 {
 public:
 	Bullet(sf::Vector2f pos, float angle);

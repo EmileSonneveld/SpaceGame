@@ -165,6 +165,9 @@
     <ClCompile Include="source\Bullet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\Gameplay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="sfml-system-2.dll">
@@ -356,6 +359,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\Bullet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\MyContactListener.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\entityBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Gameplay.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

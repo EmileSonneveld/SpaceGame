@@ -3,15 +3,16 @@
 #include "sltn.h"
 #include <Box2D\Box2D.h>
 
-extern MainClass& g_mainClass;
 
-Bullet::Bullet(sf::Vector2f pos, float angle) : sf::Sprite(), m_radius(2.0f), m_damage(40.0), m_lifeTime(10)
+Bullet::Bullet(sf::Vector2f pos, float angle) : entityBase(), m_radius(2.0f), m_damage(40.0), m_lifeTime(10)
 {
     b2BodyDef bd;
     bd.type = b2_dynamicBody;
     bd.position.Set(pos.x, pos.y);
     bd.awake=false;
-    bd.userData= new UserData();
+    auto ud= new UserData();
+    ud->creator= this;
+    bd.userData= ud;
     m_b2Body = sltn::getInst().m_world->CreateBody(&bd);
     m_b2Body->SetTransform(to_b2Vec2(pos), angle); // b2Vec2()
     b2CircleShape shape;
@@ -26,6 +27,7 @@ Bullet::Bullet(sf::Vector2f pos, float angle) : sf::Sprite(), m_radius(2.0f), m_
 
 Bullet::~Bullet()
 {
+    sltn::getInst().m_world->DestroyBody(m_b2Body);
 }
 
 void Bullet::Tick(float dt) // 0.0166
@@ -53,7 +55,7 @@ void Bullet::setTexture(const sf::Texture& texture, bool resetRect )
     sf::Sprite::setTexture(texture, resetRect);
 
     float scale= m_radius/getTexture()->getSize().x;
-    setOrigin(texture.getSize().x/2,texture.getSize().y/2);
+    setOrigin(texture.getSize().x/2U,texture.getSize().y/2U);
     setScale(scale,scale);
     //sf::Transformable::setOrigin(getTexture()->getSize()/2u); // todo: proper center
 }

@@ -1,9 +1,10 @@
 #pragma once
-#include <SFML/Graphics.hpp>
+
+#include "entityBase.h"
 
 class b2Body;
 
-class Ball : public sf::Sprite
+class Ball : public entityBase
 {
 public:
 	Ball(sf::Vector2f pos);

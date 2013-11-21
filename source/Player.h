@@ -1,13 +1,13 @@
 #pragma once
-#include <SFML/Graphics.hpp>
+#include "entityBase.h"
 
 class b2Body;
 class MainClass;
 
-class Player : public sf::Sprite
+class Player : public entityBase
 {
 public:
-	Player(sf::Vector2f pos, const MainClass* ptr);
+	Player(sf::Vector2f pos);
 	virtual ~Player();
 
 	void Tick(float dt);
@@ -17,7 +17,6 @@ public:
 	b2Body* GetB2Body(){return m_b2Body;}
 
 private:
-	const MainClass* m_MainClassPtr;
 
 	b2Body* m_b2Body;
 	float m_radius;

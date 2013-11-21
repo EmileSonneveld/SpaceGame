@@ -205,6 +205,7 @@
     <ClCompile Include="Box2D_v2.2.1\Box2D\Dynamics\Joints\b2WeldJoint.cpp" />
     <ClCompile Include="Box2D_v2.2.1\Box2D\Dynamics\Joints\b2WheelJoint.cpp" />
     <ClCompile Include="Box2D_v2.2.1\Box2D\Rope\b2Rope.cpp" />
+    <ClCompile Include="source\Gameplay.cpp" />
     <ClCompile Include="source\Ball.cpp" />
     <ClCompile Include="source\Bullet.cpp" />
     <ClCompile Include="source\main.cpp" />
@@ -272,9 +273,12 @@
     <ClInclude Include="Box2D_v2.2.1\Box2D\Dynamics\Joints\b2WeldJoint.h" />
     <ClInclude Include="Box2D_v2.2.1\Box2D\Dynamics\Joints\b2WheelJoint.h" />
     <ClInclude Include="Box2D_v2.2.1\Box2D\Rope\b2Rope.h" />
+    <ClInclude Include="source\Gameplay.h" />
     <ClInclude Include="source\Ball.h" />
     <ClInclude Include="source\Bullet.h" />
+    <ClInclude Include="source\entityBase.h" />
     <ClInclude Include="source\main.h" />
+    <ClInclude Include="source\MyContactListener.hpp" />
     <ClInclude Include="source\Player.h" />
     <ClInclude Include="source\sltn.h" />
   </ItemGroup>

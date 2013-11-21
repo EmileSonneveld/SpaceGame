@@ -3,18 +3,16 @@
 #include <Box2D\Box2D.h>
 #include "main.h"
 
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/Rect.hpp>
-#include <SFML/Graphics/RenderTarget.hpp>
 
-Player::Player(sf::Vector2f pos, const MainClass* ptr) : 
-    m_MainClassPtr(ptr),
-    sf::Sprite(), m_radius(4.0f)
+Player::Player(sf::Vector2f pos) : 
+    entityBase(), m_radius(4.0f)
 {
     b2BodyDef bd;
     bd.type = b2_dynamicBody;
     bd.position.Set(pos.x, pos.y);
-    bd.userData= new UserData();
+    auto ud= new UserData();
+    ud->creator= this;
+    bd.userData= ud;
     m_b2Body = sltn::getInst().m_world->CreateBody(&bd);
     //m_vertices[0].texCoords=sf::Vector2f(-99,-99);
     b2CircleShape shape;
@@ -31,6 +29,7 @@ Player::Player(sf::Vector2f pos, const MainClass* ptr) :
 
 Player::~Player()
 {
+    sltn::getInst().RemoveBody(m_b2Body);
 }
 
 void Player::Tick(float dt) // 0.0166
