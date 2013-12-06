@@ -22,28 +22,27 @@ int main(int argc, const char* argv[])
 MainClass::MainClass():
     m_window(sf::RenderWindow(sf::VideoMode(1280, 720), "SFML Space game By Emile"))
 {
-
     m_window.setVerticalSyncEnabled(true);
     sltn::getInst().m_ScreenSize= m_window.getSize();
 
     auto Listener = new MyContactListener();
     sltn::getInst().m_world->SetContactListener(Listener);
+	m_window.setView(sf::View(sf::FloatRect()));
 
 
     {
         b2BodyDef bd;
         bd.type = b2_staticBody;
         bd.allowSleep = false;
-        bd.position.Set(0.0f,(float)sltn::getInst().m_ScreenSize.y);
+        bd.userData= nullptr;
+        bd.position.Set(0.0f,250.0f);//(float)sltn::getInst().m_ScreenSize.y
         b2Body* body = sltn::getInst().m_world->CreateBody(&bd);
 
         b2PolygonShape shape;
-        shape.SetAsBox((float)sltn::getInst().m_ScreenSize.x,50);
+        shape.SetAsBox(1100,50); // (float)sltn::getInst().m_ScreenSize.x
         //shape.SetAsBox(0.125f, 0.125f);
         body->CreateFixture(&shape, 1.0f);
     }
-
-    //this->gameLoop();
 }
 
 void MainClass::gameLoop(){
@@ -90,7 +89,7 @@ void MainClass::gameLoop(){
 
 
 
-
+        sltn::getInst().ExcecuteDestroyBodys();
         sltn::getInst().m_world->Step(time,8,3);
 
         m_window.display();

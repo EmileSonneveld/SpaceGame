@@ -12,6 +12,7 @@ Player::Player(sf::Vector2f pos) :
     bd.position.Set(pos.x, pos.y);
     auto ud= new UserData();
     ud->creator= this;
+    ud->kind= UserData::player;
     bd.userData= ud;
     m_b2Body = sltn::getInst().m_world->CreateBody(&bd);
     //m_vertices[0].texCoords=sf::Vector2f(-99,-99);
@@ -29,11 +30,13 @@ Player::Player(sf::Vector2f pos) :
 
 Player::~Player()
 {
-    sltn::getInst().RemoveBody(m_b2Body);
+    sltn::getInst().EnqueDestroyBody(m_b2Body);
+    m_b2Body=nullptr;
 }
 
 void Player::Tick(float dt) // 0.0166
 {
+    if( !m_b2Body ) return;
     //m_b2Body->SetAngularVelocity(-m_b2Body->GetAngle());
     float angle= 180.0f/b2_pi*m_b2Body->GetTransform().q.GetAngle();
     Sprite::setRotation(angle);
@@ -53,14 +56,13 @@ void Player::Tick(float dt) // 0.0166
             moveVector*=5.0f;
         moveVector*=800.0f;
 
-        this->m_b2Body->ApplyForceToCenter(moveVector); //, b2Vec2(0,0));
+        m_b2Body->ApplyForceToCenter(moveVector);
         //this->m_b2Body->ApplyLinearImpulse(to_b2Vec2(moveVector*60.0f), b2Vec2(0,0));
     }
 
-    if( !m_b2Body ){
-    }else{
+    if( m_b2Body ){
         auto pos= m_b2Body->GetPosition();
-        setPosition(pos.x, pos.y);
+        Sprite::setPosition(pos.x, pos.y);
         //setPosition(pos.x-getOrigin().x, pos.y-getOrigin().y);
         //float angle= 180.0f/3.1415f*m_b2Body->GetTransform().q.GetAngle();
         //Sprite::setRotation(angle);

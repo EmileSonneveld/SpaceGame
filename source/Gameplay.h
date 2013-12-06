@@ -6,6 +6,7 @@
 #include "Ball.h"
 #include "Bullet.h"
 #include "Player.h"
+#include "SpriteAnimation.h"
 #include "sltn.h"
 #include "entityBase.h"
 #include <Box2D\Box2D.h>
@@ -15,58 +16,71 @@
 #include <list>
 
 
-class Gameplay
+class Gameplay 
 {
 
 public:
-    void Remove(entityBase* entity){
-        delete entity;
-        for( auto& ptr : m_bollekesVec)
-            if( ptr == entity ) {
-                ptr= nullptr;
-                return;
-            }
-            //for( auto& ptr : m_bulletVec)
-            //    if( ptr == bal ) {
-            //        ptr= nullptr;
-            //        return;
-            //    }
-            //sltn::getInst().RemoveBody(entity.)
-    }
+	// Direct delete
+	void Remove(entityBase* entity){
+		for( auto& ptr : m_bollekesVec){
+			if( ptr == entity ) {
+				delete entity;
+				ptr= nullptr;
+				return;
+			}}
+		for( auto& ptr : m_SpriteAnimationList){
+			if( ptr == entity ) {
+				delete entity;
+				ptr= nullptr;
+				return;
+			}}
+		//for( auto& ptr : m_bulletVec)
+		//    if( ptr == bal ) {
+		//        ptr= nullptr;
+		//        return;
+		//    }
+		//sltn::getInst().RemoveBody(entity.)
+	}
 
-    void Tick(float deltaTime);
-    void Paint(sf::RenderWindow& window);
+	void Tick(const float deltaTime);
+	void Paint(sf::RenderWindow& window);
+
+	void Add(SpriteAnimation* ptr){
+		m_SpriteAnimationList.push_back(ptr);
+	}
 
 private:
 
-    bool TryConnect();
+	bool TryConnect();
+	void Connect(b2Body* bodyA, b2Body* bodyB);
 
-    sf::Sprite backgroundSpr;
-    Player m_player;
-    std::vector<Ball*> m_bollekesVec;
-    std::forward_list<Bullet> m_bulletVec;
+	sf::Sprite backgroundSpr;
+	Player m_player;
+	std::vector<Ball*> m_bollekesVec;
+	std::forward_list<Bullet*> m_bulletVec;
 
-
-
-    sf::View m_View;
-    double m_mouseTimer;
+	std::vector<SpriteAnimation*> m_SpriteAnimationList;
 
 
+	sf::View m_View;
+	double m_mouseTimer;
 
 
-    // Singleton stuff:
+
+
+	// Singleton stuff:
 public:
-    ~Gameplay(void);
+	~Gameplay(void);
 
-    static Gameplay& getInst() // get the singleton reference
-    {
-        static Gameplay    instance; // Guaranteed to be destroyed.
-        // Instantiated on first use.
-        return instance;
-    }
+	static Gameplay& getInst() // get the singleton reference
+	{
+		static Gameplay    instance; // Guaranteed to be destroyed.
+		// Instantiated on first use.
+		return instance;
+	}
 
 private:
-    Gameplay(void);
+	Gameplay(void);
 
 
 };

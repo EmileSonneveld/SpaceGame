@@ -22,6 +22,7 @@
     <ProjectGuid>{03A3A55B-7541-4A9E-8DD6-BA2B359DAF21}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>SFML_emile</RootNamespace>
+    <ProjectName>SpaceGame</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -75,7 +76,7 @@
     <IncludePath>.\SFML-2.1\include;.\Box2D_v2.2.1;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)</OutDir>
     <LibraryPath>$(LibraryPath)</LibraryPath>
-    <TargetName>$(ProjectName)_debug</TargetName>
+    <TargetName>$(Platform)\$(ProjectName)_debug</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -211,6 +212,7 @@
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\Player.cpp" />
     <ClCompile Include="source\sltn.cpp" />
+    <ClCompile Include="source\SpriteAnimation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="libsndfile-1.dll" />
@@ -281,6 +283,7 @@
     <ClInclude Include="source\MyContactListener.hpp" />
     <ClInclude Include="source\Player.h" />
     <ClInclude Include="source\sltn.h" />
+    <ClInclude Include="source\SpriteAnimation.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
