@@ -23,6 +23,8 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>SFML_emile</RootNamespace>
     <ProjectName>SpaceGame</ProjectName>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">.\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -75,7 +77,6 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>.\SFML-2.1\include;.\Box2D_v2.2.1;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)</OutDir>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
     <TargetName>$(Platform)\$(ProjectName)_debug</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -111,7 +112,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\groteFolders\GeekStuff\SFML-2.1\include;D:\groteFolders\GeekStuff\Box2D_v2.2.1</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\groteFolders\GeekStuff\SFML-2.1\include;D:\groteFolders\GeekStuff\Box2D_v2.2.1;./FSFML-2.1/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -148,7 +149,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SFML_STATIC ;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:\groteFolders\GeekStuff\SFML-2.1\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -157,7 +158,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>.\SFML-2.1\lib;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics.lib;sfml-window.lib;sfml-system.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -206,6 +207,7 @@
     <ClCompile Include="Box2D_v2.2.1\Box2D\Dynamics\Joints\b2WeldJoint.cpp" />
     <ClCompile Include="Box2D_v2.2.1\Box2D\Dynamics\Joints\b2WheelJoint.cpp" />
     <ClCompile Include="Box2D_v2.2.1\Box2D\Rope\b2Rope.cpp" />
+    <ClCompile Include="source\Enemy.cpp" />
     <ClCompile Include="source\Gameplay.cpp" />
     <ClCompile Include="source\Ball.cpp" />
     <ClCompile Include="source\Bullet.cpp" />
@@ -217,16 +219,6 @@
   <ItemGroup>
     <None Include="libsndfile-1.dll" />
     <None Include="openal32.dll" />
-    <None Include="sfml-audio-2.dll" />
-    <None Include="sfml-audio-d-2.dll" />
-    <None Include="sfml-graphics-2.dll" />
-    <None Include="sfml-graphics-d-2.dll" />
-    <None Include="sfml-network-2.dll" />
-    <None Include="sfml-network-d-2.dll" />
-    <None Include="sfml-system-2.dll" />
-    <None Include="sfml-system-d-2.dll" />
-    <None Include="sfml-window-2.dll" />
-    <None Include="sfml-window-d-2.dll" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Box2D_v2.2.1\Box2D\Box2D.h" />
@@ -275,6 +267,7 @@
     <ClInclude Include="Box2D_v2.2.1\Box2D\Dynamics\Joints\b2WeldJoint.h" />
     <ClInclude Include="Box2D_v2.2.1\Box2D\Dynamics\Joints\b2WheelJoint.h" />
     <ClInclude Include="Box2D_v2.2.1\Box2D\Rope\b2Rope.h" />
+    <ClInclude Include="source\Enemy.h" />
     <ClInclude Include="source\Gameplay.h" />
     <ClInclude Include="source\Ball.h" />
     <ClInclude Include="source\Bullet.h" />
@@ -287,5 +280,6 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   </ImportGroup>
 </Project>

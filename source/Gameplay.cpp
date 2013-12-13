@@ -1,9 +1,10 @@
 #include "Gameplay.h"
+#include "Enemy.h"
 //#include <math.h>
 
 float semiGlobal_minDistanceSquared= 50.0f;
 float semiGlobal_minDistance= sqrt(semiGlobal_minDistanceSquared);
-float pi= 3.14159265;
+float pi= 3.14159265f;
 
 Gameplay::Gameplay(void):
 	m_player(Player(sf::Vector2f(50,50)))
@@ -19,6 +20,8 @@ Gameplay::Gameplay(void):
 	prevRect.height=9999;
 	backgroundSpr.setTextureRect(prevRect);
 
+	m_bollekesVec.push_back(new Enemy(sf::Vector2f(500,300)));
+	m_bollekesVec.push_back(new Enemy(sf::Vector2f(100,100)));
 
 	m_bollekesVec.reserve(3000);
 	for (unsigned int i = 0; i < 100; i++)
@@ -45,13 +48,25 @@ Gameplay::Gameplay(void):
 			}
 		}
 	}
-	m_player.setTexture(sltn::getInst().GetTexture("resources/Wheatley.png"));
+
 
 }
 
 
-Gameplay::~Gameplay(void)
+Gameplay::~Gameplay()
 {
+	for(auto& ptr : m_bollekesVec ){
+		delete ptr;
+		ptr= nullptr;
+	}
+	for(auto& ptr : m_bulletVec ){
+		delete ptr;
+		ptr= nullptr;
+	}
+	for(auto& ptr : m_SpriteAnimationList ){
+		delete ptr;
+		ptr= nullptr;
+	}
 }
 
 
@@ -217,6 +232,14 @@ void Gameplay::Tick(const float deltaTime)
 
 	// m_View.setSize((float)sltn::getInst().m_ScreenSize.x,(float)sltn::getInst().m_ScreenSize.y);
 
+	
+	for( auto* jointIt= sltn::getInst().m_world->GetJointList() ; jointIt; jointIt = jointIt->GetNext()){
+		b2Vec2 reactionForce = jointIt->GetReactionForce(1/deltaTime);
+		float forceModuleSq = reactionForce.LengthSquared();
+		if(forceModuleSq > 12000*12000) 
+			sltn::getInst().EnqueDestroyBody(jointIt);
+			//sltn::getInst().m_world->DestroyJoint(jointIt);
+	}
 
 	auto worldPos =  sltn::getInst().GetMousePos();
 
@@ -306,7 +329,6 @@ void Gameplay::Paint(sf::RenderWindow& window)
 				sf::Vector2f(body->GetPosition().x,body->GetPosition().y), sf::Color::Red ));
 		}
 	}
-
 	// BulletLines
 	//for( auto& object : m_bulletVec ){
 	//    vertexArray.append(sf::Vertex(
@@ -316,6 +338,7 @@ void Gameplay::Paint(sf::RenderWindow& window)
 	//}
 	window.draw(vertexArray);
 
+	vertexArray.clear();
 
 
 
@@ -333,29 +356,29 @@ void Gameplay::Paint(sf::RenderWindow& window)
 
 	int counter= 0;
 	sf::VertexArray spriteVertexArray(sf::PrimitiveType::Quads, m_SpriteAnimationList.size()*4);
-	for (auto& object : m_SpriteAnimationList)
+	for (auto& object : m_SpriteAnimationList){
 		if( object != nullptr){
 			//window.draw(*object);
 			float size=1.0f;
-			spriteVertexArray.append(sf::Vertex(object->getPosition()+sf::Vector2f(-size,-size),sf::Color::Red));
-			spriteVertexArray.append(sf::Vertex(object->getPosition()+sf::Vector2f(+size,-size),sf::Color::Red));
-			spriteVertexArray.append(sf::Vertex(object->getPosition()+sf::Vector2f(+size,+size),sf::Color::Red));
-			spriteVertexArray.append(sf::Vertex(object->getPosition()+sf::Vector2f(-size,+size),sf::Color::Red));
+			spriteVertexArray.append(sf::Vertex( object->getPosition()+sf::Vector2f(-size,-size), sf::Color::Red , sf::Vector2f(-1,-1)));
+			spriteVertexArray.append(sf::Vertex( object->getPosition()+sf::Vector2f(+size,-size), sf::Color::Red , sf::Vector2f(+1,-1)));
+			spriteVertexArray.append(sf::Vertex( object->getPosition()+sf::Vector2f(+size,+size), sf::Color::Red , sf::Vector2f(+1,+1)));
+			spriteVertexArray.append(sf::Vertex( object->getPosition()+sf::Vector2f(-size,+size), sf::Color::Red , sf::Vector2f(-1,+1)));
 			++counter;
 		}
+	}
+	if ( spriteVertexArray.getVertexCount()>0 ){
 
-		if ( spriteVertexArray.getVertexCount()>0 ){
-
-			const sf::Texture* tex;
-			for (auto& object : m_SpriteAnimationList)
-				if( object != nullptr)
-					tex= object->getTexture();
-
+		const sf::Texture* tex= nullptr;
+		for (auto& object : m_SpriteAnimationList)
+			if( object != nullptr)
+				tex= object->getTexture();
+		if( tex!= nullptr){
 			auto it= m_SpriteAnimationList.begin();
 			//sf::Transform::Identity
 			auto rs= sf::RenderStates(tex); // (*it)->getTexture()
-			rs.blendMode= sf::BlendMode::BlendAdd; //,m_View.getTransform, 
+			// rs.blendMode= sf::BlendMode::BlendAdd; //,m_View.getTransform, 
 			window.draw(spriteVertexArray, rs);
-
 		}
+	}
 }

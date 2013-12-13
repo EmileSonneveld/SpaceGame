@@ -4,7 +4,7 @@
 #include "sltn.h"
 #include <Box2D\Box2D.h>
 
-
+#include <assert.h> 
 
 SpriteAnimation::SpriteAnimation(sf::Vector2f pos, bool looping) : entityBase() , 
 	m_looping(looping), 
@@ -17,6 +17,8 @@ SpriteAnimation::SpriteAnimation(sf::Vector2f pos, bool looping) : entityBase() 
 	b2BodyDef bd;
 	bd.type = b2_staticBody;
 	bd.position.Set(pos.x, pos.y);
+	if( !bd.position.IsValid() ) return;
+	// assert (bd.position.IsValid()); 
 	bd.awake=false;
 	auto ud= new UserData();
 	ud->creator= this;
@@ -55,7 +57,7 @@ void SpriteAnimation::Tick(float dt) // 0.0166
 	float angle= 180.0f/3.1415f*m_b2Body->GetTransform().q.GetAngle();
 	Sprite::setRotation(angle);
 
-	if(prevRect.left >= getTexture()->getSize().x ) Gameplay::getInst().Remove(this);
+	if(prevRect.left >= (int)getTexture()->getSize().x ) Gameplay::getInst().Remove(this);
 }
 
 void SpriteAnimation::setTexture(const sf::Texture& texture, bool resetRect )

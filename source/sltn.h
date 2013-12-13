@@ -28,6 +28,13 @@ public:
         // Instantiated on first use.
         return instance;
     }
+	~sltn()
+	{
+		ExcecuteDestroyBodys();
+		delete m_world;
+
+		for (auto thing : m_BodysToDelete) {}
+	}
 
     const sf::Texture& GetTexture(const std::string& path);
 
@@ -35,6 +42,7 @@ public:
     const sf::Vector2f& GetMousePos(){return m_mousePos;}
     void SetMousePos(const sf::Vector2f& pos){m_mousePos= pos;}
     void EnqueDestroyBody(b2Body* body);
+    void EnqueDestroyBody(b2Joint* body);
     void ExcecuteDestroyBodys();
 private:
     sltn() ; 
@@ -42,6 +50,7 @@ private:
 
     vector<b2Body*> m_BodysHaveBeenDeleted;
     vector<b2Body*> m_BodysToDelete;
+    vector<b2Joint*> m_JointsToDelete;
     map<std::string,sf::Texture> m_SpriteMap;
 
     sltn(sltn const&);              // Don't Implement
@@ -62,6 +71,7 @@ struct UserData
         player= 0x12121212,
         bullet= 0x34343434,
         ball  = 0x56565656,
+		Enemy,
 		SpriteAnimation,
     };
     static const unsigned int magicSize=8;

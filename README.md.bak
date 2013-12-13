@@ -1,3 +1,9 @@
+SpaceGame
+=========
+
+A fast paced 2D game. With strategy elements.
+
+
 Beginning of the game framework
 Graphics: SFML
 Physics: Box2D
@@ -8,11 +14,11 @@ Arrow: Move
 LMB: shoot
 
 TODO:
-Easy edit spaceship
-Shooting Kils
-a Masive spaceship as level
-Ai
-Special pieces:
+* Easy edit spaceship
+* Shooting Kils
+* a Masive spaceship as level
+* Ai
+* Special pieces:
 	-Turret
 	-ExtraSpeed
 	-Power generator

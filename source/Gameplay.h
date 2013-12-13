@@ -15,6 +15,7 @@
 #include <forward_list>
 #include <list>
 
+class Enemy;
 
 class Gameplay 
 {
@@ -27,13 +28,15 @@ public:
 				delete entity;
 				ptr= nullptr;
 				return;
-			}}
+			}
+		}
 		for( auto& ptr : m_SpriteAnimationList){
 			if( ptr == entity ) {
 				delete entity;
 				ptr= nullptr;
 				return;
-			}}
+			}
+		}
 		//for( auto& ptr : m_bulletVec)
 		//    if( ptr == bal ) {
 		//        ptr= nullptr;
@@ -49,6 +52,10 @@ public:
 		m_SpriteAnimationList.push_back(ptr);
 	}
 
+	b2Vec2 GetPlayerPos(){
+		return m_player.GetB2Body()->GetPosition();
+	}
+
 private:
 
 	bool TryConnect();
@@ -58,6 +65,8 @@ private:
 	Player m_player;
 	std::vector<Ball*> m_bollekesVec;
 	std::forward_list<Bullet*> m_bulletVec;
+
+	// std::vector<Enemy*> m_EnemyVec;
 
 	std::vector<SpriteAnimation*> m_SpriteAnimationList;
 
@@ -80,7 +89,7 @@ public:
 	}
 
 private:
-	Gameplay(void);
+	Gameplay(void); //:m_player(sf::Vector2f(50,50)){}
 
 
 };

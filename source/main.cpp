@@ -14,9 +14,15 @@ using namespace std;
 
 int main(int argc, const char* argv[])
 {
+	// _crtBreakAlloc= 161;
+	//_CrtSetBreakAlloc(1);
+
+
     //auto g_mainClass= new MainClass();
     auto g_mainClass= new MainClass();
     g_mainClass->gameLoop();
+
+	// _CrtDumpMemoryLeaks();
 }
 
 MainClass::MainClass():

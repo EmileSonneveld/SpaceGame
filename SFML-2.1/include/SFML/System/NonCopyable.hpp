@@ -40,10 +40,6 @@ namespace sf
 ////////////////////////////////////////////////////////////
 class SFML_SYSTEM_API NonCopyable
 {
-public:
-	// NonCopyable& operator =(const NonCopyable&){
-	// 	int kak= 5;
-	// }
 protected :
 
     ////////////////////////////////////////////////////////////
@@ -81,7 +77,6 @@ private :
     ///
     ////////////////////////////////////////////////////////////
     NonCopyable& operator =(const NonCopyable&);
-   
 };
 
 } // namespace sf

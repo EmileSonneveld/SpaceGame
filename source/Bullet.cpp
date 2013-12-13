@@ -33,7 +33,8 @@ Bullet::Bullet(sf::Vector2f pos, float angle) : entityBase(), m_radius(2.0f), m_
 
 Bullet::~Bullet()
 {
-	//sltn::getInst().EnqueDestroyBody(m_b2Body);
+	sltn::getInst().EnqueDestroyBody(m_b2Body);
+	m_b2Body= nullptr;
 }
 
 void Bullet::DestroyBody()
