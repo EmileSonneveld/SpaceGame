@@ -5,7 +5,7 @@
 
 
 Player::Player(sf::Vector2f pos) : 
-	Ball(pos, 4.0f)
+	Ball(pos, 4.0f), m_AnimationFlow(0)
 {
 	( (UserData*) m_b2Body->GetUserData() )->kind= UserData::player;
 	this->setTexture(sltn::getInst().GetTexture("resources/Wheatley.png"), 3);
@@ -26,8 +26,10 @@ void Player::CustomStuff(float dt)
 	int nrOfFrames= 3; // 19
 	auto rectWidth= (float)getTexture()->getSize().x/nrOfFrames;
 
+	m_AnimationFlow+= dt;
+
 	auto prevRect = getTextureRect();
-	prevRect.left+= rectWidth* (int)(  dt*rectWidth/2 );
+	prevRect.left= ((int)(m_AnimationFlow*rectWidth/rectWidth))*rectWidth;
 	Sprite::setTextureRect(prevRect);
 
 	if( m_b2Body == nullptr ) return;

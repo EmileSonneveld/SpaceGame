@@ -17,3 +17,8 @@
 *.sdf
 *.opensdf
 *.pdb
+
+
+*.BAK
+*.log
+*.ilk

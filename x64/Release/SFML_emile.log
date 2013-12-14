@@ -1,9 +1,9 @@
-﻿Build started 13/12/2013 11:52:44.
+﻿Build started 14/12/2013 1:00:07.
      1>Project "C:\C_ImportantStuffUnited\_DAE_\3DAE_GD_13\Portefolio\EmileS_SpaceGame\SFML_emile.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\CL.exe /c /I"D:\groteFolders\GeekStuff\SFML-2.1\include" /Zi /nologo /W3 /WX- /O2 /Oi /GL /D SFML_STATIC /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Release\\" /Fd"x64\Release\vc110.pdb" /Gd /TP /errorReport:prompt source\Gameplay.cpp
-         Gameplay.cpp
-     1>source\Gameplay.cpp(335): warning C4267: 'argument' : conversion from 'size_t' to 'unsigned int', possible loss of data
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\CL.exe /c /I"D:\groteFolders\GeekStuff\SFML-2.1\include" /Zi /nologo /W3 /WX- /O2 /Oi /GL /D SFML_STATIC /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Release\\" /Fd"x64\Release\vc110.pdb" /Gd /TP /errorReport:prompt source\Player.cpp
+         Player.cpp
+     1>source\Player.cpp(32): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\C_ImportantStuffUnited\_DAE_\3DAE_GD_13\Portefolio\EmileS_SpaceGame\SpaceGame_release.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:".\SFML-2.1\lib" "sfml-graphics-s.lib" "sfml-window-s.lib" "sfml-system-s.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\C_ImportantStuffUnited\_DAE_\3DAE_GD_13\Portefolio\EmileS_SpaceGame\SpaceGame_release.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\C_ImportantStuffUnited\_DAE_\3DAE_GD_13\Portefolio\EmileS_SpaceGame\SpaceGame_release.lib" /MACHINE:X64 x64\Release\b2BroadPhase.obj
          x64\Release\b2CollideCircle.obj
@@ -50,6 +50,7 @@
          x64\Release\b2WeldJoint.obj
          x64\Release\b2WheelJoint.obj
          x64\Release\b2Rope.obj
+         x64\Release\Enemy.obj
          x64\Release\Gameplay.obj
          x64\Release\Ball.obj
          x64\Release\Bullet.obj
@@ -64,4 +65,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:03.17
+Time Elapsed 00:00:03.25

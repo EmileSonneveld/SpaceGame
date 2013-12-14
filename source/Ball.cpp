@@ -1,11 +1,12 @@
 #include "Ball.h"
 #include "Player.h"
 #include "sltn.h"
+#include "Gameplay.h"
 #include <Box2D\Box2D.h>
 
 //__declspec(dllimport) b2Body * __cdecl b2World::CreateBody(b2BodyDef const *);
 //#pragma import sfml-graphics-d-2.lib
- // #pragma comment(lib, "sfml-graphics-d-2.lib")
+// #pragma comment(lib, "sfml-graphics-d-2.lib")
 
 Ball::Ball(sf::Vector2f pos, float radius) : entityBase() , m_radius(radius), m_lives(100.0f)
 {
@@ -16,7 +17,7 @@ Ball::Ball(sf::Vector2f pos, float radius) : entityBase() , m_radius(radius), m_
 	bd.awake=false;
 	auto ud= new UserData();
 	ud->creator= this;
-	ud->kind= UserData::unspecified;
+	ud->kind= UserData::ball;
 	bd.userData= ud;
 	m_b2Body = sltn::getInst().m_world->CreateBody(&bd);
 
@@ -60,4 +61,10 @@ void Ball::setTexture(const sf::Texture& texture, int nrOfFrames )
 	Sprite::setOrigin( (float)texture.getSize().x/nrOfFrames/2.0f, (float)texture.getSize().y/2.0f );
 	Sprite::setScale(scale,scale);
 	Sprite::setTextureRect(sf::IntRect(0,0, (int)rectWidth, getTexture()->getSize().y) );
+}
+
+
+void Ball::DoDammage(float dammage){
+	m_lives-= dammage;
+	if( m_lives <0) Gameplay::getInst().Remove(this);
 }

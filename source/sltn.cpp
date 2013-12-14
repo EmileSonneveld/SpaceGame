@@ -67,7 +67,7 @@ void sltn::EnqueDestroyBody(b2Joint* body){
 			found= true;
 	}
 	if( !found )
-		int ha=5;
+		return;
 
 	//if( find(m_BodysToDelete.begin(), m_BodysToDelete.end(), body) !=  m_BodysToDelete.end() )
 	//	return;
@@ -83,6 +83,13 @@ void sltn::ExcecuteDestroyBodys(){
 	assert(!m_world->IsLocked());
 	if( m_world->IsLocked() )
 		int kak=5;
+	for( auto ptr : m_JointsToDelete){
+		// delete ( (UserData*)ptr->GetUserData() );
+		//ptr->SetUserData((void*)0xDE1E7ED);
+		m_world->DestroyJoint(ptr);
+	}
+	m_JointsToDelete.clear();
+
 	for( auto body : m_BodysToDelete){
 		//auto contactList= body->GetContactList();
 		delete ( (UserData*)body->GetUserData() );
@@ -92,12 +99,6 @@ void sltn::ExcecuteDestroyBodys(){
 	}
 	m_BodysToDelete.clear();
 
-	for( auto ptr : m_JointsToDelete){
-		delete ( (UserData*)ptr->GetUserData() );
-		//ptr->SetUserData((void*)0xDE1E7ED);
-		m_world->DestroyJoint(ptr);
-	}
-	m_JointsToDelete.clear();
 
 }
 

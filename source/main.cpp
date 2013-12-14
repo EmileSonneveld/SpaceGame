@@ -89,7 +89,7 @@ void MainClass::gameLoop(){
             m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window))
             );
 
-        m_window.clear(sf::Color::Green);
+        m_window.clear(sf::Color(40,40,80));
         Gameplay::getInst().Tick(time);
         Gameplay::getInst().Paint(m_window);
 

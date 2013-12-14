@@ -232,13 +232,13 @@ void Gameplay::Tick(const float deltaTime)
 
 	// m_View.setSize((float)sltn::getInst().m_ScreenSize.x,(float)sltn::getInst().m_ScreenSize.y);
 
-	
+
 	for( auto* jointIt= sltn::getInst().m_world->GetJointList() ; jointIt; jointIt = jointIt->GetNext()){
 		b2Vec2 reactionForce = jointIt->GetReactionForce(1/deltaTime);
 		float forceModuleSq = reactionForce.LengthSquared();
 		if(forceModuleSq > 12000*12000) 
 			sltn::getInst().EnqueDestroyBody(jointIt);
-			//sltn::getInst().m_world->DestroyJoint(jointIt);
+		//sltn::getInst().m_world->DestroyJoint(jointIt);
 	}
 
 	auto worldPos =  sltn::getInst().GetMousePos();
@@ -271,7 +271,7 @@ void Gameplay::Tick(const float deltaTime)
 		Connect(m_player.GetB2Body(), m_bollekesVec.back()->GetB2Body() );
 
 		for( auto ball1 : m_bollekesVec){
-
+			if(ball1==nullptr) continue;
 			//if( ( (UserData*)ball1.GetB2Body()->GetUserData() )->isConectedToCluster == false ) continue;
 			Connect(ball1->GetB2Body(), m_bollekesVec.back()->GetB2Body() );
 		}
@@ -301,6 +301,27 @@ void Gameplay::Tick(const float deltaTime)
 	m_View.setCenter(m_player.getPosition());
 }
 
+void AddThickLine(sf::VertexArray& vertices,const sf::Vector2f& point1, const sf::Vector2f& point2)
+{
+	auto thickness= 0.5f;
+
+	sf::Vector2f direction = point2 - point1;
+	sf::Vector2f unitDirection = direction/std::sqrt(direction.x*direction.x+direction.y*direction.y);
+	sf::Vector2f unitPerpendicular(-unitDirection.y,unitDirection.x);
+
+	sf::Vector2f offset = (thickness/2.f)*unitPerpendicular;
+
+	vertices.append( sf::Vertex(point1 + offset, sf::Color::Blue ) );
+	vertices.append( sf::Vertex(point2 + offset, sf::Color::Blue ) );
+	vertices.append( sf::Vertex(point2 - offset, sf::Color::Blue ) );
+	vertices.append( sf::Vertex(point1 - offset, sf::Color::Blue ) );
+
+	// vertices[0].position = point1 + offset;
+	// vertices[1].position = point2 + offset;
+	// vertices[2].position = point2 - offset;
+	// vertices[3].position = point1 - offset;
+}
+
 void Gameplay::Paint(sf::RenderWindow& window)
 {
 	window.setView(m_View);
@@ -320,13 +341,18 @@ void Gameplay::Paint(sf::RenderWindow& window)
 
 	// Debug draw the connections
 	unsigned int bCount= sltn::getInst().m_world->GetBodyCount();
-	sf::VertexArray vertexArray(sf::Lines, bCount*2);
+	sf::VertexArray vertexArray(sf::Quads, bCount*4);
 	for (b2Body* body = sltn::getInst().m_world->GetBodyList(); body; body = body->GetNext()){
 		for(b2JointEdge* j =body->GetJointList(); j; j=j->next ){
-			vertexArray.append(sf::Vertex(
-				sf::Vector2f(j->other->GetPosition().x,j->other->GetPosition().y), sf::Color::Blue ));
-			vertexArray.append(sf::Vertex(
-				sf::Vector2f(body->GetPosition().x,body->GetPosition().y), sf::Color::Red ));
+
+			AddThickLine(vertexArray, 
+				sf::Vector2f(j->other->GetPosition().x,j->other->GetPosition().y),
+				sf::Vector2f(body->GetPosition().x,body->GetPosition().y)
+			);
+			// vertexArray.append(sf::Vertex(
+			// 	sf::Vector2f(j->other->GetPosition().x,j->other->GetPosition().y), sf::Color::Blue ));
+			// vertexArray.append(sf::Vertex(
+			// 	sf::Vector2f(body->GetPosition().x,body->GetPosition().y), sf::Color::Red ));
 		}
 	}
 	// BulletLines

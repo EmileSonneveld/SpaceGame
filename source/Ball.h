@@ -15,6 +15,7 @@ public:
 
 	virtual void CustomStuff(float dt){} // Inherited object can implement stuff each Tick.
 	void setTexture(const sf::Texture& texture, int nrOfFrames=1); // bevat extras
+	void DoDammage(float dammage);
 
 protected:
 	//void DoMovement(b2Vec2& moveVector); // modify the vector ans Applys force.

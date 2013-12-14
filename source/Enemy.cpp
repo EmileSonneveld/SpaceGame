@@ -28,7 +28,7 @@ void Enemy::CustomStuff(float dt)
 	auto rectWidth= (float)getTexture()->getSize().x/nrOfFrames;
 
 	auto prevRect = getTextureRect();
-	prevRect.left+= rectWidth* (int)(  dt*rectWidth/2 );
+	prevRect.left+= rectWidth* (int)(  dt*rectWidth*0.01 );
 	Sprite::setTextureRect(prevRect);
 
 	if( m_b2Body == nullptr ) return;
