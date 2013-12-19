@@ -62,14 +62,20 @@ void MainClass::gameLoop(){
             if (event.type == sf::Event::Closed)
                 m_window.close();
 
-            if (event.type == sf::Event::KeyPressed)
+            else if (event.type == sf::Event::MouseWheelMoved)
+            {
+				auto zoomerke= (float)event.mouseWheel.delta;
+				zoomerke = 1-zoomerke/4;
+				Gameplay::getInst().zoom(zoomerke);
+			}
+			else if (event.type == sf::Event::KeyPressed)
             {
                 if (event.key.code == sf::Keyboard::Escape)
                 {
                     m_window.close();
                 }
             }
-            if (event.type == sf::Event::MouseButtonPressed)
+			else if (event.type == sf::Event::MouseButtonPressed)
             {
                 sf::Mouse::getPosition() - m_window.getPosition() ;
 

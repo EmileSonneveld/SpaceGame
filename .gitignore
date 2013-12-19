@@ -23,6 +23,7 @@ x64
 *.BAK
 *.log
 *.ilk
+*.suo
 
 x64/
 Debug/

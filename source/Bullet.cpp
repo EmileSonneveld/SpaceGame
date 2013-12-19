@@ -57,7 +57,7 @@ void Bullet::Tick(float dt) // 0.0166
 		if( m_lifeTime <0 )
 			DestroyBody();
 
-		if( rand()%5<1){
+		if( rand()%50<1){
 			auto spriteAnimation = new SpriteAnimation(getPosition(), false);
 			Gameplay::getInst().Add(spriteAnimation);
 		}

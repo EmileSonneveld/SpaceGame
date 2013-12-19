@@ -1,5 +1,6 @@
 #include "Gameplay.h"
 #include "Enemy.h"
+#include "SpaceStation.h"
 //#include <math.h>
 
 float semiGlobal_minDistanceSquared= 50.0f;
@@ -19,6 +20,9 @@ Gameplay::Gameplay(void):
 	prevRect.width=9999;
 	prevRect.height=9999;
 	backgroundSpr.setTextureRect(prevRect);
+
+	m_entities.push_back(new SpaceStation(sf::Vector2f(300,40)));
+
 
 	m_bollekesVec.push_back(new Enemy(sf::Vector2f(500,300)));
 	m_bollekesVec.push_back(new Enemy(sf::Vector2f(100,100)));
@@ -56,6 +60,10 @@ Gameplay::Gameplay(void):
 Gameplay::~Gameplay()
 {
 	for(auto& ptr : m_bollekesVec ){
+		delete ptr;
+		ptr= nullptr;
+	}
+	for(auto& ptr : m_entities ){
 		delete ptr;
 		ptr= nullptr;
 	}
@@ -287,6 +295,10 @@ void Gameplay::Tick(const float deltaTime)
 		if( object != nullptr)
 			object->Tick(deltaTime);
 
+	for (auto& object : m_entities)
+		if( object != nullptr)
+			object->Tick(deltaTime);
+
 	for (auto object : m_bulletVec)
 		if( object != nullptr)
 			object->Tick(deltaTime);
@@ -331,8 +343,8 @@ void Gameplay::Paint(sf::RenderWindow& window)
 
 
 
-	auto tex= sf::Texture();
-	tex.create(32,32);
+	//auto tex= sf::Texture();
+	//tex.create(32,32);
 	//tex.draw(backgroundSpr);
 
 	auto ha= sf::RenderTexture();
@@ -348,7 +360,7 @@ void Gameplay::Paint(sf::RenderWindow& window)
 			AddThickLine(vertexArray, 
 				sf::Vector2f(j->other->GetPosition().x,j->other->GetPosition().y),
 				sf::Vector2f(body->GetPosition().x,body->GetPosition().y)
-			);
+				);
 			// vertexArray.append(sf::Vertex(
 			// 	sf::Vector2f(j->other->GetPosition().x,j->other->GetPosition().y), sf::Color::Blue ));
 			// vertexArray.append(sf::Vertex(
@@ -372,6 +384,9 @@ void Gameplay::Paint(sf::RenderWindow& window)
 		if( object != nullptr)
 			window.draw(*object);
 
+	for (auto& object : m_entities)
+		if( object != nullptr)
+			window.draw(*object);
 
 
 	window.draw(m_player);
@@ -382,23 +397,23 @@ void Gameplay::Paint(sf::RenderWindow& window)
 
 	int counter= 0;
 	sf::VertexArray spriteVertexArray(sf::PrimitiveType::Quads, m_SpriteAnimationList.size()*4);
+
+	const sf::Texture* tex= nullptr;
+
 	for (auto& object : m_SpriteAnimationList){
-		if( object != nullptr){
-			//window.draw(*object);
-			float s=1.0f; // size
-			spriteVertexArray.append(sf::Vertex( object->getPosition()+sf::Vector2f(-s,-s), sf::Color::Red , sf::Vector2f(-1,-1)));
-			spriteVertexArray.append(sf::Vertex( object->getPosition()+sf::Vector2f(+s,-s), sf::Color::Red , sf::Vector2f(+1,-1)));
-			spriteVertexArray.append(sf::Vertex( object->getPosition()+sf::Vector2f(+s,+s), sf::Color::Red , sf::Vector2f(+1,+1)));
-			spriteVertexArray.append(sf::Vertex( object->getPosition()+sf::Vector2f(-s,+s), sf::Color::Red , sf::Vector2f(-1,+1)));
-			++counter;
-		}
+		if( object == nullptr) continue;
+		if(tex==nullptr) tex=object->getTexture();
+		float x= tex->getSize().y;
+		//window.draw(*object);
+		float s=3.0f; // size
+		spriteVertexArray.append(sf::Vertex( object->getPosition()+sf::Vector2f(-s,-s), sf::Color::White , sf::Vector2f(0,0)));
+		spriteVertexArray.append(sf::Vertex( object->getPosition()+sf::Vector2f(+s,-s), sf::Color::White , sf::Vector2f(x,0)));
+		spriteVertexArray.append(sf::Vertex( object->getPosition()+sf::Vector2f(+s,+s), sf::Color::White , sf::Vector2f(x,x)));
+		spriteVertexArray.append(sf::Vertex( object->getPosition()+sf::Vector2f(-s,+s), sf::Color::White , sf::Vector2f(0,x)));
+		++counter;
+
 	}
 	if ( spriteVertexArray.getVertexCount()>0 ){
-
-		const sf::Texture* tex= nullptr;
-		for (auto& object : m_SpriteAnimationList)
-			if( object != nullptr)
-				tex= object->getTexture();
 		if( tex!= nullptr){
 			auto it= m_SpriteAnimationList.begin();
 			//sf::Transform::Identity

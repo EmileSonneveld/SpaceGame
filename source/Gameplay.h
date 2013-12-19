@@ -16,6 +16,7 @@
 #include <list>
 
 class Enemy;
+class SpaceStation;
 
 class Gameplay 
 {
@@ -56,6 +57,9 @@ public:
 		return m_player.GetB2Body()->GetPosition();
 	}
 
+	void zoom(float delta){
+		m_View.setSize( m_View.getSize()*delta );
+	}
 private:
 
 	bool TryConnect();
@@ -65,7 +69,7 @@ private:
 	Player m_player;
 	std::vector<Ball*> m_bollekesVec;
 	std::forward_list<Bullet*> m_bulletVec;
-
+	std::vector<entityBase*> m_entities;
 	// std::vector<Enemy*> m_EnemyVec;
 
 	std::vector<SpriteAnimation*> m_SpriteAnimationList;

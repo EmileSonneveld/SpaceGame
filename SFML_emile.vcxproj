@@ -214,6 +214,7 @@
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\Player.cpp" />
     <ClCompile Include="source\sltn.cpp" />
+    <ClCompile Include="source\SpaceStation.cpp" />
     <ClCompile Include="source\SpriteAnimation.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -276,6 +277,7 @@
     <ClInclude Include="source\MyContactListener.hpp" />
     <ClInclude Include="source\Player.h" />
     <ClInclude Include="source\sltn.h" />
+    <ClInclude Include="source\SpaceStation.h" />
     <ClInclude Include="source\SpriteAnimation.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

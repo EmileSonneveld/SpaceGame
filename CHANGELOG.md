@@ -13,3 +13,9 @@ wheetly animation slowed down.
 Thick joint lines
 Ennemy is killable
 fixed some bugs with invalid pointer after body deletion
+
+2013 12 18
+More severe ignore file
+Draw explosion trail for bullets with vertexarray
+zoom with scolwheel
+basics for the SpaceStation
