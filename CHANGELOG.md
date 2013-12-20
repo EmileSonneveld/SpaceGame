@@ -19,3 +19,7 @@ More severe ignore file
 Draw explosion trail for bullets with vertexarray
 zoom with scolwheel
 basics for the SpaceStation
+
+2013 12 20
+Box2D library got corrupted, so I ported to the new one
+Fmod basics

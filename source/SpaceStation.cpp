@@ -48,7 +48,7 @@ void SpaceStation::Tick(float dt) // 0.0166
 
 		auto force= originalPos - m_b2Body->GetPosition();
 		force*= 1000.0f;
-		m_b2Body->ApplyForceToCenter(force);
+		m_b2Body->ApplyForceToCenter(force,true);
 
 		auto pos= m_b2Body->GetPosition();
 		Sprite::setPosition(pos.x, pos.y);
@@ -92,7 +92,7 @@ void SpaceStation::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	for( auto fixture = m_b2Body->GetFixtureList(); fixture; fixture= fixture->GetNext() ){
 		auto shape= (b2PolygonShape*)fixture->GetShape() ;
 		auto vec= (shape)->m_vertices;
-		for( unsigned int i=0; i<shape->m_vertexCount; ++i){
+		for( unsigned int i=0; i<shape->GetVertexCount(); ++i){
 			//auto vert= transform.getInverse().transformPoint(sf::Vector2f( vec[i].x,vec[i].y));
 			auto vert= sf::Vector2f( vec[i].x,vec[i].y);
 			va.append(sf::Vertex(vert,sf::Color(50,80,90,200), vert));

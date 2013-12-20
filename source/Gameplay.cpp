@@ -12,6 +12,18 @@ Gameplay::Gameplay(void):
 	,m_View(sf::FloatRect(0, 0, 100, 60))
 	,m_mouseTimer(0)
 {
+
+
+
+
+
+
+
+
+
+
+
+
 	//texture.setRepeated(true); tiled
 	backgroundSpr.setTexture(sltn::getInst().GetTexture("resources/space.jpg"));
 	backgroundSpr.setScale(0.2f,0.2f);
@@ -251,7 +263,27 @@ void Gameplay::Tick(const float deltaTime)
 
 	auto worldPos =  sltn::getInst().GetMousePos();
 
-	if( m_mouseTimer>0.05f && sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+	if( m_mouseTimer>0.5f && sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+		m_mouseTimer= 0;
+
+
+
+		// - sf::Vector2i( viewrect.x, viewrect.y);
+		auto force= to_b2Vec2(worldPos) - b2Vec2(m_player.getPosition().x, m_player.getPosition().y);
+		auto len= force.Length();
+		force.x /= len;
+		force.y /= len;
+		//force*=10.0f;
+
+		auto bullet = new Bullet(m_player.getPosition() + to_Vector2( force )
+			, atan2(force.y, force.x),true );
+
+		force*=65000.0f;
+		bullet->GetB2Body()->ApplyForceToCenter( force );
+		m_bulletVec.push_front( bullet );
+		//m_bulletVec.remove(bullet);
+	}
+	if( m_mouseTimer>0.01f && sf::Mouse::isButtonPressed(sf::Mouse::Middle)){
 		m_mouseTimer= 0;
 
 		// - sf::Vector2i( viewrect.x, viewrect.y);
@@ -263,12 +295,11 @@ void Gameplay::Tick(const float deltaTime)
 
 		auto bullet = new Bullet(m_player.getPosition() + to_Vector2( force )
 			, atan2(force.y, force.x) );
-		force*=55000.0f;
+		force*=45000.0f;
 		bullet->GetB2Body()->ApplyForceToCenter( force );
 		m_bulletVec.push_front( bullet );
 		//m_bulletVec.remove(bullet);
 	}
-
 	if( m_mouseTimer>0.1f && sf::Mouse::isButtonPressed(sf::Mouse::Right)){
 		m_mouseTimer= 0;
 
