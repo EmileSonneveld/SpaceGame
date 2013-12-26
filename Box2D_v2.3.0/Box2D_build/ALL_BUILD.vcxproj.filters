@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\C_ImportantStuffUnited\_DAE_\3DAE_GD_13\Portefolio\EmileS_SpaceGame\Box2D_v2.3.0\Box2D\CMakeLists.txt" />
+    <CustomBuild Include="CMakeFiles\5c76f594be916128ae78bacfa332cd91\ALL_BUILD.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CMakeFiles\ALL_BUILD" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{90298A40-1267-4983-937E-7A28FE326A22}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
