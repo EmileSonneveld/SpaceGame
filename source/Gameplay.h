@@ -18,6 +18,8 @@
 class Enemy;
 class SpaceStation;
 
+
+
 class Gameplay 
 {
 
@@ -60,6 +62,22 @@ public:
 	void zoom(float delta){
 		m_View.setSize( m_View.getSize()*delta );
 	}
+	void MakeCircle(sf::Vector2f place, float len, float distance= Ball::semiGlobal_minDistance){
+		float pi = 3.14159265f;
+		float contour = 2.0f *len* pi;
+		for (float radial = 0; radial<2.0f * pi; radial += 2.0f*pi / (contour / distance)){
+
+			auto pos = sf::Vector2f(len*cos(radial), len*sin(radial));
+			pos += place;
+			m_bollekesVec.push_back(new Ball(pos));
+
+			for (auto ball1 : m_bollekesVec){
+				// connect the last ball with the rest
+				Connect(ball1->GetB2Body(), m_bollekesVec.back()->GetB2Body());
+			}
+		}
+	}
+
 private:
 
 	bool TryConnect();

@@ -19,94 +19,94 @@ int main(int argc, const char* argv[])
 	//_CrtSetBreakAlloc(1);
 
 
-    //auto g_mainClass= new MainClass();
-    auto g_mainClass= new MainClass();
-    g_mainClass->gameLoop();
+	//auto g_mainClass= new MainClass();
+	auto g_mainClass = new MainClass();
+	g_mainClass->gameLoop();
 
 	// _CrtDumpMemoryLeaks();
 }
 
-MainClass::MainClass():
-    m_window(sf::RenderWindow(sf::VideoMode(1280, 720), "SFML Space game By Emile"))
+MainClass::MainClass() :
+m_window(sf::RenderWindow(sf::VideoMode(1280, 720), "SFML Space game By Emile"))
 {
-    m_window.setVerticalSyncEnabled(true);
-    sltn::getInst().m_ScreenSize= m_window.getSize();
+	m_window.setVerticalSyncEnabled(true);
+	sltn::getInst().m_ScreenSize = m_window.getSize();
 
-    auto Listener = new MyContactListener();
-    sltn::getInst().m_world->SetContactListener(Listener);
+	auto Listener = new MyContactListener();
+	sltn::getInst().m_world->SetContactListener(Listener);
 	m_window.setView(sf::View(sf::FloatRect()));
 
 
-    {
-        b2BodyDef bd;
-        bd.type = b2_staticBody;
-        bd.allowSleep = false;
-        bd.userData= nullptr;
-        bd.position.Set(0.0f,250.0f);//(float)sltn::getInst().m_ScreenSize.y
-        b2Body* body = sltn::getInst().m_world->CreateBody(&bd);
+	{
+		b2BodyDef bd;
+		bd.type = b2_staticBody;
+		bd.allowSleep = false;
+		bd.userData = nullptr;
+		bd.position.Set(0.0f, 250.0f);//(float)sltn::getInst().m_ScreenSize.y
+		b2Body* body = sltn::getInst().m_world->CreateBody(&bd);
 
-        b2PolygonShape shape;
-        shape.SetAsBox(1100,50); // (float)sltn::getInst().m_ScreenSize.x
-        //shape.SetAsBox(0.125f, 0.125f);
-        body->CreateFixture(&shape, 1.0f);
-    }
+		b2PolygonShape shape;
+		shape.SetAsBox(1100, 50); // (float)sltn::getInst().m_ScreenSize.x
+		//shape.SetAsBox(0.125f, 0.125f);
+		body->CreateFixture(&shape, 1.0f);
+	}
 }
 
 void MainClass::gameLoop(){
-    sf::Clock Clock;
-    float time= 0.01f;
-    while (m_window.isOpen())
-    {
-        sf::Event event;
-        while (m_window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                m_window.close();
+	sf::Clock Clock;
+	float time = 0.01f;
+	while (m_window.isOpen())
+	{
+		sf::Event event;
+		while (m_window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				m_window.close();
 
-            else if (event.type == sf::Event::MouseWheelMoved)
-            {
-				auto zoomerke= (float)event.mouseWheel.delta;
-				zoomerke = 1-zoomerke/4;
+			else if (event.type == sf::Event::MouseWheelMoved)
+			{
+				auto zoomerke = (float)event.mouseWheel.delta;
+				zoomerke = 1 - zoomerke / 4;
 				Gameplay::getInst().zoom(zoomerke);
 			}
 			else if (event.type == sf::Event::KeyPressed)
-            {
-                if (event.key.code == sf::Keyboard::Escape)
-                {
-                    m_window.close();
-                }
-            }
+			{
+				if (event.key.code == sf::Keyboard::Escape)
+				{
+					m_window.close();
+				}
+			}
 			else if (event.type == sf::Event::MouseButtonPressed)
-            {
-                sf::Mouse::getPosition() - m_window.getPosition() ;
+			{
+				sf::Mouse::getPosition() - m_window.getPosition();
 
-            }
-            //if (event.type == sf::Event::Resized)
-            //{
-            //    m_window.setSize(sf::Vector2u(event.size.width,event.size.height));
-            //}
-        }
-
-
-        time += (Clock.getElapsedTime().asSeconds()  -  time  ) /10.0f;
-        time= min(0.25f,time); // geen physics explosion plz 4FPS min
-        Clock.restart();
-
-        sltn::getInst().SetMousePos(
-            m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window))
-            );
-
-        m_window.clear(sf::Color(40,40,80));
-        Gameplay::getInst().Tick(time);
-        Gameplay::getInst().Paint(m_window);
+			}
+			//if (event.type == sf::Event::Resized)
+			//{
+			//    m_window.setSize(sf::Vector2u(event.size.width,event.size.height));
+			//}
+		}
 
 
+		time += (Clock.getElapsedTime().asSeconds() - time) / 10.0f;
+		time = min(0.25f, time); // geen physics explosion plz 4FPS min
+		Clock.restart();
 
-        sltn::getInst().ExcecuteDestroyBodys();
-        sltn::getInst().m_world->Step(time,8,3);
+		sltn::getInst().SetMousePos(
+			m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window))
+			);
 
-        m_window.display();
-    }
+		m_window.clear(sf::Color(40, 40, 80));
+		Gameplay::getInst().Tick(time);
+		Gameplay::getInst().Paint(m_window);
+
+
+
+		sltn::getInst().ExcecuteDestroyBodys();
+		sltn::getInst().m_world->Step(time, 8, 3);
+
+		m_window.display();
+	}
 }
 
 /*
