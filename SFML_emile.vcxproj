@@ -162,6 +162,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\entityBase.cpp" />
     <ClCompile Include="fmod_inc\common.cpp" />
     <ClCompile Include="fmod_inc\common_platform.cpp" />
     <ClCompile Include="source\Enemy.cpp" />
@@ -179,6 +180,13 @@
     <None Include="openal32.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Box2D_v2.3.0\Box2D\Box2D\Common\b2BlockAllocator.h" />
+    <ClInclude Include="Box2D_v2.3.0\Box2D\Box2D\Common\b2Draw.h" />
+    <ClInclude Include="Box2D_v2.3.0\Box2D\Box2D\Common\b2GrowableStack.h" />
+    <ClInclude Include="Box2D_v2.3.0\Box2D\Box2D\Common\b2Math.h" />
+    <ClInclude Include="Box2D_v2.3.0\Box2D\Box2D\Common\b2Settings.h" />
+    <ClInclude Include="Box2D_v2.3.0\Box2D\Box2D\Common\b2StackAllocator.h" />
+    <ClInclude Include="Box2D_v2.3.0\Box2D\Box2D\Common\b2Timer.h" />
     <ClInclude Include="fmod_inc\common.h" />
     <ClInclude Include="fmod_inc\common_platform.h" />
     <ClInclude Include="fmod_inc\fmod.h" />
@@ -194,7 +202,7 @@
     <ClInclude Include="source\Bullet.h" />
     <ClInclude Include="source\entityBase.h" />
     <ClInclude Include="source\main.h" />
-    <ClInclude Include="source\MyContactListener.hpp" />
+    <ClInclude Include="source\MyWorldCallbacks.hpp" />
     <ClInclude Include="source\Player.h" />
     <ClInclude Include="source\sltn.h" />
     <ClInclude Include="source\SpaceStation.h" />

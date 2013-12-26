@@ -38,6 +38,12 @@ struct b2Filter
 		groupIndex = 0;
 	}
 
+	// Emile
+	b2Filter(int16 gIndex) :groupIndex(gIndex){
+		categoryBits = 0x0001;
+		maskBits = 0xFFFF;
+	}
+
 	/// The collision category bits. Normally you would just set one bit.
 	uint16 categoryBits;
 

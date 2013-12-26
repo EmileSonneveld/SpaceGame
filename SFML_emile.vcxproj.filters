@@ -1,52 +1,55 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="fmod">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Ball.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="source\main.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="source\sltn.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="source\Player.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="source\Bullet.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="source\Gameplay.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="source\SpriteAnimation.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="source\Enemy.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="source\SpaceStation.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="fmod_inc\common.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="fmod_inc\common_platform.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\entityBase.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -58,65 +61,86 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\Ball.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\sltn.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\main.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Bullet.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\entityBase.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="source\Gameplay.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\SpriteAnimation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Enemy.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\SpaceStation.h">
-      <Filter>Header Files</Filter>
+      <Filter>fmod</Filter>
     </ClInclude>
     <ClInclude Include="fmod_inc\common.h">
-      <Filter>Header Files</Filter>
+      <Filter>fmod</Filter>
     </ClInclude>
     <ClInclude Include="fmod_inc\fmod.h">
-      <Filter>Header Files</Filter>
+      <Filter>fmod</Filter>
     </ClInclude>
     <ClInclude Include="fmod_inc\fmod.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>fmod</Filter>
     </ClInclude>
     <ClInclude Include="fmod_inc\fmod_codec.h">
-      <Filter>Header Files</Filter>
+      <Filter>fmod</Filter>
     </ClInclude>
     <ClInclude Include="fmod_inc\fmod_common.h">
-      <Filter>Header Files</Filter>
+      <Filter>fmod</Filter>
     </ClInclude>
     <ClInclude Include="fmod_inc\fmod_dsp.h">
-      <Filter>Header Files</Filter>
+      <Filter>fmod</Filter>
     </ClInclude>
     <ClInclude Include="fmod_inc\fmod_errors.h">
-      <Filter>Header Files</Filter>
+      <Filter>fmod</Filter>
     </ClInclude>
     <ClInclude Include="fmod_inc\fmod_output.h">
-      <Filter>Header Files</Filter>
+      <Filter>fmod</Filter>
     </ClInclude>
     <ClInclude Include="fmod_inc\common_platform.h">
-      <Filter>Header Files</Filter>
+      <Filter>fmod</Filter>
     </ClInclude>
-    <ClInclude Include="source\MyContactListener.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="source\Ball.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Bullet.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Enemy.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\entityBase.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Player.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\main.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\sltn.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SpaceStation.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SpriteAnimation.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\MyWorldCallbacks.hpp">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Box2D_v2.3.0\Box2D\Box2D\Common\b2BlockAllocator.h">
+      <Filter>fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="Box2D_v2.3.0\Box2D\Box2D\Common\b2Draw.h">
+      <Filter>fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="Box2D_v2.3.0\Box2D\Box2D\Common\b2GrowableStack.h">
+      <Filter>fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="Box2D_v2.3.0\Box2D\Box2D\Common\b2Math.h">
+      <Filter>fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="Box2D_v2.3.0\Box2D\Box2D\Common\b2Settings.h">
+      <Filter>fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="Box2D_v2.3.0\Box2D\Box2D\Common\b2StackAllocator.h">
+      <Filter>fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="Box2D_v2.3.0\Box2D\Box2D\Common\b2Timer.h">
+      <Filter>fmod</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -7,7 +7,7 @@
 #include <vector>
 #include "main.h"
 #include "Bullet.h"
-#include "MyContactListener.hpp"
+#include "MyWorldCallbacks.hpp"
 #include "Gameplay.h"
 
 using namespace std;
@@ -32,8 +32,8 @@ m_window(sf::RenderWindow(sf::VideoMode(1280, 720), "SFML Space game By Emile"))
 	m_window.setVerticalSyncEnabled(true);
 	sltn::getInst().m_ScreenSize = m_window.getSize();
 
-	auto Listener = new MyContactListener();
-	sltn::getInst().m_world->SetContactListener(Listener);
+	sltn::getInst().m_world->SetContactListener(new MyContactListener());
+	sltn::getInst().m_world->SetDestructionListener(new MyDestructionListener());
 	m_window.setView(sf::View(sf::FloatRect()));
 
 

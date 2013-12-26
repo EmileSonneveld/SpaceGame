@@ -10,6 +10,8 @@ Ball(pos, 4.0f), m_AnimationFlow(0)
 	((UserData*)m_b2Body->GetUserData())->kind = UserData::player;
 	this->setTexture(sltn::getInst().GetTexture("resources/Wheatley.png"), 3);
 
+	setFilterGroup(-546541); // random number
+
 	Sprite::setScale(Sprite::getScale()*2.0f);
 }
 
@@ -58,3 +60,4 @@ void Player::CustomStuff(float dt)
 	}
 
 }
+

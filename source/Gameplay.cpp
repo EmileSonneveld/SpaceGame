@@ -168,7 +168,17 @@ void ConnectBodys(b2Body* bodyA, b2Body* bodyB){
 	//jd.enableMotor = true;
 	sltn::getInst().m_world->CreateJoint(&jd);
 
-	((UserData*)bodyB->GetUserData())->isConectedToCluster = true;
+	auto udA = (UserData*)(bodyA->GetUserData());
+	auto udB = (UserData*)(bodyB->GetUserData());
+
+	if (CountJoints(bodyA) == 0){
+		udA->creator->setFilterGroup(bodyB->GetFixtureList()->GetFilterData().groupIndex);
+	}
+	else{
+		udB->creator->setFilterGroup(bodyA->GetFixtureList()->GetFilterData().groupIndex);
+	}
+
+	(udB)->isConectedToCluster = true;
 }
 
 bool Gameplay::TryConnect()
@@ -424,7 +434,7 @@ void Gameplay::Paint(sf::RenderWindow& window)
 
 
 	int counter = 0;
-	sf::VertexArray spriteVertexArray(sf::PrimitiveType::Quads, m_SpriteAnimationList.size() * 4U);
+	sf::VertexArray spriteVertexArray(sf::PrimitiveType::Quads, 4U * m_SpriteAnimationList.size());
 
 	const sf::Texture* tex = nullptr;
 
