@@ -29,7 +29,7 @@ void Player::CustomStuff(float dt)
 	m_AnimationFlow += dt;
 
 	auto prevRect = getTextureRect();
-	prevRect.left = ((int)(m_AnimationFlow*rectWidth / rectWidth))*rectWidth;
+	prevRect.left = (int) ( ((int)(m_AnimationFlow*rectWidth / rectWidth))*rectWidth );
 	Sprite::setTextureRect(prevRect);
 
 	if (m_b2Body == nullptr) return;

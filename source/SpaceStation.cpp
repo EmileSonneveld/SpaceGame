@@ -5,15 +5,15 @@
 #include <Box2D\Box2D.h>
 #include <SFML/Graphics/RenderTarget.hpp>
 
-SpaceStation::SpaceStation(sf::Vector2f pos) : entityBase() 
+SpaceStation::SpaceStation(sf::Vector2f pos) : entityBase(), m_va(sf::VertexArray(sf::PrimitiveType::Quads))
 {
 	b2BodyDef bd;
 	bd.type = b2_dynamicBody;// b2_kinematicBody;
 	bd.position.Set(pos.x, pos.y);
 	if( !bd.position.IsValid() ) return;
 	bd.awake=false;
-	auto ud= new UserData();
-	ud->creator= this;
+	auto ud= new UserData(this);
+	//ud->creator= this;
 	ud->kind= UserData::unspecified;
 	bd.userData= ud;
 	m_b2Body = sltn::getInst().m_world->CreateBody(&bd);
@@ -29,6 +29,18 @@ SpaceStation::SpaceStation(sf::Vector2f pos) : entityBase()
 	shape[3].SetAsBox(2,size, b2Vec2(0,+size*2.5f), 0);	  m_b2Body->CreateFixture(shape+3, 2.0f);
 
 	setTexture(sltn::getInst().GetTexture("resources/foto.jpg")); //Exp_yellow_maya blue-sphere_512
+
+
+	for (auto fixture = m_b2Body->GetFixtureList(); fixture; fixture = fixture->GetNext()){
+		auto shape = (b2PolygonShape*)fixture->GetShape();
+		auto vec = (shape)->m_vertices;
+		for (int i = 0; i<shape->GetVertexCount(); ++i){
+			//auto vert= transform.getInverse().transformPoint(sf::Vector2f( vec[i].x,vec[i].y));
+			auto vert = sf::Vector2f(vec[i].x, vec[i].y);
+			m_va.append(sf::Vertex(vert, sf::Color(50, 80, 90, 200), vert));
+		}
+	}
+
 }
 
 SpaceStation::~SpaceStation()
@@ -80,26 +92,9 @@ void SpaceStation::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	//target.draw(*this, states);
 
 
-	sf::VertexArray va(sf::PrimitiveType::Quads);
-	auto transform= getTransform();
-	sf::Vector2f tests[5];
-	tests[0]= transform.getInverse().transformPoint(0,0);
-	tests[1]= transform.transformPoint(0,0);
-	tests[2]= getPosition();
-	tests[3]= transform.getInverse().transformPoint(getPosition());
-	tests[4]= transform.transformPoint(getPosition());
+	
 
-	for( auto fixture = m_b2Body->GetFixtureList(); fixture; fixture= fixture->GetNext() ){
-		auto shape= (b2PolygonShape*)fixture->GetShape() ;
-		auto vec= (shape)->m_vertices;
-		for( unsigned int i=0; i<shape->GetVertexCount(); ++i){
-			//auto vert= transform.getInverse().transformPoint(sf::Vector2f( vec[i].x,vec[i].y));
-			auto vert= sf::Vector2f( vec[i].x,vec[i].y);
-			va.append(sf::Vertex(vert,sf::Color(50,80,90,200), vert));
-		}
-	}
-
-	target.draw(va,states);
+	target.draw(m_va, states);
 
 
 }

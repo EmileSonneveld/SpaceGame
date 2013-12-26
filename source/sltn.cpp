@@ -181,7 +181,7 @@ int sltn::fmod_mainFunction()
 {
 	return 0;
 	//FMOD::System    *system;
-	FMOD_RESULT      result;
+	//FMOD_RESULT      result;
 
 	bool             listenerflag = true;
 

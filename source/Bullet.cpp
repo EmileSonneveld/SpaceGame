@@ -19,8 +19,8 @@ Bullet::Bullet(sf::Vector2f pos, float angle, bool useSound) : entityBase(), m_r
 	bd.type = b2_dynamicBody;
 	bd.position.Set(pos.x, pos.y);
 	bd.awake = false;
-	auto ud = new UserData();
-	ud->creator = this;
+	auto ud = new UserData(this);
+	//ud->creator = this;
 	ud->kind = UserData::bullet;
 	bd.userData = ud;
 	m_b2Body = sltn::getInst().m_world->CreateBody(&bd);

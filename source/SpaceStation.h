@@ -25,6 +25,7 @@ protected:
 	b2Vec2 originalPos;
 	void setTexture(const sf::Texture& texture, int nrOfFrames=1); // bevat extras
 
+	sf::VertexArray m_va;
 private:
 
 };

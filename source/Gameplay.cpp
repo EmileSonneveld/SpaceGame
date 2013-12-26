@@ -28,8 +28,8 @@ m_player(Player(sf::Vector2f(50, 50)))
 	backgroundSpr.setScale(0.2f, 0.2f);
 	backgroundSpr.setPosition(sf::Vector2f(-99 / 2, -99 / 2));
 	auto prevRect = backgroundSpr.getTextureRect();
-	prevRect.width = 9999;
-	prevRect.height = 9999;
+	prevRect.width = 99999;
+	prevRect.height = 99999;
 	backgroundSpr.setTextureRect(prevRect);
 
 	m_entities.push_back(new SpaceStation(sf::Vector2f(300, 40)));
@@ -37,7 +37,7 @@ m_player(Player(sf::Vector2f(50, 50)))
 	const unsigned int arrSize = 3;
 	Enemy* arr[3];
 	arr[0] = new Enemy(sf::Vector2f(500, 300));
-	arr[1] = new Enemy(sf::Vector2f(50, 50));
+	arr[1] = new Enemy(sf::Vector2f(80, 50));
 	arr[2] = new Enemy(sf::Vector2f(200, 200));
 	m_bollekesVec.push_back(arr[0]);
 	m_bollekesVec.push_back(arr[1]);
@@ -424,7 +424,7 @@ void Gameplay::Paint(sf::RenderWindow& window)
 
 
 	int counter = 0;
-	sf::VertexArray spriteVertexArray(sf::PrimitiveType::Quads, m_SpriteAnimationList.size() * 4);
+	sf::VertexArray spriteVertexArray(sf::PrimitiveType::Quads, m_SpriteAnimationList.size() * 4U);
 
 	const sf::Texture* tex = nullptr;
 
