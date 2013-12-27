@@ -4,22 +4,22 @@
 
 //void DrawShape(b2Fixture* fixture, const b2Transform& xf, const b2Color& color);
 
-sltn::sltn():m_world( new b2World(b2Vec2(0,0)) )   {
+sltn::sltn() :m_world(new b2World(b2Vec2(0, 0)))   {
 	//m_world = new b2World(b2Vec2(0,0));
 	//auto dbg= m_world->DrawDebugData();
 	FmodStartup();
 }
 
 const sf::Texture& sltn::GetTexture(const std::string& path){
-	map<string,sf::Texture>::const_iterator it = m_SpriteMap.find(path); //map<string,sf::Texture>::const_iterator
-	if( it==m_SpriteMap.end() ) {
+	map<string, sf::Texture>::const_iterator it = m_SpriteMap.find(path); //map<string,sf::Texture>::const_iterator
+	if (it == m_SpriteMap.end()) {
 		//sf::Texture tex;
 		//tex.loadFromFile(path);
 		//tex.setSmooth(true);
 		//m_SpriteMap.insert( std::pair<std::string,sf::Texture>(path, tex)); // tex word meerdere keren gecopierd, daarom kan
 		cout << "Loading Texture: " << path << "\n";
-		m_SpriteMap.insert( std::pair<std::string,sf::Texture>(path, sf::Texture()));
-		if( !m_SpriteMap[path].loadFromFile(path) ) 
+		m_SpriteMap.insert(std::pair<std::string, sf::Texture>(path, sf::Texture()));
+		if (!m_SpriteMap[path].loadFromFile(path))
 			cout << " IMAGE NOT FOUND ";
 		m_SpriteMap[path].setSmooth(true);
 		m_SpriteMap[path].setRepeated(true);
@@ -28,45 +28,45 @@ const sf::Texture& sltn::GetTexture(const std::string& path){
 	return m_SpriteMap[path];
 }
 
-void sltn::EnqueDestroyBody(b2Body* body){
+void sltn::EnqueDestroyPhysicsEntity(b2Body* body){
 
-	if( body == nullptr ) return;
+	if (body == nullptr) return;
 	//if( !m_world->IsLocked() )
 	//    m_world->DestroyBody(body);
 	//else 
-	bool found= false;
-	for( b2Body* bodyIt= m_world->GetBodyList() ; bodyIt; bodyIt = bodyIt->GetNext()){
+	bool found = false;
+	for (b2Body* bodyIt = m_world->GetBodyList(); bodyIt; bodyIt = bodyIt->GetNext()){
 		//for (b2Body* body= sltn::getInst().m_world->GetBodyList(); body; body = body->GetNext()){
-		if(bodyIt == body )
-			found= true;
+		if (bodyIt == body)
+			found = true;
 	}
-	if( !found || body->GetContactList()== (b2ContactEdge*)0xfdfdfdfdfdfdfdfd)
-		int ha=5;
+	if (!found || body->GetContactList() == (b2ContactEdge*)0xfdfdfdfdfdfdfdfd)
+		int ha = 5;
 
-	if( find(m_BodysToDelete.begin(), m_BodysToDelete.end(), body) !=  m_BodysToDelete.end() )
+	if (find(m_BodysToDelete.begin(), m_BodysToDelete.end(), body) != m_BodysToDelete.end())
 		return;
 
 	m_BodysHaveBeenDeleted.push_back(body);
 	m_BodysToDelete.push_back(body);
 
-	auto ud= (UserData*)body->GetUserData();
+	auto ud = (UserData*)body->GetUserData();
 	b2Assert(ud);
-	( ud )->creator->nullB2Body();
+	(ud)->creator->nullB2Body();
 }
 
-void sltn::EnqueDestroyBody(b2Joint* body){
+void sltn::EnqueDestroyPhysicsEntity(b2Joint* body){
 
-	if( body == nullptr ) return;
+	if (body == nullptr) return;
 	//if( !m_world->IsLocked() )
 	//    m_world->DestroyBody(body);
 	//else 
-	bool found= false;
-	for( auto* bodyIt= m_world->GetJointList() ; bodyIt; bodyIt = bodyIt->GetNext()){
+	bool found = false;
+	for (auto* bodyIt = m_world->GetJointList(); bodyIt; bodyIt = bodyIt->GetNext()){
 		//for (b2Body* body= sltn::getInst().m_world->GetBodyList(); body; body = body->GetNext()){
-		if(bodyIt == body )
-			found= true;
+		if (bodyIt == body)
+			found = true;
 	}
-	if( !found )
+	if (!found)
 		return;
 
 	//if( find(m_BodysToDelete.begin(), m_BodysToDelete.end(), body) !=  m_BodysToDelete.end() )
@@ -75,24 +75,24 @@ void sltn::EnqueDestroyBody(b2Joint* body){
 	//m_BodysHaveBeenDeleted.push_back(body);
 	m_JointsToDelete.push_back(body);
 
-	auto ud= (UserData*)body->GetUserData();
+	auto ud = (UserData*)body->GetUserData();
 	// b2Assert(ud);
 	// ( ud )->creator->nullB2Body();
 }
-void sltn::ExcecuteDestroyBodys(){
+void sltn::ExcecuteDestroyPhysicsEntities(){
 	assert(!m_world->IsLocked());
-	if( m_world->IsLocked() )
-		int kak=5;
-	for( auto ptr : m_JointsToDelete){
+	if (m_world->IsLocked())
+		int kak = 5;
+	for (auto ptr : m_JointsToDelete){
 		// delete ( (UserData*)ptr->GetUserData() );
 		//ptr->SetUserData((void*)0xDE1E7ED);
 		m_world->DestroyJoint(ptr);
 	}
 	m_JointsToDelete.clear();
 
-	for( auto body : m_BodysToDelete){
+	for (auto body : m_BodysToDelete){
 		//auto contactList= body->GetContactList();
-		delete ( (UserData*)body->GetUserData() );
+		delete ((UserData*)body->GetUserData());
 		body->SetUserData((void*)0xDE1E7ED);
 		m_world->DestroyBody(body);
 		//memcpy(body, "Are you trying to acces something?",sizeof(*body));
@@ -112,9 +112,9 @@ const float DISTANCEFACTOR = 1.0f;          // Units per meter.  I.e feet would 
 void sltn::FmodStartup()
 {
 	FMOD_RESULT      result;
-	listenerpos.x= 0;
-	listenerpos.y=0;
-	listenerpos.z= -1.0f * DISTANCEFACTOR;
+	listenerpos.x = 0;
+	listenerpos.y = 0;
+	listenerpos.z = -1.0f * DISTANCEFACTOR;
 	// listenerpos  = { 0.0f, 0.0f, -1.0f * DISTANCEFACTOR };
 	unsigned int     version;
 	void            *extradriverdata = 0;
@@ -167,7 +167,7 @@ void sltn::playSound(FMOD::Sound* soundPtr)
 	FMOD_RESULT      result;
 
 	FMOD_VECTOR pos = { -10.0f * DISTANCEFACTOR, 0.0f, 0.0f };
-	FMOD_VECTOR vel = {  0.0f, 0.0f, 0.0f };
+	FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
 
 	result = system->playSound(soundPtr, 0, true, &channel1);
 	ERRCHECK(result);

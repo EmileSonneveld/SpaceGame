@@ -1,12 +1,17 @@
 #pragma once
 
+class entityBase;
+class Ball;
+class Player;
+class Enemy;
+class Bullet;
+class SpaceStation;
+class SpriteAnimation;
+
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-#include "Ball.h"
-#include "Bullet.h"
 #include "Player.h"
-#include "SpriteAnimation.h"
 #include "sltn.h"
 #include "entityBase.h"
 #include <Box2D\Box2D.h>
@@ -15,80 +20,88 @@
 #include <forward_list>
 #include <list>
 
-class Enemy;
-class SpaceStation;
+void AddThickLine(sf::VertexArray& vertices, const sf::Vector2f& point1, const sf::Vector2f& point2);
+bool AreLinqued(b2Body* bodyA, b2Body* bodyB);
+bool CCW(b2Vec2 p1, b2Vec2 p2, b2Vec2 p3);
+void ConnectTry(b2Body* bodyA, b2Body* bodyB); // Gameplay safties
+bool ConnectBodys(b2Body* bodyA, b2Body* bodyB); // Just Do it!
+unsigned int CountJoints(b2Body* body);
+bool isIntersect(b2Vec2 p1, b2Vec2 p2, b2Vec2 q3, b2Vec2 q4);
 
-
-
-class Gameplay 
+class Gameplay
 {
 
 public:
 	// Direct delete
-	void Remove(entityBase* entity){
-		for( auto& ptr : m_bollekesVec){
-			if( ptr == entity ) {
-				delete entity;
-				ptr= nullptr;
-				return;
-			}
-		}
-		for( auto& ptr : m_SpriteAnimationList){
-			if( ptr == entity ) {
-				delete entity;
-				ptr= nullptr;
-				return;
-			}
-		}
-		//for( auto& ptr : m_bulletVec)
-		//    if( ptr == bal ) {
-		//        ptr= nullptr;
-		//        return;
-		//    }
-		//sltn::getInst().RemoveBody(entity.)
-	}
+	void Remove(entityBase* entity);
 
 	void Tick(const float deltaTime);
 	void Paint(sf::RenderWindow& window);
 
-	void Add(SpriteAnimation* ptr){
-		m_SpriteAnimationList.push_back(ptr);
-	}
+	
 
 	b2Vec2 GetPlayerPos(){
 		return m_player.GetB2Body()->GetPosition();
 	}
 
+
 	void zoom(float delta){
-		m_View.setSize( m_View.getSize()*delta );
+		m_View.setSize(m_View.getSize()*delta);
 	}
-	void MakeCircle(sf::Vector2f place, float len, float distance= Ball::semiGlobal_minDistance){
+	void MakeCircle(sf::Vector2f place, float len, float distance = Ball::semiGlobal_minDistance){
 		float pi = 3.14159265f;
 		float contour = 2.0f *len* pi;
-		for (float radial = 0; radial<2.0f * pi; radial += 2.0f*pi / (contour / distance)){
+		for (float radial = 0; radial < 2.0f * pi; radial += 2.0f*pi / (contour / distance)){
 
 			auto pos = sf::Vector2f(len*cos(radial), len*sin(radial));
 			pos += place;
-			m_bollekesVec.push_back(new Ball(pos));
+			m_Balls.push_back(new Ball(pos));
 
-			for (auto ball1 : m_bollekesVec){
+			for (auto ball1 : m_Balls){
 				// connect the last ball with the rest
-				Connect(ball1->GetB2Body(), m_bollekesVec.back()->GetB2Body());
+				ConnectTry(ball1->GetB2Body(), m_Balls.back()->GetB2Body());
 			}
 		}
 	}
 
+	void ConnectWithOthers(Ball* ballA);
+
+	void EnqueueAddToList(entityBase* ptr){
+		m_entitiesToAdd.push_back(ptr);
+	}
+	void EnqueueAddToList(Ball* ptr){
+		m_BallsToAdd.push_back(ptr);
+	}
+	void AddToList(SpriteAnimation* ptr){
+		m_SpriteAnimationList.push_back(ptr);
+	}
+
 private:
 
+
 	bool TryConnect();
-	void Connect(b2Body* bodyA, b2Body* bodyB);
 
 	sf::Sprite backgroundSpr;
 	Player m_player;
-	std::vector<Ball*> m_bollekesVec;
-	std::forward_list<Bullet*> m_bulletVec;
 	std::vector<entityBase*> m_entities;
+	std::vector<entityBase*> m_entitiesToAdd;
+	std::vector<Ball*> m_Balls;
+	std::vector<Ball*> m_BallsToAdd;
+	std::forward_list<Bullet*> m_bulletVec;
+
+	void ApplyAddToQueue(){
+		for (auto ptr : m_entitiesToAdd)
+			m_entities.push_back(ptr);
+		m_entitiesToAdd.clear();
+
+		for (auto ptr : m_BallsToAdd)
+			m_Balls.push_back(ptr);
+		m_BallsToAdd.clear();
+	}
+
 	// std::vector<Enemy*> m_EnemyVec;
+
+
 
 	std::vector<SpriteAnimation*> m_SpriteAnimationList;
 

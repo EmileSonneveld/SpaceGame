@@ -1,9 +1,35 @@
 #include "Gameplay.h"
 #include "Enemy.h"
 #include "SpaceStation.h"
+#include "Ball.h"
+#include "Bullet.h"
+#include "SpriteAnimation.h"
 //#include <math.h>
 
 
+void Gameplay::Remove(entityBase* entity){
+	for (auto& ptr : m_Balls){
+		if (ptr == entity) {
+			delete entity;
+			ptr = nullptr;
+			return;
+		}
+	}
+	for (auto& ptr : m_SpriteAnimationList){
+		if (ptr == entity) {
+			delete entity;
+			ptr = nullptr;
+			return;
+		}
+	}
+
+	//for( auto& ptr : m_bulletVec)
+	//    if( ptr == bal ) {
+	//        ptr= nullptr;
+	//        return;
+	//    }
+	//sltn::getInst().RemoveBody(entity.)
+}
 
 Gameplay::Gameplay(void) :
 m_player(Player(sf::Vector2f(50, 50)))
@@ -11,7 +37,7 @@ m_player(Player(sf::Vector2f(50, 50)))
 , m_mouseTimer(0)
 {
 
-	m_bollekesVec.reserve(3000);
+	m_Balls.reserve(3000);
 
 
 
@@ -34,33 +60,25 @@ m_player(Player(sf::Vector2f(50, 50)))
 
 	m_entities.push_back(new SpaceStation(sf::Vector2f(300, 40)));
 
-	const unsigned int arrSize = 3;
+	const unsigned int arrSize = 2;
 	Enemy* arr[3];
 	arr[0] = new Enemy(sf::Vector2f(500, 300));
 	arr[1] = new Enemy(sf::Vector2f(80, 50));
-	arr[2] = new Enemy(sf::Vector2f(200, 200));
-	m_bollekesVec.push_back(arr[0]);
-	m_bollekesVec.push_back(arr[1]);
-	m_bollekesVec.push_back(arr[2]);
-
+	//arr[2] = new Enemy(sf::Vector2f(200, 200));
+	m_Balls.push_back(arr[0]);
+	m_Balls.push_back(arr[1]);
+	//m_Balls.push_back(arr[2]);
+	
 	for (int i = 0; i < arrSize; ++i){
 		MakeCircle(arr[i]->getPosition(), 6, 3);
 		MakeCircle(arr[i]->getPosition(), 7, 3);
 	}
 
-	for (unsigned int i = 0; i < 100; i++)
-	{
-		//auto pos= sf::Vector2f((float)(rand()%sltn::getInst().m_ScreenSize.x/8) , 
-		//    (float)(rand()%sltn::getInst().m_ScreenSize.y));
-		auto pos = sf::Vector2f((float)(rand() % 500), (float)(rand() % 200));
-		m_bollekesVec.push_back(new Ball(pos));
-	}
 
-	sf::Vector2f place(20.0f, 20.0f);
-
-	for (float len = 7.0f; len < 25; len += 3.0f){
-		MakeCircle(place, len);
-	}
+	// sf::Vector2f place(20.0f, 20.0f);
+	// for (float len = 7.0f; len < 25; len += 3.0f){
+	// 	MakeCircle(place, len);
+	// }
 
 
 }
@@ -68,7 +86,7 @@ m_player(Player(sf::Vector2f(50, 50)))
 
 Gameplay::~Gameplay()
 {
-	for (auto& ptr : m_bollekesVec){
+	for (auto& ptr : m_Balls){
 		delete ptr;
 		ptr = nullptr;
 	}
@@ -143,9 +161,28 @@ bool isIntersect(b2Vec2 p1, b2Vec2 p2, b2Vec2 q3, b2Vec2 q4) {
 }
 
 // engine Logic
-void ConnectBodys(b2Body* bodyA, b2Body* bodyB){
-	if (AreLinqued(bodyB, bodyA)) return;
-	if (AreLinqued(bodyA, bodyB)) return;
+bool ConnectBodys(b2Body* bodyA, b2Body* bodyB){
+	if (AreLinqued(bodyB, bodyA)) return false;
+	if (AreLinqued(bodyA, bodyB)) return false;
+
+
+	auto udA = (UserData*)(bodyA->GetUserData());
+	auto udB = (UserData*)(bodyB->GetUserData());
+	auto filterA = bodyA->GetFixtureList()->GetFilterData();
+	auto filterB = bodyB->GetFixtureList()->GetFilterData();
+
+	if (filterA.groupIndex != filterB.groupIndex) {
+		if (filterA.groupIndex != 0 && filterB.groupIndex != 0)
+			return false; // Both a different exotic value
+	}
+
+	if (CountJoints(bodyA) < CountJoints(bodyB)){
+		udA->creator->setFilterGroup(filterB.groupIndex);
+	}
+	else{
+		udB->creator->setFilterGroup(filterA.groupIndex);
+	}
+
 
 	auto diffVec = (bodyA->GetPosition() - bodyB->GetPosition());
 	b2RevoluteJointDef jd; //b2RevoluteJointDef b2WeldJoint  b2DistanceJointDef
@@ -168,31 +205,56 @@ void ConnectBodys(b2Body* bodyA, b2Body* bodyB){
 	//jd.enableMotor = true;
 	sltn::getInst().m_world->CreateJoint(&jd);
 
-	auto udA = (UserData*)(bodyA->GetUserData());
-	auto udB = (UserData*)(bodyB->GetUserData());
 
-	if (CountJoints(bodyA) == 0){
-		udA->creator->setFilterGroup(bodyB->GetFixtureList()->GetFilterData().groupIndex);
-	}
-	else{
-		udB->creator->setFilterGroup(bodyA->GetFixtureList()->GetFilterData().groupIndex);
-	}
-
+	(udA)->isConectedToCluster = true;
 	(udB)->isConectedToCluster = true;
+	return true;
 }
+void Gameplay::ConnectWithOthers(Ball* ballA)
+{
+	if (ballA == nullptr)return;
+	b2Body* bodyA = ballA->GetB2Body();
+	if (bodyA == nullptr)return;
+
+	for (auto ballB : m_Balls){
+
+		if (ballB == nullptr)continue;
+		b2Body* bodyB = ballB->GetB2Body();
+		if (bodyB == nullptr)continue;
+		auto diffVec = (bodyA->GetPosition() - bodyB->GetPosition());
+		auto squared = diffVec.LengthSquared();
+
+		//if( ((UserData*)bodyB->GetUserData() )->isConectedToCluster == true ) continue;
+
+		if (squared > Ball::semiGlobal_minDistanceSquared ) continue;
+
+		auto chosenBody = ChosenBody(bodyA, bodyB, squared);
+		if (chosenBody.numOfJoints >4) continue;
+
+		ConnectTry(bodyA, bodyB);
+		//chosenBodys.push_back(chosenBody);
+	}
+}
+
 
 bool Gameplay::TryConnect()
 {
 
 
 	vector<ChosenBody> chosenBodys;
-	for (auto& ballA : m_bollekesVec){
+	for (auto& ballA : m_Balls){
+
+		if (ballA == nullptr)continue;
 		b2Body* bodyA = ballA->GetB2Body();
+		if (bodyA == nullptr)continue;
+
 		if (((UserData*)bodyA->GetUserData())->isConectedToCluster != true) continue;
 
-		for (auto& ballB : m_bollekesVec){
+		for (auto ballB : m_Balls){
 
+			if (ballB == nullptr)continue;
 			b2Body* bodyB = ballB->GetB2Body();
+			if (bodyB == nullptr)continue;
 			auto diffVec = (bodyA->GetPosition() - bodyB->GetPosition());
 			auto squared = diffVec.LengthSquared();
 
@@ -204,7 +266,6 @@ bool Gameplay::TryConnect()
 			if (chosenBody.numOfJoints >4) continue;
 
 			chosenBodys.push_back(chosenBody);
-
 		}
 	}
 	if (chosenBodys.size() <= 0) return false;
@@ -225,7 +286,7 @@ bool Gameplay::TryConnect()
 }
 
 // GameplayLogic
-void Gameplay::Connect(b2Body* bodyA, b2Body* bodyB){
+void ConnectTry(b2Body* bodyA, b2Body* bodyB){
 	if (!(bodyA && bodyB)) return;
 
 	auto diffVec = (bodyA->GetPosition() - bodyB->GetPosition());
@@ -263,73 +324,16 @@ void Gameplay::Tick(const float deltaTime)
 	for (auto* jointIt = sltn::getInst().m_world->GetJointList(); jointIt; jointIt = jointIt->GetNext()){
 		b2Vec2 reactionForce = jointIt->GetReactionForce(1 / deltaTime);
 		float forceModuleSq = reactionForce.LengthSquared();
-		if (forceModuleSq > 12000 * 12000)
-			sltn::getInst().EnqueDestroyBody(jointIt);
+		if (forceModuleSq > 11000 * 11000)
+			sltn::getInst().EnqueDestroyPhysicsEntity(jointIt);
 		//sltn::getInst().m_world->DestroyJoint(jointIt);
 	}
 
-	auto worldPos = sltn::getInst().GetMousePos();
 
-	if (m_mouseTimer > 0.5f && sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-		m_mouseTimer = 0;
-
-
-
-		// - sf::Vector2i( viewrect.x, viewrect.y);
-		auto force = to_b2Vec2(worldPos) - b2Vec2(m_player.getPosition().x, m_player.getPosition().y);
-		auto len = force.Length();
-		force.x /= len;
-		force.y /= len;
-		//force*=10.0f;
-
-		auto bullet = new Bullet(m_player.getPosition() + to_Vector2(force)
-			, atan2(force.y, force.x), true);
-
-		force *= 65000.0f;
-		bullet->GetB2Body()->ApplyForceToCenter(force);
-		m_bulletVec.push_front(bullet);
-		//m_bulletVec.remove(bullet);
-	}
-	if (m_mouseTimer > 0.01f && sf::Mouse::isButtonPressed(sf::Mouse::Middle)){
-		m_mouseTimer = 0;
-
-		// - sf::Vector2i( viewrect.x, viewrect.y);
-		auto force = to_b2Vec2(worldPos) - b2Vec2(m_player.getPosition().x, m_player.getPosition().y);
-		auto len = force.Length();
-		force.x /= len;
-		force.y /= len;
-		//force*=10.0f;
-
-		auto bullet = new Bullet(m_player.getPosition() + to_Vector2(force)
-			, atan2(force.y, force.x));
-		force *= 45000.0f;
-		bullet->GetB2Body()->ApplyForceToCenter(force);
-		m_bulletVec.push_front(bullet);
-		//m_bulletVec.remove(bullet);
-	}
-	if (m_mouseTimer > 0.1f && sf::Mouse::isButtonPressed(sf::Mouse::Right)){
-		m_mouseTimer = 0;
-
-		auto ball = new Ball(worldPos);
-		ball->setTexture(sltn::getInst().GetTexture("resources/blue-sphere_512.png"));
-		m_bollekesVec.push_back(ball);
-
-		Connect(m_player.GetB2Body(), m_bollekesVec.back()->GetB2Body());
-
-		for (auto ball1 : m_bollekesVec){
-			if (ball1 == nullptr) continue;
-			//if( ( (UserData*)ball1.GetB2Body()->GetUserData() )->isConectedToCluster == false ) continue;
-			Connect(ball1->GetB2Body(), m_bollekesVec.back()->GetB2Body());
-		}
-
-		//b2Body* bodyA= m_player.GetB2Body(); // m_playe
-		//b2Body* bodyB= m_bollekesVec.back()->GetB2Body(); // ball
-
-	}
 
 	m_player.Tick(deltaTime);
 
-	for (auto& object : m_bollekesVec)
+	for (auto& object : m_Balls)
 	if (object != nullptr)
 		object->Tick(deltaTime);
 
@@ -347,6 +351,8 @@ void Gameplay::Tick(const float deltaTime)
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 		TryConnect();
+
+	ApplyAddToQueue();
 
 	m_View.setCenter(m_player.getPosition());
 }
@@ -418,7 +424,7 @@ void Gameplay::Paint(sf::RenderWindow& window)
 
 
 
-	for (auto& object : m_bollekesVec)
+	for (auto& object : m_Balls)
 	if (object != nullptr)
 		window.draw(*object);
 

@@ -18,7 +18,7 @@
 *.opensdf
 *.pdb
 
-
+# Emile specific
 x64
 *.BAK
 *.log

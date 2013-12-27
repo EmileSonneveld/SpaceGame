@@ -34,7 +34,8 @@ public:
 
 	void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
 	{ /* handle post-solve event */
-		if (*impulse->normalImpulses > 150.0f)
+
+		if (*impulse->normalImpulses > 170.0f)
 		{
 			// Detroy stuff
 			auto udA = (UserData*)contact->GetFixtureA()->GetBody()->GetUserData();
@@ -46,20 +47,20 @@ public:
 
 				if ((udA->kind == UserData::ball || udB->kind == UserData::ball)){
 					// this can be called multiple times in one frame
-					sltn::getInst().EnqueDestroyBody(contact->GetFixtureA()->GetBody());
-					sltn::getInst().EnqueDestroyBody(contact->GetFixtureB()->GetBody());
+					sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
+					sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureB()->GetBody());
 					//Gameplay::getInst().Remove( ( ud )->creator );
 				}
 
 
 				if (udA->kind == UserData::Enemy) {
 					((Enemy*)udA->creator)->DoDammage(5);
-					sltn::getInst().EnqueDestroyBody(contact->GetFixtureB()->GetBody());
+					sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureB()->GetBody());
 				}
 
 				if (udB->kind == UserData::Enemy) {
 					((Enemy*)udB->creator)->DoDammage(5);
-					sltn::getInst().EnqueDestroyBody(contact->GetFixtureA()->GetBody());
+					sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
 				}
 
 			}

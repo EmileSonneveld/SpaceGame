@@ -45,7 +45,7 @@ SpaceStation::SpaceStation(sf::Vector2f pos) : entityBase(), m_va(sf::VertexArra
 
 SpaceStation::~SpaceStation()
 {
-	if( m_b2Body ) sltn::getInst().EnqueDestroyBody(m_b2Body);
+	if( m_b2Body ) sltn::getInst().EnqueDestroyPhysicsEntity(m_b2Body);
 	m_b2Body=nullptr;
 }
 

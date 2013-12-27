@@ -38,13 +38,13 @@ Bullet::Bullet(sf::Vector2f pos, float angle, bool useSound) : entityBase(), m_r
 
 Bullet::~Bullet()
 {
-	sltn::getInst().EnqueDestroyBody(m_b2Body);
+	sltn::getInst().EnqueDestroyPhysicsEntity(m_b2Body);
 	m_b2Body = nullptr;
 }
 
 void Bullet::DestroyBody()
 {
-	sltn::getInst().EnqueDestroyBody(m_b2Body);
+	sltn::getInst().EnqueDestroyPhysicsEntity(m_b2Body);
 	m_b2Body = nullptr;
 }
 
@@ -64,7 +64,7 @@ void Bullet::Tick(float dt) // 0.0166
 
 		if (rand() % 50 < 1){
 			auto spriteAnimation = new SpriteAnimation(getPosition(), false);
-			Gameplay::getInst().Add(spriteAnimation);
+			Gameplay::getInst().AddToList(spriteAnimation);
 		}
 
 	}

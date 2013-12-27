@@ -102,8 +102,8 @@ void MainClass::gameLoop(){
 
 
 
-		sltn::getInst().ExcecuteDestroyBodys();
-		sltn::getInst().m_world->Step(time, 8, 3);
+		sltn::getInst().ExcecuteDestroyPhysicsEntities();
+		sltn::getInst().m_world->Step(0.01678f, 8, 3); //time
 
 		m_window.display();
 	}
