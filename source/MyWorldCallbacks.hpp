@@ -44,11 +44,21 @@ public:
 
 
 			if ((udA->kind == UserData::bullet || udB->kind == UserData::bullet)){
-
+				if (udA->kind == UserData::bullet){
+					Gameplay::getInst().EnqueueRemoveFromList(udA->creator);
+					sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
+				}
+				if (udB->kind == UserData::bullet){
+					Gameplay::getInst().EnqueueRemoveFromList(udB->creator);
+					sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureB()->GetBody());
+					//sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
+				}
 				if ((udA->kind == UserData::ball || udB->kind == UserData::ball)){
+
+					//Gameplay::getInst().EnqueueRemoveFromList(udB->creator);
 					// this can be called multiple times in one frame
 					sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
-					sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureB()->GetBody());
+					//sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureB()->GetBody());
 					//Gameplay::getInst().Remove( ( ud )->creator );
 				}
 

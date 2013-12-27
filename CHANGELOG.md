@@ -23,3 +23,9 @@ basics for the SpaceStation
 2013 12 20
 Box2D library got corrupted, so I ported to the new one
 Fmod basics
+
+...
+
+2013 12 27
+cluster tracking
+Enemies can shoot

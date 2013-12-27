@@ -77,7 +77,7 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>.\SFML-2.1\include;.\Box2D_v2.3.0\Box2D;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)</OutDir>
-    <TargetName>$(Platform)\$(ProjectName)_debug</TargetName>
+    <TargetName>$(ProjectName)_debug</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -207,6 +207,7 @@
     <ClInclude Include="source\sltn.h" />
     <ClInclude Include="source\SpaceStation.h" />
     <ClInclude Include="source\SpriteAnimation.h" />
+    <ClInclude Include="UserData.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

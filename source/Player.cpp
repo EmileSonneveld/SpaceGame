@@ -9,9 +9,9 @@ Player::Player(sf::Vector2f pos) :
 Ball(pos, 4.0f), m_AnimationFlow(0), m_ShootTimer(0)
 {
 	((UserData*)m_b2Body->GetUserData())->kind = UserData::player;
-	this->setTexture(sltn::getInst().GetTexture("resources/Wheatley.png"), 3);
+	this->setTexture(sltn::getInst().GetTexture("resources/Wheatley.png"));
 
-	setFilterGroup(-546541); // random number
+	setFilterGroup(-2); // random number
 
 	Sprite::setScale(Sprite::getScale()*2.0f);
 }
@@ -54,9 +54,9 @@ void Player::CustomStuff(float dt)
 
 	if (abs(moveVector.x) > 0.01f || abs(moveVector.y) > 0.01f){
 		moveVector.Normalize();
+		moveVector *= 5000.0f;
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
-			moveVector *= 5.0f;
-		moveVector *= 800.0f;
+			moveVector *= 2.0f;
 
 		assert(m_b2Body);
 		m_b2Body->ApplyForceToCenter(moveVector);

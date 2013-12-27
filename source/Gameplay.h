@@ -14,6 +14,7 @@ class SpriteAnimation;
 #include "Player.h"
 #include "sltn.h"
 #include "entityBase.h"
+#include "UserData.h"
 #include <Box2D\Box2D.h>
 
 #include <vector>
@@ -32,8 +33,7 @@ class Gameplay
 {
 
 public:
-	// Direct delete
-	void Remove(entityBase* entity);
+	
 
 	void Tick(const float deltaTime);
 	void Paint(sf::RenderWindow& window);
@@ -65,7 +65,9 @@ public:
 	}
 
 	void ConnectWithOthers(Ball* ballA);
-
+	void EnqueueRemoveFromList(entityBase* ptr){
+		m_entitiesRemoveFrom.push_back(ptr);
+	}
 	void EnqueueAddToList(entityBase* ptr){
 		m_entitiesToAdd.push_back(ptr);
 	}
@@ -76,6 +78,9 @@ public:
 		m_SpriteAnimationList.push_back(ptr);
 	}
 
+	int16 GetGroupForKind(Kind kind){
+
+	}
 private:
 
 
@@ -85,9 +90,11 @@ private:
 	Player m_player;
 	std::vector<entityBase*> m_entities;
 	std::vector<entityBase*> m_entitiesToAdd;
+	std::vector<entityBase*> m_entitiesRemoveFrom;
 	std::vector<Ball*> m_Balls;
 	std::vector<Ball*> m_BallsToAdd;
 	std::forward_list<Bullet*> m_bulletVec;
+	std::vector<SpriteAnimation*> m_SpriteAnimationList;
 
 	void ApplyAddToQueue(){
 		for (auto ptr : m_entitiesToAdd)
@@ -98,12 +105,18 @@ private:
 			m_Balls.push_back(ptr);
 		m_BallsToAdd.clear();
 	}
-
+	void ApplyRemoveFrom(){
+		for (auto ptr : m_entitiesRemoveFrom){
+			RemoveFrom(ptr);
+		}
+		m_entitiesRemoveFrom.clear();
+	}
+	
+	void RemoveFrom(entityBase* entity);
 	// std::vector<Enemy*> m_EnemyVec;
 
 
 
-	std::vector<SpriteAnimation*> m_SpriteAnimationList;
 
 
 	sf::View m_View;

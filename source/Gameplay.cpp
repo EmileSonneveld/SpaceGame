@@ -7,22 +7,35 @@
 //#include <math.h>
 
 
-void Gameplay::Remove(entityBase* entity){
+void Gameplay::RemoveFrom(entityBase* entity){
+	for (unsigned int i = 0; i < m_entities.size(); ++i){
+		if (m_entities[i] == entity) {
+			//delete m_entities[i];
+			m_entities[i] = nullptr;
+			return;
+		}
+	}
 	for (auto& ptr : m_Balls){
 		if (ptr == entity) {
-			delete entity;
+			//delete entity;
 			ptr = nullptr;
 			return;
 		}
 	}
 	for (auto& ptr : m_SpriteAnimationList){
 		if (ptr == entity) {
-			delete entity;
+			//delete entity;
 			ptr = nullptr;
 			return;
 		}
 	}
-
+	//for (unsigned int i = 0; i < m_bulletVec.size(); ++i){
+	//	if (m_bulletVec[i] == entity) {
+	//		//delete m_bulletVec[i];
+	//		m_bulletVec[i] = nullptr;
+	//		return;
+	//	}
+	//}
 	//for( auto& ptr : m_bulletVec)
 	//    if( ptr == bal ) {
 	//        ptr= nullptr;
@@ -63,12 +76,12 @@ m_player(Player(sf::Vector2f(50, 50)))
 	const unsigned int arrSize = 2;
 	Enemy* arr[3];
 	arr[0] = new Enemy(sf::Vector2f(500, 300));
-	arr[1] = new Enemy(sf::Vector2f(80, 50));
+	arr[1] = new Enemy(sf::Vector2f(180, 50));
 	//arr[2] = new Enemy(sf::Vector2f(200, 200));
 	m_Balls.push_back(arr[0]);
 	m_Balls.push_back(arr[1]);
 	//m_Balls.push_back(arr[2]);
-	
+
 	for (int i = 0; i < arrSize; ++i){
 		MakeCircle(arr[i]->getPosition(), 6, 3);
 		MakeCircle(arr[i]->getPosition(), 7, 3);
@@ -160,28 +173,21 @@ bool isIntersect(b2Vec2 p1, b2Vec2 p2, b2Vec2 q3, b2Vec2 q4) {
 	// (Fx - Ex)(Qy - Fy) - (Fy - Ey)(Qx - Fx);
 }
 
+// recursevely infect te cluster
+void SpreadFilterGroup(b2Body* bodyA, int16 groupIndex){
+	if (bodyA->GetFixtureList()->GetFilterData().groupIndex == groupIndex) return;
+	bodyA->GetFixtureList()->SetFilterData(b2Filter(groupIndex));
+
+	for (auto joint = bodyA->GetJointList(); joint; joint = joint->next){
+		SpreadFilterGroup(joint->other, groupIndex);
+	}
+}
+
 // engine Logic
 bool ConnectBodys(b2Body* bodyA, b2Body* bodyB){
 	if (AreLinqued(bodyB, bodyA)) return false;
 	if (AreLinqued(bodyA, bodyB)) return false;
 
-
-	auto udA = (UserData*)(bodyA->GetUserData());
-	auto udB = (UserData*)(bodyB->GetUserData());
-	auto filterA = bodyA->GetFixtureList()->GetFilterData();
-	auto filterB = bodyB->GetFixtureList()->GetFilterData();
-
-	if (filterA.groupIndex != filterB.groupIndex) {
-		if (filterA.groupIndex != 0 && filterB.groupIndex != 0)
-			return false; // Both a different exotic value
-	}
-
-	if (CountJoints(bodyA) < CountJoints(bodyB)){
-		udA->creator->setFilterGroup(filterB.groupIndex);
-	}
-	else{
-		udB->creator->setFilterGroup(filterA.groupIndex);
-	}
 
 
 	auto diffVec = (bodyA->GetPosition() - bodyB->GetPosition());
@@ -206,10 +212,32 @@ bool ConnectBodys(b2Body* bodyA, b2Body* bodyB){
 	sltn::getInst().m_world->CreateJoint(&jd);
 
 
+
+	auto udA = (UserData*)(bodyA->GetUserData());
+	auto udB = (UserData*)(bodyB->GetUserData());
+	auto filterA = bodyA->GetFixtureList()->GetFilterData();
+	auto filterB = bodyB->GetFixtureList()->GetFilterData();
+
+	if (filterA.groupIndex != filterB.groupIndex) {
+		if (filterA.groupIndex != 0 && filterB.groupIndex != 0)
+			return false; // Both a different exotic value
+	}
+
+	if (filterA.groupIndex==0){
+		//udA->creator->setFilterGroup(filterB.groupIndex);
+		SpreadFilterGroup(bodyA, filterB.groupIndex);
+	}
+	else{
+		//udB->creator->setFilterGroup(filterA.groupIndex);
+		SpreadFilterGroup(bodyB, filterA.groupIndex);
+	}
+
 	(udA)->isConectedToCluster = true;
 	(udB)->isConectedToCluster = true;
 	return true;
 }
+
+
 void Gameplay::ConnectWithOthers(Ball* ballA)
 {
 	if (ballA == nullptr)return;
@@ -226,10 +254,10 @@ void Gameplay::ConnectWithOthers(Ball* ballA)
 
 		//if( ((UserData*)bodyB->GetUserData() )->isConectedToCluster == true ) continue;
 
-		if (squared > Ball::semiGlobal_minDistanceSquared ) continue;
+		if (squared > Ball::semiGlobal_minDistanceSquared) continue;
 
 		auto chosenBody = ChosenBody(bodyA, bodyB, squared);
-		if (chosenBody.numOfJoints >4) continue;
+		if (chosenBody.numOfJoints > 4) continue;
 
 		ConnectTry(bodyA, bodyB);
 		//chosenBodys.push_back(chosenBody);
@@ -352,6 +380,7 @@ void Gameplay::Tick(const float deltaTime)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 		TryConnect();
 
+	ApplyRemoveFrom();
 	ApplyAddToQueue();
 
 	m_View.setCenter(m_player.getPosition());
