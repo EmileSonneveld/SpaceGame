@@ -16,14 +16,14 @@ using namespace std;
 int main(int argc, const char* argv[])
 {
 	// _crtBreakAlloc= 161;
-	//_CrtSetBreakAlloc(1);
+	_CrtSetBreakAlloc(1);
 
 
 	//auto g_mainClass= new MainClass();
 	auto g_mainClass = new MainClass();
 	g_mainClass->gameLoop();
 
-	// _CrtDumpMemoryLeaks();
+	_CrtDumpMemoryLeaks();
 }
 
 MainClass::MainClass() :
@@ -66,7 +66,7 @@ void MainClass::gameLoop(){
 			else if (event.type == sf::Event::MouseWheelMoved)
 			{
 				auto zoomerke = (float)event.mouseWheel.delta;
-				zoomerke = 1 - zoomerke / 4;
+				zoomerke = 1 - zoomerke / 7;
 				Gameplay::getInst().zoom(zoomerke);
 			}
 			else if (event.type == sf::Event::KeyPressed)
@@ -103,7 +103,7 @@ void MainClass::gameLoop(){
 
 
 		sltn::getInst().ExcecuteDestroyPhysicsEntities();
-		sltn::getInst().m_world->Step(0.01678f, 8, 3); //time
+		sltn::getInst().m_world->Step(0.01f, 8, 3); //time
 
 		m_window.display();
 	}

@@ -34,7 +34,7 @@ public:
 
 	void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
 	{ /* handle post-solve event */
-
+		//return;
 		if (*impulse->normalImpulses > 170.0f)
 		{
 			// Detroy stuff

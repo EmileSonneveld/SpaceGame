@@ -142,7 +142,7 @@
     <ClInclude Include="Box2D_v2.3.0\Box2D\Box2D\Common\b2Timer.h">
       <Filter>fmod</Filter>
     </ClInclude>
-    <ClInclude Include="UserData.h">
+    <ClInclude Include="source\UserData.h">
       <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>

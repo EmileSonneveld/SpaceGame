@@ -1,5 +1,6 @@
 #include "sltn.h"
 #include "UserData.h"
+#include "entityBase.h"
 #include <Box2D\Box2D.h>
 #include <iostream>
 
@@ -10,7 +11,25 @@ sltn::sltn() :m_world(new b2World(b2Vec2(0, 0)))   {
 	//auto dbg= m_world->DrawDebugData();
 	FmodStartup();
 }
+sltn::~sltn()
+{
+	ExcecuteDestroyPhysicsEntities();
+	delete m_world;
 
+
+	FMOD_RESULT      result;
+	for (auto soundPtr : m_Sounds){
+		result = soundPtr->release();
+		ERRCHECK(result);
+	}
+
+	result = system->close();
+	ERRCHECK(result);
+	result = system->release();
+	ERRCHECK(result);
+
+	Common_Close();
+}
 const sf::Texture& sltn::GetTexture(const std::string& path){
 	map<string, sf::Texture>::const_iterator it = m_SpriteMap.find(path); //map<string,sf::Texture>::const_iterator
 	if (it == m_SpriteMap.end()) {
@@ -80,6 +99,7 @@ void sltn::EnqueDestroyPhysicsEntity(b2Joint* body){
 	// b2Assert(ud);
 	// ( ud )->creator->nullB2Body();
 }
+
 void sltn::ExcecuteDestroyPhysicsEntities(){
 	assert(!m_world->IsLocked());
 	if (m_world->IsLocked())
@@ -380,23 +400,23 @@ int sltn::fmod_mainFunction()
 
 
 
-b2Vec2 to_b2Vec2(sf::Vector2<float>& vec){
+b2Vec2 to_b2Vec2(const sf::Vector2<float>& vec){
 	return b2Vec2(vec.x, vec.y);
 }
 
-b2Vec2 to_b2Vec2(sf::Vector2<int>& vec){
+b2Vec2 to_b2Vec2(const sf::Vector2<int>& vec){
 	return b2Vec2((float)vec.x, (float)vec.y);
 }
 
-b2Vec2 to_b2Vec2(sf::Vector2<unsigned int>& vec){
+b2Vec2 to_b2Vec2(const sf::Vector2<unsigned int>& vec){
 	return b2Vec2((float)vec.x, (float)vec.y);
 }
 
-b2Vec2 to_b2Vec2(unsigned int x, unsigned int y){
+b2Vec2 to_b2Vec2(const unsigned int x, unsigned int y){
 	return b2Vec2((float)x, (float)y);
 }
 
 
-sf::Vector2<float> to_Vector2(b2Vec2 vec){
+sf::Vector2<float> to_Vector2(const b2Vec2 vec){
 	return sf::Vector2<float>(vec.x, vec.y);
 }

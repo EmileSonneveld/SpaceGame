@@ -207,7 +207,7 @@
     <ClInclude Include="source\sltn.h" />
     <ClInclude Include="source\SpaceStation.h" />
     <ClInclude Include="source\SpriteAnimation.h" />
-    <ClInclude Include="UserData.h" />
+    <ClInclude Include="source\UserData.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

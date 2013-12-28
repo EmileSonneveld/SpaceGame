@@ -24,7 +24,7 @@ class SpriteAnimation;
 void AddThickLine(sf::VertexArray& vertices, const sf::Vector2f& point1, const sf::Vector2f& point2);
 bool AreLinqued(b2Body* bodyA, b2Body* bodyB);
 bool CCW(b2Vec2 p1, b2Vec2 p2, b2Vec2 p3);
-void ConnectTry(b2Body* bodyA, b2Body* bodyB); // Gameplay safties
+bool ConnectTry(b2Body* bodyA, b2Body* bodyB); // Gameplay safties
 bool ConnectBodys(b2Body* bodyA, b2Body* bodyB); // Just Do it!
 unsigned int CountJoints(b2Body* body);
 bool isIntersect(b2Vec2 p1, b2Vec2 p2, b2Vec2 q3, b2Vec2 q4);
@@ -78,7 +78,7 @@ public:
 		m_SpriteAnimationList.push_back(ptr);
 	}
 
-	int16 GetGroupForKind(Kind kind){
+	int16 GetGroupForKind(UserData::Kind kind){
 
 	}
 private:
@@ -101,8 +101,10 @@ private:
 			m_entities.push_back(ptr);
 		m_entitiesToAdd.clear();
 
-		for (auto ptr : m_BallsToAdd)
-			m_Balls.push_back(ptr);
+		for (auto ptr : m_BallsToAdd){
+		m_Balls.push_back(ptr);
+		this->ConnectWithOthers(ptr);
+	}
 		m_BallsToAdd.clear();
 	}
 	void ApplyRemoveFrom(){

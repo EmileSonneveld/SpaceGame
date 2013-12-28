@@ -11,7 +11,9 @@ Ball(pos, 4.0f), m_AnimationFlow(0), m_ShootTimer(0)
 	((UserData*)m_b2Body->GetUserData())->kind = UserData::player;
 	this->setTexture(sltn::getInst().GetTexture("resources/Wheatley.png"));
 
-	setFilterGroup(-2); // random number
+	m_b2Body->GetFixtureList()->SetFriction(0.9f);
+
+	setFilter(UserData::player, ~(UserData::player << 1));
 
 	Sprite::setScale(Sprite::getScale()*2.0f);
 }
@@ -19,8 +21,6 @@ Ball(pos, 4.0f), m_AnimationFlow(0), m_ShootTimer(0)
 
 Player::~Player()
 {
-	sltn::getInst().EnqueDestroyPhysicsEntity(m_b2Body);
-	m_b2Body = nullptr;
 }
 
 void Player::CustomStuff(float dt)
@@ -64,66 +64,50 @@ void Player::CustomStuff(float dt)
 	}
 
 
-	auto worldPos = sltn::getInst().GetMousePos();
+	auto targetPos = sltn::getInst().GetMousePos();
 	Gameplay& gp = Gameplay::getInst();
-	if (m_ShootTimer > 0.2f && sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+
+	if (m_ShootTimer > 0.05f && sf::Mouse::isButtonPressed(sf::Mouse::Left))	{
 		m_ShootTimer = 0;
 
+		Shoot(to_b2Vec2(targetPos), false);
+	}
 
+	if (m_ShootTimer > 0.2f && sf::Mouse::isButtonPressed(sf::Mouse::Middle)){
+		m_ShootTimer = 0;
 
-		// - sf::Vector2i( viewrect.x, viewrect.y);
-		auto force = to_b2Vec2(worldPos) - b2Vec2(gp.GetPlayerPos().x, gp.GetPlayerPos().y);
+		// Make a bullet that shoot against everything
+		auto force = to_b2Vec2(targetPos) - m_b2Body->GetPosition();
 		auto len = force.Length();
-		force.x /= len;
-		force.y /= len;
+		force.x /= len;  force.y /= len;
 		//force*=10.0f;
 
-		auto bullet = new Bullet(to_Vector2(gp.GetPlayerPos() + force)
+		auto bullet = new Bullet(to_Vector2(m_b2Body->GetPosition() + force)
 			, atan2(force.y, force.x), true);
-		bullet->setFilterGroup(this->getFilterGroup());
+		//bullet->setFilterGroup(this->getFilterGroup());
+		//bullet->setFilter(UserData::Enemy << 1, -1);
 		force *= 65000.0f;
 		bullet->GetB2Body()->ApplyForceToCenter(force);
-		//m_bulletVec.push_front(bullet);
+
 		gp.EnqueueAddToList(bullet);
-		//m_bulletVec.remove(bullet);
 	}
-	if (m_ShootTimer > 0.001f && sf::Mouse::isButtonPressed(sf::Mouse::Middle))
-	{
+
+	if (m_ShootTimer > 0.2f && sf::Mouse::isButtonPressed(sf::Mouse::Right)){
 		m_ShootTimer = 0;
 
-		// - sf::Vector2i( viewrect.x, viewrect.y);
-		auto force = to_b2Vec2(worldPos) - b2Vec2(gp.GetPlayerPos().x, gp.GetPlayerPos().y);
-		auto len = force.Length();
-		force.x /= len;
-		force.y /= len;
-		//force*=10.0f;
-
-		auto bullet = new Bullet(getPosition() + to_Vector2(force)
-			, atan2(force.y, force.x));
-		bullet->setFilterGroup(getFilterGroup());
-		force *= 45000.0f;
-		bullet->GetB2Body()->ApplyForceToCenter(force);
-		gp.EnqueueAddToList(bullet);
-		//m_bulletVec.push_front(bullet);
-		//m_bulletVec.remove(bullet);
-	}
-	if (m_ShootTimer > 0.05f && sf::Mouse::isButtonPressed(sf::Mouse::Right)){
-		m_ShootTimer = 0;
-
-		auto ball = new Ball(worldPos);
-		ball->setTexture(sltn::getInst().GetTexture("resources/blue-sphere_512.png"));
-		//m_Balls.push_back(ball);
+		auto ball = new Ball(targetPos);
+		//ball->setTexture(sltn::getInst().GetTexture("resources/blue-sphere_512.png"));
+		ball->setFilter(UserData::player, -1 & ~UserData::player);
 		gp.EnqueueAddToList(ball);
+		 
+		//gp.ConnectWithOthers(ball);
 		ConnectTry(this->GetB2Body(), ball->GetB2Body());
-		gp.ConnectWithOthers(ball);
+
 		// for (auto ball1 : m_Balls){
 		// 	if (ball1 == nullptr) continue;
 		// 	//if( ( (UserData*)ball1.GetB2Body()->GetUserData() )->isConectedToCluster == false ) continue;
 		// 	ConnectTry(ball1->GetB2Body(), m_Balls.back()->GetB2Body());
 		// }
-
-		//b2Body* bodyA= m_player.GetB2Body(); // m_playe
-		//b2Body* bodyB= m_Balls.back()->GetB2Body(); // ball
 
 	}
 }

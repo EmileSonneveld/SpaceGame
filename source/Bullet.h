@@ -20,7 +20,7 @@ public:
 private:
 	float m_damage;
 	float m_radius;
-	float m_lifeTime;
+	float m_lifeTime; // used two times
 
 	static FMOD::Sound* m_sound; // Shooting sound
 };

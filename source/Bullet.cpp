@@ -31,6 +31,7 @@ Bullet::Bullet(sf::Vector2f pos, float angle, bool useSound) : entityBase(), m_r
 	//shape.SetAsBox(m_radius/2,m_radius/2);
 	m_b2Body->CreateFixture(&shape, 1.0f);
 
+
 	setTexture(sltn::getInst().GetTexture("resources/bullet.png"));
 
 }
@@ -38,8 +39,7 @@ Bullet::Bullet(sf::Vector2f pos, float angle, bool useSound) : entityBase(), m_r
 
 Bullet::~Bullet()
 {
-	sltn::getInst().EnqueDestroyPhysicsEntity(m_b2Body);
-	m_b2Body = nullptr;
+	
 }
 
 void Bullet::DestroyBody()
@@ -51,6 +51,7 @@ void Bullet::DestroyBody()
 void Bullet::Tick(float dt) // 0.0166
 {
 
+	m_lifeTime -= dt;
 
 	if (m_b2Body){
 		auto pos = m_b2Body->GetPosition();
@@ -58,15 +59,22 @@ void Bullet::Tick(float dt) // 0.0166
 		float angle = 180.0f / 3.1415f*m_b2Body->GetTransform().q.GetAngle();
 		Sprite::setRotation(angle);
 
-		m_lifeTime -= dt;
-		if (m_lifeTime < 0)
+		if (m_lifeTime < 0){
 			DestroyBody();
+			m_lifeTime = 2;
+		}
 
 		if (rand() % 50 < 1){
 			auto spriteAnimation = new SpriteAnimation(getPosition(), false);
 			Gameplay::getInst().AddToList(spriteAnimation);
 		}
 
+	}
+	else{
+		if (m_lifeTime < 0){
+			Gameplay::getInst().EnqueueRemoveFromList(this);
+			m_lifeTime = 2;
+		}
 	}
 }
 

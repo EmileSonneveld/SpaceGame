@@ -10,14 +10,14 @@
 void Gameplay::RemoveFrom(entityBase* entity){
 	for (unsigned int i = 0; i < m_entities.size(); ++i){
 		if (m_entities[i] == entity) {
-			//delete m_entities[i];
+			delete m_entities[i];
 			m_entities[i] = nullptr;
 			return;
 		}
 	}
 	for (auto& ptr : m_Balls){
 		if (ptr == entity) {
-			//delete entity;
+			delete entity;
 			ptr = nullptr;
 			return;
 		}
@@ -36,11 +36,12 @@ void Gameplay::RemoveFrom(entityBase* entity){
 	//		return;
 	//	}
 	//}
-	//for( auto& ptr : m_bulletVec)
-	//    if( ptr == bal ) {
-	//        ptr= nullptr;
-	//        return;
-	//    }
+	for (auto& ptr : m_bulletVec){
+		if (ptr == entity) {
+			ptr = nullptr;
+			return;
+		}
+	}
 	//sltn::getInst().RemoveBody(entity.)
 }
 
@@ -51,14 +52,6 @@ m_player(Player(sf::Vector2f(50, 50)))
 {
 
 	m_Balls.reserve(3000);
-
-
-
-
-
-
-
-
 
 
 
@@ -99,11 +92,13 @@ m_player(Player(sf::Vector2f(50, 50)))
 
 Gameplay::~Gameplay()
 {
-	for (auto& ptr : m_Balls){
+	ApplyAddToQueue();
+	ApplyRemoveFrom();
+	for (auto& ptr : m_entities){
 		delete ptr;
 		ptr = nullptr;
 	}
-	for (auto& ptr : m_entities){
+	for (auto& ptr : m_Balls){
 		delete ptr;
 		ptr = nullptr;
 	}
@@ -115,6 +110,9 @@ Gameplay::~Gameplay()
 		delete ptr;
 		ptr = nullptr;
 	}
+	// To be sure
+	ApplyAddToQueue();
+	ApplyRemoveFrom();
 }
 
 
@@ -174,13 +172,44 @@ bool isIntersect(b2Vec2 p1, b2Vec2 p2, b2Vec2 q3, b2Vec2 q4) {
 }
 
 // recursevely infect te cluster
-void SpreadFilterGroup(b2Body* bodyA, int16 groupIndex){
-	if (bodyA->GetFixtureList()->GetFilterData().groupIndex == groupIndex) return;
-	bodyA->GetFixtureList()->SetFilterData(b2Filter(groupIndex));
+//void SpreadFilterGroup(b2Body* bodyA, int16 groupIndex){
+//	if (bodyA->GetFixtureList()->GetFilterData().groupIndex == groupIndex) return;
+//	bodyA->GetFixtureList()->SetFilterData(b2Filter(groupIndex));
+//
+//	for (auto joint = bodyA->GetJointList(); joint; joint = joint->next){
+//		SpreadFilterGroup(joint->other, groupIndex);
+//	}
+//}
+void SpreadFilterGroup(b2Body* bodyA, const int16 categoryBits, const int16 maskBits){
+	if (bodyA->GetFixtureList()->GetFilterData().categoryBits == categoryBits &&
+		bodyA->GetFixtureList()->GetFilterData().maskBits == maskBits) return;
+
+	b2Filter filter;
+	filter.categoryBits = categoryBits;
+	filter.maskBits = maskBits;
+	bodyA->GetFixtureList()->SetFilterData(filter);
 
 	for (auto joint = bodyA->GetJointList(); joint; joint = joint->next){
-		SpreadFilterGroup(joint->other, groupIndex);
+		SpreadFilterGroup(joint->other, categoryBits, maskBits);
 	}
+}
+
+// GameplayLogic
+bool ConnectTry(b2Body* bodyA, b2Body* bodyB){
+	if (bodyA == bodyB) return false;
+	if (!(bodyA && bodyB)) return false;
+
+	auto diffVec = (bodyA->GetPosition() - bodyB->GetPosition());
+	auto squared = diffVec.LengthSquared();
+	if (squared > Ball::semiGlobal_minDistanceSquared) return false;
+	if (squared<4)
+		return false;
+
+	if (CountJoints(bodyA) > 5) return false;
+	if (CountJoints(bodyB) > 5) return false;
+
+	ConnectBodys(bodyA, bodyB);
+	return true;
 }
 
 // engine Logic
@@ -195,8 +224,8 @@ bool ConnectBodys(b2Body* bodyA, b2Body* bodyB){
 	jd.bodyA = bodyA;
 	jd.bodyB = bodyB;
 	//jd.referenceAngle= std::atan2f(diffVec.y, diffVec.x); // radialen
-	jd.referenceAngle = bodyB->GetAngle();
-	//jd.localAnchorA.Set(0,0);//+sqrt(squared)/2);
+	jd.referenceAngle = -bodyB->GetAngle();
+	//jd.localAnchorA.Set(0, 0);//+sqrt(squared)/2);
 	jd.localAnchorB.Set(diffVec.x, diffVec.y);//-sqrt(squared)/2);
 	//jd.localAnchorA.Set(bodyB->GetPosition().x, bodyB->GetPosition().y);//+sqrt(squared)/2);
 	//jd.localAnchorB.Set(bodyA->GetPosition().x, bodyA->GetPosition().y);//-sqrt(squared)/2);
@@ -211,37 +240,41 @@ bool ConnectBodys(b2Body* bodyA, b2Body* bodyB){
 	//jd.enableMotor = true;
 	sltn::getInst().m_world->CreateJoint(&jd);
 
-
-
 	auto udA = (UserData*)(bodyA->GetUserData());
 	auto udB = (UserData*)(bodyB->GetUserData());
-	auto filterA = bodyA->GetFixtureList()->GetFilterData();
-	auto filterB = bodyB->GetFixtureList()->GetFilterData();
-
-	if (filterA.groupIndex != filterB.groupIndex) {
-		if (filterA.groupIndex != 0 && filterB.groupIndex != 0)
-			return false; // Both a different exotic value
-	}
-
-	if (filterA.groupIndex==0){
-		//udA->creator->setFilterGroup(filterB.groupIndex);
-		SpreadFilterGroup(bodyA, filterB.groupIndex);
-	}
-	else{
-		//udB->creator->setFilterGroup(filterA.groupIndex);
-		SpreadFilterGroup(bodyB, filterA.groupIndex);
-	}
 
 	(udA)->isConectedToCluster = true;
 	(udB)->isConectedToCluster = true;
+
+	return true;
+
+	auto filterA = bodyA->GetFixtureList()->GetFilterData();
+	auto filterB = bodyB->GetFixtureList()->GetFilterData();
+
+	//if (filterA.groupIndex != filterB.groupIndex) {
+	//	if (filterA.groupIndex != 0 && filterB.groupIndex != 0)
+	//		return false; // Both a different exotic value
+	//}
+
+	if (filterA.categoryBits == 0x1){
+		//udA->creator->setFilterGroup(filterB.groupIndex);
+		SpreadFilterGroup(bodyA, filterB.categoryBits, filterB.maskBits);
+	}
+	else{
+		//udB->creator->setFilterGroup(filterA.groupIndex);
+		//SpreadFilterGroup(bodyB, filterA.groupIndex);
+		SpreadFilterGroup(bodyB, filterA.categoryBits, filterA.maskBits);
+	}
+
 	return true;
 }
 
 
-void Gameplay::ConnectWithOthers(Ball* ballA)
+void Gameplay::ConnectWithOthers(Ball* ballNew)
 {
-	if (ballA == nullptr)return;
-	b2Body* bodyA = ballA->GetB2Body();
+	assert(ballNew);
+	//if (ballNew == nullptr)return;
+	b2Body* bodyA = ballNew->GetB2Body();
 	if (bodyA == nullptr)return;
 
 	for (auto ballB : m_Balls){
@@ -249,82 +282,62 @@ void Gameplay::ConnectWithOthers(Ball* ballA)
 		if (ballB == nullptr)continue;
 		b2Body* bodyB = ballB->GetB2Body();
 		if (bodyB == nullptr)continue;
-		auto diffVec = (bodyA->GetPosition() - bodyB->GetPosition());
-		auto squared = diffVec.LengthSquared();
 
-		//if( ((UserData*)bodyB->GetUserData() )->isConectedToCluster == true ) continue;
-
-		if (squared > Ball::semiGlobal_minDistanceSquared) continue;
-
-		auto chosenBody = ChosenBody(bodyA, bodyB, squared);
-		if (chosenBody.numOfJoints > 4) continue;
 
 		ConnectTry(bodyA, bodyB);
-		//chosenBodys.push_back(chosenBody);
 	}
 }
 
 
-bool Gameplay::TryConnect()
-{
+//bool Gameplay::TryConnect()
+//{
+//
+//
+//	vector<ChosenBody> chosenBodys;
+//	for (auto& ballA : m_Balls){
+//
+//		if (ballA == nullptr)continue;
+//		b2Body* bodyA = ballA->GetB2Body();
+//		if (bodyA == nullptr)continue;
+//
+//		if (((UserData*)bodyA->GetUserData())->isConectedToCluster != true) continue;
+//
+//		for (auto ballB : m_Balls){
+//
+//			if (ballB == nullptr)continue;
+//			b2Body* bodyB = ballB->GetB2Body();
+//			if (bodyB == nullptr)continue;
+//			auto diffVec = (bodyA->GetPosition() - bodyB->GetPosition());
+//			auto squared = diffVec.LengthSquared();
+//
+//			//if( ((UserData*)bodyB->GetUserData() )->isConectedToCluster == true ) continue;
+//
+//			if (squared > 50 && squared<30) continue;
+//
+//			auto chosenBody = ChosenBody(bodyA, bodyB, squared);
+//			if (chosenBody.numOfJoints >4) continue;
+//
+//			chosenBodys.push_back(chosenBody);
+//		}
+//	}
+//	if (chosenBodys.size() <= 0) return false;
+//
+//	// if( chosenBodys.size()<2 ) 
+//	float minDistance = 9999999.0f;
+//	ChosenBody cb = ChosenBody();
+//	for (auto chosenBody : chosenBodys)
+//	{
+//		auto distanceSqr = chosenBody.distanceSquared;
+//		if (distanceSqr < minDistance){
+//			minDistance = distanceSqr;
+//			cb = chosenBody;
+//		}
+//	}
+//	ConnectBodys(cb.bodyA, cb.bodyB);
+//	return true;
+//}
 
 
-	vector<ChosenBody> chosenBodys;
-	for (auto& ballA : m_Balls){
-
-		if (ballA == nullptr)continue;
-		b2Body* bodyA = ballA->GetB2Body();
-		if (bodyA == nullptr)continue;
-
-		if (((UserData*)bodyA->GetUserData())->isConectedToCluster != true) continue;
-
-		for (auto ballB : m_Balls){
-
-			if (ballB == nullptr)continue;
-			b2Body* bodyB = ballB->GetB2Body();
-			if (bodyB == nullptr)continue;
-			auto diffVec = (bodyA->GetPosition() - bodyB->GetPosition());
-			auto squared = diffVec.LengthSquared();
-
-			//if( ((UserData*)bodyB->GetUserData() )->isConectedToCluster == true ) continue;
-
-			if (squared > 50 && squared<30) continue;
-
-			auto chosenBody = ChosenBody(bodyA, bodyB, squared);
-			if (chosenBody.numOfJoints >4) continue;
-
-			chosenBodys.push_back(chosenBody);
-		}
-	}
-	if (chosenBodys.size() <= 0) return false;
-
-	// if( chosenBodys.size()<2 ) 
-	float minDistance = 9999999.0f;
-	ChosenBody cb = ChosenBody();
-	for (auto chosenBody : chosenBodys)
-	{
-		auto distanceSqr = chosenBody.distanceSquared;
-		if (distanceSqr < minDistance){
-			minDistance = distanceSqr;
-			cb = chosenBody;
-		}
-	}
-	ConnectBodys(cb.bodyA, cb.bodyB);
-	return true;
-}
-
-// GameplayLogic
-void ConnectTry(b2Body* bodyA, b2Body* bodyB){
-	if (!(bodyA && bodyB)) return;
-
-	auto diffVec = (bodyA->GetPosition() - bodyB->GetPosition());
-	auto squared = diffVec.LengthSquared();
-	if (squared > Ball::semiGlobal_minDistanceSquared) return;
-
-	if (CountJoints(bodyA) > 10) return;
-
-	ConnectBodys(bodyA, bodyB);
-}
 
 
 
@@ -378,7 +391,8 @@ void Gameplay::Tick(const float deltaTime)
 		object->Tick(deltaTime);
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-		TryConnect();
+		sf::sleep(sf::milliseconds(50));
+	//TryConnect();
 
 	ApplyRemoveFrom();
 	ApplyAddToQueue();
