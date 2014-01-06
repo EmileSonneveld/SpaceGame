@@ -4,6 +4,7 @@
 #include "Ball.h"
 #include "Bullet.h"
 #include "SpriteAnimation.h"
+#include "VertexFigure.h"
 //#include <math.h>
 
 
@@ -54,6 +55,7 @@ m_player(Player(sf::Vector2f(50, 50)))
 	m_Balls.reserve(3000);
 
 
+	m_entities.push_back(new VertexFigure(sf::Vector2f(10, 10)));
 
 	//texture.setRepeated(true); tiled
 	backgroundSpr.setTexture(sltn::getInst().GetTexture("resources/space.jpg"));
@@ -483,14 +485,15 @@ void Gameplay::Paint(sf::RenderWindow& window)
 
 
 	int counter = 0;
-	sf::VertexArray spriteVertexArray(sf::PrimitiveType::Quads, 4U * m_SpriteAnimationList.size());
+	//size_t 
+	sf::VertexArray spriteVertexArray(sf::PrimitiveType::Quads, (unsigned int)(4U * m_SpriteAnimationList.size()));
 
 	const sf::Texture* tex = nullptr;
 
 	for (auto& object : m_SpriteAnimationList){
 		if (object == nullptr) continue;
 		if (tex == nullptr) tex = object->getTexture();
-		float x = tex->getSize().y;
+		float x = (float)tex->getSize().y;
 		//window.draw(*object);
 		float s = 3.0f; // size
 		spriteVertexArray.append(sf::Vertex(object->getPosition() + sf::Vector2f(-s, -s), sf::Color::White, sf::Vector2f(0, 0)));

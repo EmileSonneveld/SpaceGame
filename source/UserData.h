@@ -17,7 +17,7 @@ struct UserData
 		SpriteAnimation = -0x0040,
 	};
 #ifdef _DEBUG
-	static const unsigned int magicSize = 8;
+	static const unsigned int magicSize = 11;
 	char memoryMagic[magicSize]; // view object in memory
 #endif
 	Kind kind;
@@ -33,4 +33,9 @@ struct UserData
 		memcpy(memoryMagic, "UserData ;)", magicSize);
 #endif
 	}
+
+private:
+	// Disabling default copy constructor and default assignment operator.
+	UserData(const UserData& yRef);
+	UserData& operator=(const UserData& yRef);
 };

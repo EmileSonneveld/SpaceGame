@@ -143,7 +143,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level2</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
@@ -174,6 +174,7 @@
     <ClCompile Include="source\sltn.cpp" />
     <ClCompile Include="source\SpaceStation.cpp" />
     <ClCompile Include="source\SpriteAnimation.cpp" />
+    <ClCompile Include="source\VertexFigure.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="libsndfile-1.dll" />
@@ -208,6 +209,7 @@
     <ClInclude Include="source\SpaceStation.h" />
     <ClInclude Include="source\SpriteAnimation.h" />
     <ClInclude Include="source\UserData.h" />
+    <ClInclude Include="source\VertexFigure.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

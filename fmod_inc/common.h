@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <math.h>
 
-#define NUM_COLUMNS 50
-#define NUM_ROWS 25
+#define NUM_COLUMNS 250
+#define NUM_ROWS 250
 
 enum Common_Button
 {
