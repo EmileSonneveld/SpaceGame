@@ -83,6 +83,8 @@ public:
 	}
 private:
 
+	void PaintGui(sf::RenderWindow& window);
+	sf::Font m_Font;
 
 	bool TryConnect();
 

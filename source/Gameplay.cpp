@@ -49,8 +49,10 @@ void Gameplay::RemoveFrom(entityBase* entity){
 Gameplay::Gameplay(void) :
 m_player(Player(sf::Vector2f(50, 50)))
 , m_View(sf::FloatRect(0, 0, 100, 60))
-, m_mouseTimer(0)
+, m_mouseTimer(0), m_Font()
 {
+
+	m_Font.loadFromFile("C:/Windows/Fonts/Arial.TTF");
 
 	m_Balls.reserve(3000);
 
@@ -422,10 +424,27 @@ void AddThickLine(sf::VertexArray& vertices, const sf::Vector2f& point1, const s
 	// vertices[2].position = point2 - offset;
 	// vertices[3].position = point1 - offset;
 }
+void Gameplay::PaintGui(sf::RenderWindow& window)
+{
+	window.setView(sf::View());
+
+	auto rect = sf::RectangleShape(sf::Vector2f(120, 50));
+	rect.setPosition(sf::Vector2f(5, 5));
+	rect.setFillColor(sf::Color::Blue);
+
+	window.draw(rect);
+
+	auto text = sf::Text("Hello world", m_Font, 30);
+	text.setPosition(rect.getPosition());
+	text.setColor(sf::Color(0, 0, 0));
+	window.draw(text);
+}
 
 void Gameplay::Paint(sf::RenderWindow& window)
 {
+
 	window.setView(m_View);
+
 
 	//sf::RenderTexture* texture= new sf::RenderTexture(); texture->create(4096, 2048);
 	window.draw(backgroundSpr);
@@ -512,4 +531,8 @@ void Gameplay::Paint(sf::RenderWindow& window)
 			window.draw(spriteVertexArray, rs);
 		}
 	}
+
+
+	PaintGui(window);
+
 }
