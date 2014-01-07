@@ -1,56 +1,30 @@
 #include "Gameplay.h"
-#include "Enemy.h"
-#include "SpaceStation.h"
+
 #include "Ball.h"
 #include "Bullet.h"
+#include "Enemy.h"
+#include "Player.h"
+#include "SpaceStation.h"
 #include "SpriteAnimation.h"
 #include "VertexFigure.h"
 //#include <math.h>
 
+Gameplay* Gameplay::instance = nullptr;
 
-void Gameplay::RemoveFrom(entityBase* entity){
-	for (unsigned int i = 0; i < m_entities.size(); ++i){
-		if (m_entities[i] == entity) {
-			delete m_entities[i];
-			m_entities[i] = nullptr;
-			return;
-		}
+Gameplay& Gameplay::getInst() // get the singleton reference
+	{
+		//static Gameplay    instance; // Guaranteed to be destroyed.
+		// Instantiated on first use.
+		if (instance == nullptr)instance = new Gameplay();
+		return *instance;
 	}
-	for (auto& ptr : m_Balls){
-		if (ptr == entity) {
-			delete entity;
-			ptr = nullptr;
-			return;
-		}
-	}
-	for (auto& ptr : m_SpriteAnimationList){
-		if (ptr == entity) {
-			//delete entity;
-			ptr = nullptr;
-			return;
-		}
-	}
-	//for (unsigned int i = 0; i < m_bulletVec.size(); ++i){
-	//	if (m_bulletVec[i] == entity) {
-	//		//delete m_bulletVec[i];
-	//		m_bulletVec[i] = nullptr;
-	//		return;
-	//	}
-	//}
-	for (auto& ptr : m_bulletVec){
-		if (ptr == entity) {
-			ptr = nullptr;
-			return;
-		}
-	}
-	//sltn::getInst().RemoveBody(entity.)
-}
 
 Gameplay::Gameplay(void) :
-m_player(Player(sf::Vector2f(50, 50)))
+m_player(nullptr)
 , m_View(sf::FloatRect(0, 0, 100, 60))
-, m_mouseTimer(0), m_Font()
+, m_mouseTimer(0), m_Font(), m_NrOfKills()
 {
+	m_player= new Player(sf::Vector2f(50, 50));
 
 	m_Font.loadFromFile("C:/Windows/Fonts/Arial.TTF");
 
@@ -121,8 +95,48 @@ Gameplay::~Gameplay()
 
 
 
+void Gameplay::RemoveFrom(entityBase* entity){
+	for (unsigned int i = 0; i < m_entities.size(); ++i){
+		if (m_entities[i] == entity) {
+			delete m_entities[i];
+			m_entities[i] = nullptr;
+			return;
+		}
+	}
+	for (auto& ptr : m_Balls){
+		if (ptr == entity) {
+			delete entity;
+			ptr = nullptr;
+			return;
+		}
+	}
+	for (auto& ptr : m_SpriteAnimationList){
+		if (ptr == entity) {
+			//delete entity;
+			ptr = nullptr;
+			return;
+		}
+	}
+	//for (unsigned int i = 0; i < m_bulletVec.size(); ++i){
+	//	if (m_bulletVec[i] == entity) {
+	//		//delete m_bulletVec[i];
+	//		m_bulletVec[i] = nullptr;
+	//		return;
+	//	}
+	//}
+	for (auto& ptr : m_bulletVec){
+		if (ptr == entity) {
+			ptr = nullptr;
+			return;
+		}
+	}
+	//sltn::getInst().RemoveBody(entity.)
+}
 
 
+b2Vec2 Gameplay::GetPlayerPos(){
+	return m_player->GetB2Body()->GetPosition();
+}
 
 bool AreLinqued(b2Body* bodyA, b2Body* bodyB)
 {
@@ -356,10 +370,10 @@ void Gameplay::ConnectWithOthers(Ball* ballNew)
 void Gameplay::Tick(const float deltaTime)
 {
 	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)){
-	//    if( m_player.GetB2Body() ==nullptr ) return;
+	//    if( m_player->GetB2Body() ==nullptr ) return;
 	//    sltn::getInst().m_world->DestroyJoint(
-	//        m_player.GetB2Body()->GetJointList()->joint);
-	//    m_player.GetB2Body()->GetJointList()->joint = nullptr;
+	//        m_player->GetB2Body()->GetJointList()->joint);
+	//    m_player->GetB2Body()->GetJointList()->joint = nullptr;
 	//}
 	m_mouseTimer += deltaTime;
 
@@ -376,7 +390,7 @@ void Gameplay::Tick(const float deltaTime)
 
 
 
-	m_player.Tick(deltaTime);
+	m_player->Tick(deltaTime);
 
 	for (auto& object : m_Balls)
 	if (object != nullptr)
@@ -401,7 +415,7 @@ void Gameplay::Tick(const float deltaTime)
 	ApplyRemoveFrom();
 	ApplyAddToQueue();
 
-	m_View.setCenter(m_player.getPosition());
+	m_View.setCenter(m_player->getPosition());
 }
 
 void AddThickLine(sf::VertexArray& vertices, const sf::Vector2f& point1, const sf::Vector2f& point2)
@@ -428,15 +442,20 @@ void Gameplay::PaintGui(sf::RenderWindow& window)
 {
 	window.setView(sf::View());
 
-	auto rect = sf::RectangleShape(sf::Vector2f(120, 50));
-	rect.setPosition(sf::Vector2f(5, 5));
+
+
+	auto text = sf::Text(sf::String((L"Nr of kills ")) + std::to_wstring(m_NrOfKills), m_Font, 30);
+	text.setPosition(sf::Vector2f(10, 10));
+	text.setColor(sf::Color(0, 0, 0));
+
+	auto marging = sf::Vector2f(5, 5);
+	auto rect = sf::RectangleShape(
+		sf::Vector2f(text.getGlobalBounds().width, text.getGlobalBounds().height)
+		+ marging*2.f);
+	rect.setPosition(text.getPosition() - marging);
 	rect.setFillColor(sf::Color::Blue);
 
 	window.draw(rect);
-
-	auto text = sf::Text("Hello world", m_Font, 30);
-	text.setPosition(rect.getPosition());
-	text.setColor(sf::Color(0, 0, 0));
 	window.draw(text);
 }
 
@@ -478,7 +497,7 @@ void Gameplay::Paint(sf::RenderWindow& window)
 	// BulletLines
 	//for( auto& object : m_bulletVec ){
 	//    vertexArray.append(sf::Vertex(
-	//        m_player.getPosition(), sf::Color::Yellow ));
+	//        m_player->getPosition(), sf::Color::Yellow ));
 	//    vertexArray.append(sf::Vertex(
 	//        object.getPosition(), sf::Color::Red ));
 	//}
@@ -497,7 +516,7 @@ void Gameplay::Paint(sf::RenderWindow& window)
 		window.draw(*object);
 
 
-	window.draw(m_player);
+	window.draw(*m_player);
 
 	for (auto object : m_bulletVec)
 		window.draw(*object);
@@ -534,5 +553,21 @@ void Gameplay::Paint(sf::RenderWindow& window)
 
 
 	PaintGui(window);
+	window.setView(m_View);
+}
 
+void Gameplay::MakeCircle(sf::Vector2f place, float len, float distance = Ball::semiGlobal_minDistance){
+	float pi = 3.14159265f;
+	float contour = 2.0f *len* pi;
+	for (float radial = 0; radial < 2.0f * pi; radial += 2.0f*pi / (contour / distance)){
+
+		auto pos = sf::Vector2f(len*cos(radial), len*sin(radial));
+		pos += place;
+		m_Balls.push_back(new Ball(pos));
+
+		for (auto ball1 : m_Balls){
+			// connect the last ball with the rest
+			ConnectTry(ball1->GetB2Body(), m_Balls.back()->GetB2Body());
+		}
+	}
 }

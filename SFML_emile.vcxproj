@@ -175,6 +175,7 @@
     <ClCompile Include="source\SpaceStation.cpp" />
     <ClCompile Include="source\SpriteAnimation.cpp" />
     <ClCompile Include="source\VertexFigure.cpp" />
+    <ClCompile Include="source\SpawnPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="libsndfile-1.dll" />
@@ -210,6 +211,7 @@
     <ClInclude Include="source\SpriteAnimation.h" />
     <ClInclude Include="source\UserData.h" />
     <ClInclude Include="source\VertexFigure.h" />
+    <ClInclude Include="source\SpawnPoint.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

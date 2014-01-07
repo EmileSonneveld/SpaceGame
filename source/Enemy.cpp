@@ -24,6 +24,7 @@ Enemy::~Enemy()
 {
 	sltn::getInst().EnqueDestroyPhysicsEntity(m_b2Body);
 	m_b2Body = nullptr;
+	Gameplay::getInst().AddKill();
 }
 
 

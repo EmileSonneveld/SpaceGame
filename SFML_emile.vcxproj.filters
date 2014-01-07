@@ -54,6 +54,9 @@
     <ClCompile Include="source\VertexFigure.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="source\SpawnPoint.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="libsndfile-1.dll">
@@ -149,6 +152,9 @@
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="source\VertexFigure.h">
+      <Filter>fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SpawnPoint.h">
       <Filter>fmod</Filter>
     </ClInclude>
   </ItemGroup>

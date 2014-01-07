@@ -17,5 +17,9 @@ public:
 private:
 	float m_AnimationFlow;
 	float m_ShootTimer;
+
+	// Disabling default copy constructor and default assignment operator.
+	Player(const Ball& yRef);
+	Player& operator=(const Player& yRef);
 };
 

@@ -1,22 +1,25 @@
 #pragma once
 
 class entityBase;
+
 class Ball;
-class Player;
-class Enemy;
 class Bullet;
+class Enemy;
+class Player;
 class SpaceStation;
 class SpriteAnimation;
+//class UserData;
 
 #include <SFML/Graphics.hpp>
-#include <iostream>
 
-#include "Player.h"
-#include "sltn.h"
+//#include "sltn.h"
 #include "entityBase.h"
 #include "UserData.h"
-#include <Box2D\Box2D.h>
+//#include <Box2D/Box2D.h>
+#include <Box2D/Common/b2Math.h>
+#include <Box2D/Dynamics/b2Body.h>
 
+#include <iostream>
 #include <vector>
 #include <forward_list>
 #include <list>
@@ -33,36 +36,20 @@ class Gameplay
 {
 
 public:
-	
+
 
 	void Tick(const float deltaTime);
 	void Paint(sf::RenderWindow& window);
 
-	
 
-	b2Vec2 GetPlayerPos(){
-		return m_player.GetB2Body()->GetPosition();
-	}
+
+	b2Vec2 GetPlayerPos();
 
 
 	void zoom(float delta){
 		m_View.setSize(m_View.getSize()*delta);
 	}
-	void MakeCircle(sf::Vector2f place, float len, float distance = Ball::semiGlobal_minDistance){
-		float pi = 3.14159265f;
-		float contour = 2.0f *len* pi;
-		for (float radial = 0; radial < 2.0f * pi; radial += 2.0f*pi / (contour / distance)){
-
-			auto pos = sf::Vector2f(len*cos(radial), len*sin(radial));
-			pos += place;
-			m_Balls.push_back(new Ball(pos));
-
-			for (auto ball1 : m_Balls){
-				// connect the last ball with the rest
-				ConnectTry(ball1->GetB2Body(), m_Balls.back()->GetB2Body());
-			}
-		}
-	}
+	void MakeCircle(sf::Vector2f place, float len, float distance );
 
 	void ConnectWithOthers(Ball* ballA);
 	void EnqueueRemoveFromList(entityBase* ptr){
@@ -81,15 +68,17 @@ public:
 	int16 GetGroupForKind(UserData::Kind kind){
 
 	}
-private:
+	void AddKill(){ ++m_NrOfKills; }
 
+private:
+	int m_NrOfKills;
 	void PaintGui(sf::RenderWindow& window);
 	sf::Font m_Font;
 
 	bool TryConnect();
 
 	sf::Sprite backgroundSpr;
-	Player m_player;
+	Player* m_player;
 	std::vector<entityBase*> m_entities;
 	std::vector<entityBase*> m_entitiesToAdd;
 	std::vector<entityBase*> m_entitiesRemoveFrom;
@@ -104,9 +93,9 @@ private:
 		m_entitiesToAdd.clear();
 
 		for (auto ptr : m_BallsToAdd){
-		m_Balls.push_back(ptr);
-		this->ConnectWithOthers(ptr);
-	}
+			m_Balls.push_back(ptr);
+			this->ConnectWithOthers(ptr);
+		}
 		m_BallsToAdd.clear();
 	}
 	void ApplyRemoveFrom(){
@@ -115,7 +104,7 @@ private:
 		}
 		m_entitiesRemoveFrom.clear();
 	}
-	
+
 	void RemoveFrom(entityBase* entity);
 	// std::vector<Enemy*> m_EnemyVec;
 
@@ -133,16 +122,10 @@ private:
 public:
 	~Gameplay(void);
 
-	static Gameplay& getInst() // get the singleton reference
-	{
-		static Gameplay    instance; // Guaranteed to be destroyed.
-		// Instantiated on first use.
-		return instance;
-	}
+	static Gameplay& getInst(); // get the singleton reference
 
 private:
 	Gameplay(void); //:m_player(sf::Vector2f(50,50)){}
-
-
+	static Gameplay*    instance;
 };
 

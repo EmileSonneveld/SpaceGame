@@ -4,7 +4,9 @@ class b2Body;
 class b2Joint;
 class b2World;
 
-#include <SFML/Graphics.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics/texture.hpp>
+
 #include <Box2D\Common\b2Math.h>
 #include <string>
 #include <map>

@@ -1,17 +1,13 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "Ball.h"
-#include "Player.h"
-#include "sltn.h"
 #include <Box2D\Box2D.h>
 #include <vector>
 #include "main.h"
-#include "Bullet.h"
 #include "MyWorldCallbacks.hpp"
 #include "Gameplay.h"
+#include "sltn.h"
 
 using namespace std;
-
 
 int main(int argc, const char* argv[])
 {

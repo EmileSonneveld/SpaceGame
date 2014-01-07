@@ -3,7 +3,7 @@
 #include <Box2D\Box2D.h>
 #include "main.h"
 #include "Gameplay.h"
-
+#include "Bullet.h"
 
 Player::Player(sf::Vector2f pos) :
 Ball(pos, 4.0f), m_AnimationFlow(0), m_ShootTimer(0)
