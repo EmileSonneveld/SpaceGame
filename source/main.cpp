@@ -7,19 +7,26 @@
 #include "Gameplay.h"
 #include "sltn.h"
 
-using namespace std;
+//using namespace std;
 
 int main(int argc, const char* argv[])
 {
+#ifdef DEBUG
 	// _crtBreakAlloc= 161;
 	_CrtSetBreakAlloc(1);
-
+#endif
 
 	//auto g_mainClass= new MainClass();
-	auto g_mainClass = new MainClass();
-	g_mainClass->gameLoop();
+	auto mainClass = new MainClass();
+	mainClass->gameLoop();
 
-	_CrtDumpMemoryLeaks();
+	// Delete singletons to exit grasefully
+	delete &Gameplay::getInst();
+	delete &sltn::getInst();
+
+#ifdef DEBUG
+//	_CrtDumpMemoryLeaks();
+#endif
 }
 
 MainClass::MainClass() :

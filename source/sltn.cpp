@@ -5,6 +5,7 @@
 #include <iostream>
 
 //void DrawShape(b2Fixture* fixture, const b2Transform& xf, const b2Color& color);
+sltn* sltn::instance = nullptr;
 
 sltn::sltn() :m_world(new b2World(b2Vec2(0, 0)))   {
 	//m_world = new b2World(b2Vec2(0,0));
@@ -29,6 +30,7 @@ sltn::~sltn()
 	ERRCHECK(result);
 
 	Common_Close();
+	instance = nullptr;
 }
 const sf::Texture& sltn::GetTexture(const std::string& path){
 	map<string, sf::Texture>::const_iterator it = m_SpriteMap.find(path); //map<string,sf::Texture>::const_iterator

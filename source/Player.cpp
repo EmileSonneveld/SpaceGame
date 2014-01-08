@@ -8,7 +8,10 @@
 Player::Player(sf::Vector2f pos) :
 Ball(pos, 4.0f), m_AnimationFlow(0), m_ShootTimer(0)
 {
-	((UserData*)m_b2Body->GetUserData())->kind = UserData::player;
+	auto ud = (UserData*)m_b2Body->GetUserData();
+	ud->kind = UserData::player;
+	ud->isCore = true;
+
 	this->setTexture(sltn::getInst().GetTexture("resources/Wheatley.png"));
 
 	m_b2Body->GetFixtureList()->SetFriction(0.9f);
@@ -23,7 +26,7 @@ Player::~Player()
 {
 }
 
-void Player::CustomStuff(float dt)
+void Player::CustomTick(float dt)
 {
 	m_ShootTimer += dt;
 

@@ -8,6 +8,7 @@ class Enemy;
 class Player;
 class SpaceStation;
 class SpriteAnimation;
+class SpawnPoint;
 //class UserData;
 
 #include <SFML/Graphics.hpp>
@@ -55,11 +56,11 @@ public:
 	void EnqueueRemoveFromList(entityBase* ptr){
 		m_entitiesRemoveFrom.push_back(ptr);
 	}
-	void EnqueueAddToList(entityBase* ptr){
-		m_entitiesToAdd.push_back(ptr);
-	}
 	void EnqueueAddToList(Ball* ptr){
 		m_BallsToAdd.push_back(ptr);
+	}
+	void EnqueueAddToList(entityBase* ptr){
+		m_entitiesToAdd.push_back(ptr);
 	}
 	void AddToList(SpriteAnimation* ptr){
 		m_SpriteAnimationList.push_back(ptr);
@@ -86,6 +87,8 @@ private:
 	std::vector<Ball*> m_BallsToAdd;
 	std::forward_list<Bullet*> m_bulletVec;
 	std::vector<SpriteAnimation*> m_SpriteAnimationList;
+
+	std::vector<SpawnPoint*> m_SpawnPointVec;
 
 	void ApplyAddToQueue(){
 		for (auto ptr : m_entitiesToAdd)

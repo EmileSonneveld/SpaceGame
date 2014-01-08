@@ -7,27 +7,29 @@
 #include "SpaceStation.h"
 #include "SpriteAnimation.h"
 #include "VertexFigure.h"
+#include "SpawnPoint.h"
 //#include <math.h>
 
 Gameplay* Gameplay::instance = nullptr;
 
 Gameplay& Gameplay::getInst() // get the singleton reference
-	{
-		//static Gameplay    instance; // Guaranteed to be destroyed.
-		// Instantiated on first use.
-		if (instance == nullptr)instance = new Gameplay();
-		return *instance;
-	}
+{
+	//static Gameplay    instance; // Guaranteed to be destroyed.
+	// Instantiated on first use.
+	if (instance == nullptr)instance = new Gameplay();
+	return *instance;
+}
 
 Gameplay::Gameplay(void) :
 m_player(nullptr)
 , m_View(sf::FloatRect(0, 0, 100, 60))
 , m_mouseTimer(0), m_Font(), m_NrOfKills()
 {
-	m_player= new Player(sf::Vector2f(50, 50));
+	m_player = new Player(sf::Vector2f(70, 50));
 
 	m_Font.loadFromFile("C:/Windows/Fonts/Arial.TTF");
 
+	m_SpawnPointVec.reserve(5);
 	m_Balls.reserve(3000);
 
 
@@ -45,19 +47,7 @@ m_player(nullptr)
 	m_entities.push_back(new SpaceStation(sf::Vector2f(300, 40)));
 
 	const unsigned int arrSize = 2;
-	Enemy* arr[3];
-	arr[0] = new Enemy(sf::Vector2f(500, 300));
-	arr[1] = new Enemy(sf::Vector2f(180, 50));
-	//arr[2] = new Enemy(sf::Vector2f(200, 200));
-	m_Balls.push_back(arr[0]);
-	m_Balls.push_back(arr[1]);
-	//m_Balls.push_back(arr[2]);
-
-	for (int i = 0; i < arrSize; ++i){
-		MakeCircle(arr[i]->getPosition(), 6, 3);
-		MakeCircle(arr[i]->getPosition(), 7, 3);
-	}
-
+	m_SpawnPointVec.push_back(new SpawnPoint(sf::Vector2f(50, 50)));
 
 	// sf::Vector2f place(20.0f, 20.0f);
 	// for (float len = 7.0f; len < 25; len += 3.0f){
@@ -91,6 +81,7 @@ Gameplay::~Gameplay()
 	// To be sure
 	ApplyAddToQueue();
 	ApplyRemoveFrom();
+	instance = nullptr;
 }
 
 
@@ -198,13 +189,15 @@ bool isIntersect(b2Vec2 p1, b2Vec2 p2, b2Vec2 q3, b2Vec2 q4) {
 //		SpreadFilterGroup(joint->other, groupIndex);
 //	}
 //}
-void SpreadFilterGroup(b2Body* bodyA, const int16 categoryBits, const int16 maskBits){
-	if (bodyA->GetFixtureList()->GetFilterData().categoryBits == categoryBits &&
-		bodyA->GetFixtureList()->GetFilterData().maskBits == maskBits) return;
+void SpreadFilterGroup(b2Body* bodyA, const uint16 categoryBits, const uint16 maskBits){
+	b2Filter filter = bodyA->GetFixtureList()->GetFilterData();
+	if (filter.categoryBits == categoryBits &&
+		filter.maskBits == maskBits) return;
 
-	b2Filter filter;
+	
 	filter.categoryBits = categoryBits;
 	filter.maskBits = maskBits;
+
 	bodyA->GetFixtureList()->SetFilterData(filter);
 
 	for (auto joint = bodyA->GetJointList(); joint; joint = joint->next){
@@ -264,7 +257,7 @@ bool ConnectBodys(b2Body* bodyA, b2Body* bodyB){
 	(udA)->isConectedToCluster = true;
 	(udB)->isConectedToCluster = true;
 
-	return true;
+	//return true;
 
 	auto filterA = bodyA->GetFixtureList()->GetFilterData();
 	auto filterB = bodyB->GetFixtureList()->GetFilterData();
@@ -376,6 +369,9 @@ void Gameplay::Tick(const float deltaTime)
 	//    m_player->GetB2Body()->GetJointList()->joint = nullptr;
 	//}
 	m_mouseTimer += deltaTime;
+
+	for (auto ptr : m_SpawnPointVec)
+		ptr->Tick(deltaTime);
 
 	// m_View.setSize((float)sltn::getInst().m_ScreenSize.x,(float)sltn::getInst().m_ScreenSize.y);
 
@@ -566,6 +562,7 @@ void Gameplay::MakeCircle(sf::Vector2f place, float len, float distance = Ball::
 		m_Balls.push_back(new Ball(pos));
 
 		for (auto ball1 : m_Balls){
+			if (ball1 == nullptr) continue;
 			// connect the last ball with the rest
 			ConnectTry(ball1->GetB2Body(), m_Balls.back()->GetB2Body());
 		}

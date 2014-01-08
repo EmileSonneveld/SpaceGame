@@ -32,6 +32,7 @@ Ball::Ball(sf::Vector2f pos, float radius) : entityBase(), m_lives(100.0f), m_ra
 	fixtureDef.shape = &shape;
 	//fixtureDef.friction = 0;
 	fixtureDef.density = 1;
+	fixtureDef.restitution = 0.8;
 	//fixtureDef.filter.groupIndex = 0;
 	m_b2Body->CreateFixture(&fixtureDef);
 
@@ -41,7 +42,7 @@ Ball::Ball(sf::Vector2f pos, float radius) : entityBase(), m_lives(100.0f), m_ra
 	//setFilter(UserData::player, -1 & ~(UserData::ball | UserData::player) );
 
 	Sprite::setPosition(pos.x, pos.y);
-	if (getTexture()==nullptr)
+	if (getTexture() == nullptr)
 		setTexture(sltn::getInst().GetTexture("resources/blue-sphere_512.png")); //Exp_yellow_maya blue-sphere_512
 }
 
@@ -54,11 +55,12 @@ Ball::~Ball()
 
 void Ball::Tick(float dt) // 0.0166
 {
-	CustomStuff(dt);
-
-
+	CustomTick(dt);
 	if (m_b2Body) // Sync body to sprite
 	{
+		auto filter = m_b2Body->GetFixtureList()->GetFilterData();
+		Sprite::setColor(sf::Color(filter.categoryBits * 50 % 255, filter.maskBits % 255, 0));
+
 		auto pos = m_b2Body->GetPosition();
 		Sprite::setPosition(pos.x, pos.y);
 
@@ -113,6 +115,7 @@ void Ball::Shoot(const b2Vec2 target, bool ai)
 
 	auto force = target - m_b2Body->GetPosition();
 	auto len = force.Length();
+
 	if (ai && len > 100) return; // shoot only is in range
 
 	force.x /= len;  force.y /= len;
@@ -121,7 +124,13 @@ void Ball::Shoot(const b2Vec2 target, bool ai)
 	auto bullet = new Bullet(to_Vector2(m_b2Body->GetPosition() + force)
 		, atan2(force.y, force.x), false);
 	//bullet->setFilterGroup(this->getFilterGroup());
-	bullet->setFilter(~(m_b2Body->GetFixtureList()->GetFilterData().maskBits), m_b2Body->GetFixtureList()->GetFilterData().maskBits); // UserData::Enemy << 1
+	auto filter = m_b2Body->GetFixtureList()->GetFilterData();
+	// Bullet is another category and will not collide with its creator's category
+	bullet->setFilter(
+		filter.categoryBits << 1,
+		~filter.categoryBits
+		);
+
 	force *= 65000.0f;
 	bullet->GetB2Body()->ApplyForceToCenter(force);
 

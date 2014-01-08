@@ -11,7 +11,7 @@ public:
 	virtual ~Enemy();
 
 	//virtual void draw(RenderTarget& target, RenderStates states) const;
-	virtual void CustomStuff(float dt); // Inherited object can implement stuff each Tick;
+	virtual void CustomTick(float dt); // Inherited object can implement stuff each Tick;
 
 private:
 	//b2Vec2 target;

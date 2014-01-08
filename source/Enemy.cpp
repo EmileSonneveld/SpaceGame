@@ -8,14 +8,21 @@
 Enemy::Enemy(sf::Vector2f pos) :
 Ball(pos, 5.0f), m_ShootTimer(0), m_isBursting(false), m_burstTimer(0), m_chasingPlayer(false)
 {
-	((UserData*)m_b2Body->GetUserData())->kind = UserData::Enemy;
-	this->setTexture(sltn::getInst().GetTexture("resources/Wheatley.png"));
+	//((UserData*)m_b2Body->GetUserData())->kind = UserData::Enemy;
+	auto ud = (UserData*)m_b2Body->GetUserData();
+	ud->kind = UserData::Enemy;
+	ud->isCore = true;
 
+	this->setTexture(sltn::getInst().GetTexture("resources/Wheatley.png"));
+	
 	//setFilterGroup(-3); // random number
 	//setFilter(UserData::Enemy, UserData::ball | UserData::player | UserData::Enemy);
 	//setFilter(UserData::Enemy, -1 & ~UserData::Enemy);
 	setFilter(UserData::Enemy, ~(UserData::Enemy << 1));
 	Sprite::setScale(Sprite::getScale()*2.0f);
+
+	Gameplay::getInst().MakeCircle(pos, 6, 3);
+	Gameplay::getInst().MakeCircle(pos, 7, 3);
 }
 
 
@@ -29,7 +36,7 @@ Enemy::~Enemy()
 
 
 
-void Enemy::CustomStuff(float dt)
+void Enemy::CustomTick(float dt)
 {
 	if (!m_chasingPlayer){
 		auto force = Gameplay::getInst().GetPlayerPos() - m_b2Body->GetPosition();
@@ -58,8 +65,6 @@ void Enemy::CustomStuff(float dt)
 		//	m_isBursting = true;
 		//
 	}
-
-
 
 
 	int nrOfFrames = 3; // 19

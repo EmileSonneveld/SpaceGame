@@ -7,6 +7,7 @@
 #include "Gameplay.h"
 #include "sltn.h"
 #include "Enemy.h"
+#include "Bullet.h"
 
 class MyContactListener : public b2ContactListener
 
@@ -35,7 +36,7 @@ public:
 	void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
 	{ /* handle post-solve event */
 		//return;
-		if (*impulse->normalImpulses > 170.0f)
+		if (*impulse->normalImpulses > 120.0f)
 		{
 			// Detroy stuff
 			auto udA = (UserData*)contact->GetFixtureA()->GetBody()->GetUserData();
@@ -64,13 +65,17 @@ public:
 
 
 				if (udA->kind == UserData::Enemy) {
-					((Enemy*)udA->creator)->DoDammage(5);
-					sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureB()->GetBody());
+					auto bullet = ((Bullet*)udB->creator);
+					((Ball*)udA->creator)->DoDammage(bullet->GetDammage());
+					bullet->StartToDie();
+					//sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureB()->GetBody());
 				}
 
 				if (udB->kind == UserData::Enemy) {
-					((Enemy*)udB->creator)->DoDammage(5);
-					sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
+					auto bullet = ((Bullet*)udA->creator);
+					((Ball*)udB->creator)->DoDammage(bullet->GetDammage());
+					bullet->StartToDie();
+					//sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
 				}
 
 			}

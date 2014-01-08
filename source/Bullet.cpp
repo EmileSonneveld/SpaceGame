@@ -7,7 +7,7 @@
 
 FMOD::Sound* Bullet::m_sound = nullptr;
 
-Bullet::Bullet(sf::Vector2f pos, float angle, bool useSound) : entityBase(), m_radius(2.0f), m_damage(40.0), m_lifeTime(5)
+Bullet::Bullet(sf::Vector2f pos, float angle, bool useSound) : entityBase(), m_radius(2.0f), m_damage(20.0), m_lifeTime(5)
 {
 	setPosition(pos);
 	if (useSound){

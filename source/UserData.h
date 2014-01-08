@@ -14,6 +14,7 @@ struct UserData
 		bullet = 0x0008,
 		ball = 0x0001,
 		Enemy = 0x0010,
+		Enemy2 = 0x0020,
 		SpriteAnimation = -0x0040,
 	};
 #ifdef _DEBUG
@@ -21,12 +22,14 @@ struct UserData
 	char memoryMagic[magicSize]; // view object in memory
 #endif
 	Kind kind;
+	bool isCore;
 	bool isConectedToCluster;
 	//unsigned int clusterNumber;
 	entityBase *const creator;
 	unsigned int cluster;
 
-	UserData(entityBase* cr, Kind knd = UserData::unspecified) : creator(cr), isConectedToCluster(false), kind(knd)
+	UserData(entityBase* cr, Kind knd = UserData::unspecified) : creator(cr), 
+		isConectedToCluster(false), kind(knd), isCore(false)
 	{
 		//typeid(isConectedToCluster).raw_name();
 #ifdef _DEBUG

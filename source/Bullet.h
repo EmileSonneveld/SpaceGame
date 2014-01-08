@@ -16,7 +16,8 @@ public:
 	void DestroyBody();
 
 	void setTexture(const sf::Texture& texture, bool resetRect = false); // bevat extras
-
+	float GetDammage(){ return m_damage; }
+	void StartToDie(){ m_lifeTime = 0; }
 private:
 	float m_damage;
 	float m_radius;

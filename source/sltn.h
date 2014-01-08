@@ -32,14 +32,16 @@ public:
 	sf::Vector2u m_ScreenSize; // evil
 	b2World * const m_world;
 
-
+private:
+	static sltn*    instance;
 public:
 	// sltn::getInst().
 	static sltn& getInst() // get the singleton reference
 	{
-		static sltn    instance; // Guaranteed to be destroyed.
+		//static sltn    instance; // Guaranteed to be destroyed.
 		// Instantiated on first use.
-		return instance;
+		if (instance == nullptr) instance = new sltn();
+		return *instance;
 	}
 	
 		~sltn();
