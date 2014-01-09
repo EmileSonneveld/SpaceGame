@@ -17,12 +17,13 @@ class b2World;
 
 using namespace std;
 
-b2Vec2 to_b2Vec2(const sf::Vector2<float>& vec);
+b2Vec2 to_b2Vec2(const sf::Vector2f& vec);
 b2Vec2 to_b2Vec2(const sf::Vector2<int>& vec);
 b2Vec2 to_b2Vec2(const sf::Vector2<unsigned int>& vec);
 b2Vec2 to_b2Vec2(const unsigned int x, const unsigned int y);
 sf::Vector2<float> to_Vector2(const b2Vec2 vec);
 
+std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems);
 
 // Singleton
 class sltn // final 

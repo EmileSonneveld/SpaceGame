@@ -32,7 +32,7 @@ Ball::Ball(sf::Vector2f pos, float radius) : entityBase(), m_lives(100.0f), m_ra
 	fixtureDef.shape = &shape;
 	//fixtureDef.friction = 0;
 	fixtureDef.density = 1;
-	fixtureDef.restitution = 0.8;
+	//fixtureDef.restitution = 0.1;
 	//fixtureDef.filter.groupIndex = 0;
 	m_b2Body->CreateFixture(&fixtureDef);
 

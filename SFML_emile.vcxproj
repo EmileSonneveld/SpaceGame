@@ -162,6 +162,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\BgElement.cpp" />
     <ClCompile Include="source\entityBase.cpp" />
     <ClCompile Include="fmod_inc\common.cpp" />
     <ClCompile Include="fmod_inc\common_platform.cpp" />
@@ -171,6 +172,7 @@
     <ClCompile Include="source\Bullet.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\Player.cpp" />
+    <ClCompile Include="source\pugiXml\pugixml.cpp" />
     <ClCompile Include="source\sltn.cpp" />
     <ClCompile Include="source\SpaceStation.cpp" />
     <ClCompile Include="source\SpriteAnimation.cpp" />
@@ -182,6 +184,7 @@
     <None Include="openal32.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\BgElement.h" />
     <ClInclude Include="Box2D_v2.3.0\Box2D\Box2D\Common\b2BlockAllocator.h" />
     <ClInclude Include="Box2D_v2.3.0\Box2D\Box2D\Common\b2Draw.h" />
     <ClInclude Include="Box2D_v2.3.0\Box2D\Box2D\Common\b2GrowableStack.h" />
@@ -199,6 +202,7 @@
     <ClInclude Include="fmod_inc\fmod_errors.h" />
     <ClInclude Include="fmod_inc\fmod_output.h" />
     <ClInclude Include="source\Enemy.h" />
+    <ClInclude Include="source\GameDefines.h" />
     <ClInclude Include="source\Gameplay.h" />
     <ClInclude Include="source\Ball.h" />
     <ClInclude Include="source\Bullet.h" />
@@ -206,6 +210,8 @@
     <ClInclude Include="source\main.h" />
     <ClInclude Include="source\MyWorldCallbacks.hpp" />
     <ClInclude Include="source\Player.h" />
+    <ClInclude Include="source\pugiXml\pugiconfig.hpp" />
+    <ClInclude Include="source\pugiXml\pugixml.hpp" />
     <ClInclude Include="source\sltn.h" />
     <ClInclude Include="source\SpaceStation.h" />
     <ClInclude Include="source\SpriteAnimation.h" />

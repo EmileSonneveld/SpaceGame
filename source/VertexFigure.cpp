@@ -8,7 +8,6 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <sstream>
 
 VertexFigure::VertexFigure(sf::Vector2f pos) : entityBase(), m_va(sf::VertexArray(sf::PrimitiveType::Quads))
 {
@@ -108,15 +107,7 @@ void VertexFigure::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 using namespace sf;
 
-std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
-	elems.clear();
-	std::stringstream ss(s);
-	std::string item;
-	while (std::getline(ss, item, delim)) {
-		elems.push_back(item);
-	}
-	return elems;
-}
+
 
 // Copied and refactored from c#
 void VertexFigure::Load()

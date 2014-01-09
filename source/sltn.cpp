@@ -3,6 +3,7 @@
 #include "entityBase.h"
 #include <Box2D\Box2D.h>
 #include <iostream>
+#include <sstream>
 
 //void DrawShape(b2Fixture* fixture, const b2Transform& xf, const b2Color& color);
 sltn* sltn::instance = nullptr;
@@ -402,7 +403,7 @@ int sltn::fmod_mainFunction()
 
 
 
-b2Vec2 to_b2Vec2(const sf::Vector2<float>& vec){
+b2Vec2 to_b2Vec2(const sf::Vector2f& vec){
 	return b2Vec2(vec.x, vec.y);
 }
 
@@ -421,4 +422,15 @@ b2Vec2 to_b2Vec2(const unsigned int x, unsigned int y){
 
 sf::Vector2<float> to_Vector2(const b2Vec2 vec){
 	return sf::Vector2<float>(vec.x, vec.y);
+}
+
+
+std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
+	elems.clear();
+	std::stringstream ss(s);
+	std::string item;
+	while (std::getline(ss, item, delim)) {
+		elems.push_back(item);
+	}
+	return elems;
 }

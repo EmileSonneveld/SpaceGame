@@ -11,6 +11,8 @@ class SpriteAnimation;
 class SpawnPoint;
 //class UserData;
 
+class BgElement;
+
 #include <SFML/Graphics.hpp>
 
 //#include "sltn.h"
@@ -19,6 +21,8 @@ class SpawnPoint;
 //#include <Box2D/Box2D.h>
 #include <Box2D/Common/b2Math.h>
 #include <Box2D/Dynamics/b2Body.h>
+
+#include "GameDefines.h"
 
 #include <iostream>
 #include <vector>
@@ -32,6 +36,8 @@ bool ConnectTry(b2Body* bodyA, b2Body* bodyB); // Gameplay safties
 bool ConnectBodys(b2Body* bodyA, b2Body* bodyB); // Just Do it!
 unsigned int CountJoints(b2Body* body);
 bool isIntersect(b2Vec2 p1, b2Vec2 p2, b2Vec2 q3, b2Vec2 q4);
+bool FileExists(const string& filename);
+bool FileExists(const wstring& filename);
 
 class Gameplay
 {
@@ -42,7 +48,7 @@ public:
 	void Tick(const float deltaTime);
 	void Paint(sf::RenderWindow& window);
 
-
+	void LoadInktscapeFile(char* HitregionsFile);
 
 	b2Vec2 GetPlayerPos();
 
@@ -58,6 +64,7 @@ public:
 	}
 	void EnqueueAddToList(Ball* ptr){
 		m_BallsToAdd.push_back(ptr);
+		this->ConnectWithOthers(ptr);
 	}
 	void EnqueueAddToList(entityBase* ptr){
 		m_entitiesToAdd.push_back(ptr);
@@ -78,6 +85,8 @@ private:
 
 	bool TryConnect();
 
+	std::vector<sf::Drawable*> m_BgElements;
+
 	sf::Sprite backgroundSpr;
 	Player* m_player;
 	std::vector<entityBase*> m_entities;
@@ -97,7 +106,6 @@ private:
 
 		for (auto ptr : m_BallsToAdd){
 			m_Balls.push_back(ptr);
-			this->ConnectWithOthers(ptr);
 		}
 		m_BallsToAdd.clear();
 	}

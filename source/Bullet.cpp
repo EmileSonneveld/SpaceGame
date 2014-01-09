@@ -25,11 +25,17 @@ Bullet::Bullet(sf::Vector2f pos, float angle, bool useSound) : entityBase(), m_r
 	bd.userData = ud;
 	m_b2Body = sltn::getInst().m_world->CreateBody(&bd);
 	m_b2Body->SetTransform(to_b2Vec2(pos), angle); // b2Vec2()
+
 	b2CircleShape shape;
 	shape.m_radius = m_radius / 2;
-	//b2PolygonShape shape;
-	//shape.SetAsBox(m_radius/2,m_radius/2);
-	m_b2Body->CreateFixture(&shape, 1.0f);
+
+	b2FixtureDef fixtureDef;
+	fixtureDef.shape = &shape;
+	//fixtureDef.friction = 0;
+	fixtureDef.density = 1;
+	fixtureDef.restitution = 0.5;
+	//fixtureDef.filter.groupIndex = 0;
+	m_b2Body->CreateFixture(&fixtureDef);
 
 
 	setTexture(sltn::getInst().GetTexture("resources/bullet.png"));

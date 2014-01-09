@@ -8,6 +8,10 @@
 #include "SpriteAnimation.h"
 #include "VertexFigure.h"
 #include "SpawnPoint.h"
+
+#include "BgElement.h"
+#include "pugiXml\pugixml.hpp"
+//using namespace pugi;
 //#include <math.h>
 
 Gameplay* Gameplay::instance = nullptr;
@@ -54,7 +58,7 @@ m_player(nullptr)
 	// 	MakeCircle(place, len);
 	// }
 
-
+	LoadInktscapeFile(("resources/LevelFile.svg"));
 }
 
 
@@ -180,6 +184,21 @@ bool isIntersect(b2Vec2 p1, b2Vec2 p2, b2Vec2 q3, b2Vec2 q4) {
 	// (Fx - Ex)(Qy - Fy) - (Fy - Ey)(Qx - Fx);
 }
 
+bool FileExists(const string& filename)
+{
+	if (ifstream(filename.c_str())){ //openFile
+		return true;
+	}
+	return false; // openFile zit in de stack en word dus nu gedelete
+}
+bool FileExists(const wstring& filename)
+{
+	if (wifstream(filename.c_str())){ //openFile
+		return true;
+	}
+	return false; // openFile zit in de stack en word dus nu gedelete
+}
+
 // recursevely infect te cluster
 //void SpreadFilterGroup(b2Body* bodyA, int16 groupIndex){
 //	if (bodyA->GetFixtureList()->GetFilterData().groupIndex == groupIndex) return;
@@ -194,7 +213,7 @@ void SpreadFilterGroup(b2Body* bodyA, const uint16 categoryBits, const uint16 ma
 	if (filter.categoryBits == categoryBits &&
 		filter.maskBits == maskBits) return;
 
-	
+
 	filter.categoryBits = categoryBits;
 	filter.maskBits = maskBits;
 
@@ -228,14 +247,16 @@ bool ConnectBodys(b2Body* bodyA, b2Body* bodyB){
 	if (AreLinqued(bodyB, bodyA)) return false;
 	if (AreLinqued(bodyA, bodyB)) return false;
 
-
+	// bodyB is the newkid
 
 	auto diffVec = (bodyA->GetPosition() - bodyB->GetPosition());
-	b2RevoluteJointDef jd; //b2RevoluteJointDef b2WeldJoint  b2DistanceJointDef
+	b2RevoluteJointDef jd; //b2RevoluteJointDef b2WeldJoint  b2DistanceJointDef b2Vec2(0, 0)
+	jd.Initialize(bodyA, bodyB, bodyA->GetPosition());
+	/*
 	jd.bodyA = bodyA;
 	jd.bodyB = bodyB;
 	//jd.referenceAngle= std::atan2f(diffVec.y, diffVec.x); // radialen
-	jd.referenceAngle = -bodyB->GetAngle();
+	jd.referenceAngle = -bodyA->GetAngle();
 	//jd.localAnchorA.Set(0, 0);//+sqrt(squared)/2);
 	jd.localAnchorB.Set(diffVec.x, diffVec.y);//-sqrt(squared)/2);
 	//jd.localAnchorA.Set(bodyB->GetPosition().x, bodyB->GetPosition().y);//+sqrt(squared)/2);
@@ -249,6 +270,7 @@ bool ConnectBodys(b2Body* bodyA, b2Body* bodyB){
 	//jd.motorSpeed = 0.05f * b2_pi;
 	//jd.maxMotorTorque = 1e8f;
 	//jd.enableMotor = true;
+	*/
 	sltn::getInst().m_world->CreateJoint(&jd);
 
 	auto udA = (UserData*)(bodyA->GetUserData());
@@ -350,16 +372,6 @@ void Gameplay::ConnectWithOthers(Ball* ballNew)
 
 
 
-
-
-
-
-
-
-
-
-
-
 void Gameplay::Tick(const float deltaTime)
 {
 	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)){
@@ -384,7 +396,8 @@ void Gameplay::Tick(const float deltaTime)
 		//sltn::getInst().m_world->DestroyJoint(jointIt);
 	}
 
-
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+		LoadInktscapeFile(("resources/LevelFile.svg"));
 
 	m_player->Tick(deltaTime);
 
@@ -501,7 +514,8 @@ void Gameplay::Paint(sf::RenderWindow& window)
 
 	vertexArray.clear();
 
-
+	for (auto object : m_BgElements)
+		window.draw(*object);
 
 	for (auto& object : m_Balls)
 	if (object != nullptr)
@@ -566,5 +580,138 @@ void Gameplay::MakeCircle(sf::Vector2f place, float len, float distance = Ball::
 			// connect the last ball with the rest
 			ConnectTry(ball1->GetB2Body(), m_Balls.back()->GetB2Body());
 		}
+	}
+}
+
+
+void Gameplay::LoadInktscapeFile(char* HitregionsFile)
+{
+	//God::GetSingleton()->AddHitStuk(sf::Vector2f(10.0,100.0),  ("Level"));
+
+	//TCHAR* HitregionsFile=  ("resources/Level/Level_Hitregions.svg"); // Level_Hitregions
+	if (!FileExists(HitregionsFile)) return;
+
+	pugi::xml_document xmlDoc;
+	pugi::xml_parse_result result = xmlDoc.load_file(HitregionsFile);
+
+	for (auto ptr : m_BgElements)
+		delete ptr;
+	m_BgElements.clear();
+
+
+	//xmlDoc.child( ("g"));
+	for (pugi::xml_node pathNode = xmlDoc.child(("svg")).child(("g")).first_child(); pathNode; pathNode = pathNode.next_sibling())
+	{
+		auto attribute = pathNode.attribute(("sodipodi:type"));
+
+		if (attribute != 0 &&
+			(string(attribute.value()) == string(("arc")))){
+
+			auto ptr = new BgElement();
+
+
+			b2Vec2 pos(
+				pathNode.attribute(("sodipodi:cx")).as_float(),
+				pathNode.attribute(("sodipodi:cy")).as_float()
+				);
+			b2Vec2 radius(
+				pathNode.attribute(("sodipodi:rx")).as_float(),
+				pathNode.attribute(("sodipodi:ry")).as_float()
+				);
+
+			// transform/translate Matrix/snizzle  //////////
+			sf::Transformable matRotate;// matRotate.SetAsIdentity();
+			auto transformAttr = pathNode.attribute("transform");
+			if (transformAttr != 0){
+				string strMat = transformAttr.as_string();
+				strMat = strMat.substr(strMat.find_last_of(("(")) + 1, 999);
+				strMat = strMat.substr(0, strMat.find_last_of((")")));
+
+				vector<float> readArrfloats;
+				std::vector<string> elements;
+				split(strMat, ',', elements);
+				for (string s : elements)
+					readArrfloats.push_back(std::stof(s.c_str()));
+
+				string beginStr(transformAttr.value(), 10);
+				if (beginStr.find("translate") == 0){
+					pos.x += readArrfloats.at(0);
+					pos.y += readArrfloats[1];
+				}
+				else if (beginStr.find("matrix") == 0){
+					// not supported
+				}
+				//matRotate = sf::Transformable(strMat);
+			}
+
+			try{
+				auto colorStr = string(pathNode.attribute(("style")).value(), 6, 6);
+				unsigned int r, g, b;
+				stringstream ss;
+				ss << std::hex << colorStr.substr(0, 2); ss >> r; ss.clear();
+				ss << std::hex << colorStr.substr(2, 2); ss >> g; ss.clear();
+				ss << std::hex << colorStr.substr(4, 2); ss >> b; ss.clear();
+				ptr->setFillColor(sf::Color(r, g, b));
+			}
+			catch (int e){}
+			ptr->setTexture(&sltn::getInst().GetTexture("resources/foto.jpg"));
+
+			ptr->SetAsOval(
+				pos, radius
+				);
+			m_BgElements.push_back(ptr);
+
+		}
+
+		if (pathNode.attribute(("x")) == 0) continue; // must be somehing with cordinates
+		// pathNode is een image tag
+		auto imageNode = pathNode;
+
+		// Name ////////////
+		string nameStr = imageNode.attribute(("xlink:href")).as_string();
+		nameStr = nameStr.substr(nameStr.find_last_of(("/")) + 1, 999);
+		nameStr = nameStr.substr(0, nameStr.find_last_of((".")));
+
+		sf::Transformable matTotalTransform;
+
+		// Pos /////////////
+		sf::Vector2f pos(
+			imageNode.attribute(("x")).as_float(),
+			imageNode.attribute(("y")).as_float()
+			);
+		matTotalTransform.setPosition(pos);
+		//sf::Transformable matPos;		matPos.setPosition(pos);
+
+		if (nameStr.find(("EnemySpawner")) != string::npos){
+			m_SpawnPointVec.push_back(new SpawnPoint(pos));
+			continue; // volgende item in de svg
+		}
+		else if (nameStr.find(("prite")) != string::npos){ // Sprite of sprite
+			nameStr = nameStr.substr(0, nameStr.find_last_of(("_")));
+		}
+
+		// Scale ////////////
+		//sf::Transformable matScale; // matScale.SetAsIdentity();
+		sf::Vector2f scaledSize, imageSize(108, 108);
+		if (imageNode.attribute(("width")) != 0){
+			scaledSize.x = imageNode.attribute(("width")).as_double();
+			scaledSize.y = imageNode.attribute(("height")).as_double();
+			int imageSizeX = 108, imageSizeY = 108;
+			string file = ("./resources/level/") + nameStr + ("_sprite.png");
+			//God::GetImageSizeEx(file.c_str(), &imageSizeX, &imageSizeY);
+			imageSize = sf::Vector2f(imageSizeX, imageSizeY);
+			matTotalTransform.scale(scaledSize.x / imageSizeX, scaledSize.y / imageSizeY);
+			//matScale.setScale(scaledSize.x / imageSizeX, scaledSize.y / imageSizeY);
+		}
+
+		
+
+		// matTotalTransform /////////////// *sf::Transformable::CreateTranslationMatrix(imageSize/2)
+		// sf::Transformable matTotalTransform = matScale * matRotate * matPos;
+
+
+
+		//God::GetSingleton()->AddHitStuk(matTotalTransform, nameStr);
+
 	}
 }

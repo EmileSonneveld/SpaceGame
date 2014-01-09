@@ -14,8 +14,8 @@ struct UserData
 		bullet = 0x0008,
 		ball = 0x0001,
 		Enemy = 0x0010,
-		Enemy2 = 0x0020,
 		SpriteAnimation = -0x0040,
+		Static= 0x1000,
 	};
 #ifdef _DEBUG
 	static const unsigned int magicSize = 11;

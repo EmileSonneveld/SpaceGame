@@ -14,7 +14,7 @@ Ball(pos, 4.0f), m_AnimationFlow(0), m_ShootTimer(0)
 
 	this->setTexture(sltn::getInst().GetTexture("resources/Wheatley.png"));
 
-	m_b2Body->GetFixtureList()->SetFriction(0.9f);
+	m_b2Body->GetFixtureList()->SetFriction(10.5f);
 
 	setFilter(UserData::player, ~(UserData::player << 1));
 
