@@ -36,13 +36,22 @@ public:
 	void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
 	{ /* handle post-solve event */
 		//return;
-		if (*impulse->normalImpulses > 120.0f)
+		if (*impulse->normalImpulses > 150.0f)
 		{
 			// Detroy stuff
 			auto udA = (UserData*)contact->GetFixtureA()->GetBody()->GetUserData();
 			if (udA == nullptr) return;
 			auto udB = (UserData*)contact->GetFixtureB()->GetBody()->GetUserData();
 
+
+			if ((udA->kind == UserData::player || udB->kind == UserData::player)){
+				FMOD::Sound* sound;
+				if (*impulse->normalImpulses > 100.0f)
+					sound = sltn::getInst().getSound("resources/MetalRicochet1.wav");
+				else
+					sound = sltn::getInst().getSound("resources/MetalRicochet2.wav");
+				sltn::getInst().playSound(sound);
+			}
 
 			if ((udA->kind == UserData::bullet || udB->kind == UserData::bullet)){
 				if (udA->kind == UserData::bullet){

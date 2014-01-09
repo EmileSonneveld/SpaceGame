@@ -6,7 +6,7 @@
 using namespace sf;
 
 
-BgElement::BgElement() : m_vertices(), m_Body(nullptr), m_pointCount(0), m_radius(1,1)
+BgElement::BgElement() : m_vertices(), m_b2Body(nullptr), m_pointCount(0), m_radius(1,1)
 {
 
 }
@@ -14,12 +14,13 @@ BgElement::BgElement() : m_vertices(), m_Body(nullptr), m_pointCount(0), m_radiu
 
 BgElement::~BgElement()
 {
+	sltn::getInst().EnqueDestroyPhysicsEntity(m_b2Body);
 }
 
 void BgElement::SetAsOval(const b2Vec2 pos, const b2Vec2 radius)
 {
 	m_radius = radius;
-	m_pointCount = 3 + (unsigned int)m_radius.x / 2;
+	m_pointCount = 10 + (unsigned int)m_radius.x / 4;
 	this->setPosition(pos.x - radius.x, pos.y - radius.y);
 
 

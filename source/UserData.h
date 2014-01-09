@@ -16,6 +16,7 @@ struct UserData
 		Enemy = 0x0010,
 		SpriteAnimation = -0x0040,
 		Static= 0x1000,
+		Pickup= 0x2000
 	};
 #ifdef _DEBUG
 	static const unsigned int magicSize = 11;

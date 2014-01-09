@@ -10,6 +10,7 @@
 #include "SpawnPoint.h"
 
 #include "BgElement.h"
+#include "Pickup.h"
 #include "pugiXml\pugixml.hpp"
 //using namespace pugi;
 //#include <math.h>
@@ -36,6 +37,8 @@ m_player(nullptr)
 	m_SpawnPointVec.reserve(5);
 	m_Balls.reserve(3000);
 
+	auto bgSound = sltn::getInst().getSound("");
+	sltn::getInst().playSound(bgSound);
 
 	m_entities.push_back(new VertexFigure(sf::Vector2f(10, 10)));
 
@@ -48,7 +51,7 @@ m_player(nullptr)
 	prevRect.height = 99999;
 	backgroundSpr.setTextureRect(prevRect);
 
-	m_entities.push_back(new SpaceStation(sf::Vector2f(300, 40)));
+	m_entities.push_back(new SpaceStation(sf::Vector2f(360, 118)));
 
 	const unsigned int arrSize = 2;
 	m_SpawnPointVec.push_back(new SpawnPoint(sf::Vector2f(50, 50)));
@@ -514,7 +517,7 @@ void Gameplay::Paint(sf::RenderWindow& window)
 
 	vertexArray.clear();
 
-	for (auto object : m_BgElements)
+	for (auto object : m_Drawables)
 		window.draw(*object);
 
 	for (auto& object : m_Balls)
@@ -584,7 +587,7 @@ void Gameplay::MakeCircle(sf::Vector2f place, float len, float distance = Ball::
 }
 
 
-void Gameplay::LoadInktscapeFile(char* HitregionsFile)
+void Gameplay::LoadInktscapeFile(const char* HitregionsFile)
 {
 	//God::GetSingleton()->AddHitStuk(sf::Vector2f(10.0,100.0),  ("Level"));
 
@@ -594,108 +597,111 @@ void Gameplay::LoadInktscapeFile(char* HitregionsFile)
 	pugi::xml_document xmlDoc;
 	pugi::xml_parse_result result = xmlDoc.load_file(HitregionsFile);
 
-	for (auto ptr : m_BgElements)
+	for (auto ptr : m_Drawables)
 		delete ptr;
-	m_BgElements.clear();
+	m_Drawables.clear();
 
 
 	//xmlDoc.child( ("g"));
-	for (pugi::xml_node pathNode = xmlDoc.child(("svg")).child(("g")).first_child(); pathNode; pathNode = pathNode.next_sibling())
+	for (pugi::xml_node elementNode = xmlDoc.child(("svg")).child(("g")).first_child(); elementNode; elementNode = elementNode.next_sibling())
 	{
-		auto attribute = pathNode.attribute(("sodipodi:type"));
+		b2Vec2 pos(0, 0);
+		b2Vec2 radius(0, 0);
 
-		if (attribute != 0 &&
-			(string(attribute.value()) == string(("arc")))){
+		auto sodipodi = elementNode.attribute(("sodipodi:cx"));
+		if (sodipodi != 0){
+			pos.x = elementNode.attribute(("sodipodi:cx")).as_float();
+			pos.y = elementNode.attribute(("sodipodi:cy")).as_float();
 
-			auto ptr = new BgElement();
-
-
-			b2Vec2 pos(
-				pathNode.attribute(("sodipodi:cx")).as_float(),
-				pathNode.attribute(("sodipodi:cy")).as_float()
-				);
-			b2Vec2 radius(
-				pathNode.attribute(("sodipodi:rx")).as_float(),
-				pathNode.attribute(("sodipodi:ry")).as_float()
-				);
-
-			// transform/translate Matrix/snizzle  //////////
-			sf::Transformable matRotate;// matRotate.SetAsIdentity();
-			auto transformAttr = pathNode.attribute("transform");
-			if (transformAttr != 0){
-				string strMat = transformAttr.as_string();
-				strMat = strMat.substr(strMat.find_last_of(("(")) + 1, 999);
-				strMat = strMat.substr(0, strMat.find_last_of((")")));
-
-				vector<float> readArrfloats;
-				std::vector<string> elements;
-				split(strMat, ',', elements);
-				for (string s : elements)
-					readArrfloats.push_back(std::stof(s.c_str()));
-
-				string beginStr(transformAttr.value(), 10);
-				if (beginStr.find("translate") == 0){
-					pos.x += readArrfloats.at(0);
-					pos.y += readArrfloats[1];
-				}
-				else if (beginStr.find("matrix") == 0){
-					// not supported
-				}
-				//matRotate = sf::Transformable(strMat);
-			}
-
-			try{
-				auto colorStr = string(pathNode.attribute(("style")).value(), 6, 6);
-				unsigned int r, g, b;
-				stringstream ss;
-				ss << std::hex << colorStr.substr(0, 2); ss >> r; ss.clear();
-				ss << std::hex << colorStr.substr(2, 2); ss >> g; ss.clear();
-				ss << std::hex << colorStr.substr(4, 2); ss >> b; ss.clear();
-				ptr->setFillColor(sf::Color(r, g, b));
-			}
-			catch (int e){}
-			ptr->setTexture(&sltn::getInst().GetTexture("resources/foto.jpg"));
-
-			ptr->SetAsOval(
-				pos, radius
-				);
-			m_BgElements.push_back(ptr);
-
+			radius.x = elementNode.attribute(("sodipodi:rx")).as_float();
+			radius.y = elementNode.attribute(("sodipodi:ry")).as_float();
 		}
 
-		if (pathNode.attribute(("x")) == 0) continue; // must be somehing with cordinates
-		// pathNode is een image tag
-		auto imageNode = pathNode;
+		if (elementNode.attribute(("x")) != 0){
+			pos.x += elementNode.attribute(("x")).as_float();
+			pos.y += elementNode.attribute(("y")).as_float();
+		}
+
+		// transform/translate Matrix/snizzle  //////////
+		sf::Transformable matRotate;// matRotate.SetAsIdentity();
+		auto transformAttr = elementNode.attribute("transform");
+		if (transformAttr != 0){
+			string strMat = transformAttr.as_string();
+			strMat = strMat.substr(strMat.find_last_of(("(")) + 1, 999);
+			strMat = strMat.substr(0, strMat.find_last_of((")")));
+
+			vector<float> readArrfloats;
+			std::vector<string> elements;
+			split(strMat, ',', elements);
+			for (string s : elements)
+				readArrfloats.push_back(std::stof(s.c_str()));
+
+			string beginStr(transformAttr.value(), 10);
+			if (beginStr.find("translate") == 0){
+				pos.x += readArrfloats.at(0);
+				pos.y += readArrfloats[1];
+			}
+			else if (beginStr.find("matrix") == 0){
+				// not supported
+			}
+			//matRotate = sf::Transformable(strMat);
+		}
+		// ptr->setRotation(rand() % 100 - 200); // not supported
+
+		if ((string)elementNode.name() == (string)"path"){
+			auto attribute = elementNode.attribute(("sodipodi:type"));
+			if (attribute != 0 && (string(attribute.value()) == string(("arc")))){
+				auto ptr = new BgElement();
+
+				try{
+					auto colorStr = string(elementNode.attribute(("style")).value(), 6, 6);
+					unsigned int r, g, b;
+					stringstream ss;
+					ss << std::hex << colorStr.substr(0, 2); ss >> r; ss.clear();
+					ss << std::hex << colorStr.substr(2, 2); ss >> g; ss.clear();
+					ss << std::hex << colorStr.substr(4, 2); ss >> b; ss.clear();
+					ptr->setFillColor(sf::Color(r, g, b));
+				}
+				catch (int e){}
+
+				ptr->setTexture(&sltn::getInst().GetTexture("resources/mars.jpg"));
+
+				ptr->SetAsOval(
+					pos, radius
+					);
+				m_Drawables.push_back(ptr);
+				continue;
+			}
+		}
 
 		// Name ////////////
-		string nameStr = imageNode.attribute(("xlink:href")).as_string();
+		string nameStr = elementNode.attribute(("xlink:href")).as_string();
 		nameStr = nameStr.substr(nameStr.find_last_of(("/")) + 1, 999);
 		nameStr = nameStr.substr(0, nameStr.find_last_of((".")));
 
 		sf::Transformable matTotalTransform;
 
-		// Pos /////////////
-		sf::Vector2f pos(
-			imageNode.attribute(("x")).as_float(),
-			imageNode.attribute(("y")).as_float()
-			);
-		matTotalTransform.setPosition(pos);
-		//sf::Transformable matPos;		matPos.setPosition(pos);
 
-		if (nameStr.find(("EnemySpawner")) != string::npos){
-			m_SpawnPointVec.push_back(new SpawnPoint(pos));
+
+		if (nameStr.find(("pickup1")) != string::npos){ // Sprite of sprite
+			m_Drawables.push_back(new Pickup(pos));
+			continue;
+		}
+		else if (nameStr.find(("EnemySpawner")) != string::npos){
+			m_SpawnPointVec.push_back(new SpawnPoint(to_Vector2(pos)));
 			continue; // volgende item in de svg
 		}
 		else if (nameStr.find(("prite")) != string::npos){ // Sprite of sprite
 			nameStr = nameStr.substr(0, nameStr.find_last_of(("_")));
+			continue;
 		}
 
 		// Scale ////////////
 		//sf::Transformable matScale; // matScale.SetAsIdentity();
 		sf::Vector2f scaledSize, imageSize(108, 108);
-		if (imageNode.attribute(("width")) != 0){
-			scaledSize.x = imageNode.attribute(("width")).as_double();
-			scaledSize.y = imageNode.attribute(("height")).as_double();
+		if (elementNode.attribute(("width")) != 0){
+			scaledSize.x = elementNode.attribute(("width")).as_float();
+			scaledSize.y = elementNode.attribute(("height")).as_float();
 			int imageSizeX = 108, imageSizeY = 108;
 			string file = ("./resources/level/") + nameStr + ("_sprite.png");
 			//God::GetImageSizeEx(file.c_str(), &imageSizeX, &imageSizeY);
@@ -704,7 +710,7 @@ void Gameplay::LoadInktscapeFile(char* HitregionsFile)
 			//matScale.setScale(scaledSize.x / imageSizeX, scaledSize.y / imageSizeY);
 		}
 
-		
+
 
 		// matTotalTransform /////////////// *sf::Transformable::CreateTranslationMatrix(imageSize/2)
 		// sf::Transformable matTotalTransform = matScale * matRotate * matPos;

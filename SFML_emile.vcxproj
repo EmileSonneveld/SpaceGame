@@ -171,6 +171,7 @@
     <ClCompile Include="source\Ball.cpp" />
     <ClCompile Include="source\Bullet.cpp" />
     <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\Pickup.cpp" />
     <ClCompile Include="source\Player.cpp" />
     <ClCompile Include="source\pugiXml\pugixml.cpp" />
     <ClCompile Include="source\sltn.cpp" />
@@ -209,6 +210,7 @@
     <ClInclude Include="source\entityBase.h" />
     <ClInclude Include="source\main.h" />
     <ClInclude Include="source\MyWorldCallbacks.hpp" />
+    <ClInclude Include="source\Pickup.h" />
     <ClInclude Include="source\Player.h" />
     <ClInclude Include="source\pugiXml\pugiconfig.hpp" />
     <ClInclude Include="source\pugiXml\pugixml.hpp" />

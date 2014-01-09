@@ -25,6 +25,8 @@ sf::Vector2<float> to_Vector2(const b2Vec2 vec);
 
 std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems);
 
+const float FMOD_DistanceFactor = 1.0f;          // Units per meter.  I.e feet would = 3.28.  centimeters would = 100.
+
 // Singleton
 class sltn // final 
 {
@@ -44,16 +46,16 @@ public:
 		if (instance == nullptr) instance = new sltn();
 		return *instance;
 	}
-	
-		~sltn();
+
+	~sltn();
 
 
 	const sf::Texture& GetTexture(const std::string& path);
 
 	// in World cordinates
 	const sf::Vector2f& GetMousePos(){ return m_mousePos; }
-	
-		void SetMousePos(const sf::Vector2f& pos){ m_mousePos = pos; }
+
+	void SetMousePos(const sf::Vector2f& pos){ m_mousePos = pos; }
 
 	void EnqueDestroyPhysicsEntity(b2Body* body);
 	void EnqueDestroyPhysicsEntity(b2Joint* body);
@@ -63,10 +65,13 @@ public:
 
 
 	FMOD::System    *system;
-	vector<FMOD::Sound*> m_Sounds;
-	FMOD::Sound* getSound(const char* str);
+	std::map<std::string, FMOD::Sound*> m_Sounds;
+	FMOD::Sound* getSound(const char* ptr);
 	void playSound(FMOD::Sound* soundPtr);
-
+	void playSound(FMOD::Sound* soundPtr,
+		FMOD_VECTOR pos ,
+		FMOD_VECTOR vel 
+	);
 	void FmodStartup();
 
 	int fmod_mainFunction();

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 
+#include "GameDefines.h"
 //void DrawShape(b2Fixture* fixture, const b2Transform& xf, const b2Color& color);
 sltn* sltn::instance = nullptr;
 
@@ -21,7 +22,7 @@ sltn::~sltn()
 
 	FMOD_RESULT      result;
 	for (auto soundPtr : m_Sounds){
-		result = soundPtr->release();
+		result = soundPtr.second->release();
 		ERRCHECK(result);
 	}
 
@@ -131,15 +132,14 @@ void sltn::ExcecuteDestroyPhysicsEntities(){
 
 
 const int   INTERFACE_UPDATETIME = 50;      // 50ms update for interface
-const float DISTANCEFACTOR = 1.0f;          // Units per meter.  I.e feet would = 3.28.  centimeters would = 100.
 
 void sltn::FmodStartup()
 {
 	FMOD_RESULT      result;
 	listenerpos.x = 0;
 	listenerpos.y = 0;
-	listenerpos.z = -1.0f * DISTANCEFACTOR;
-	// listenerpos  = { 0.0f, 0.0f, -1.0f * DISTANCEFACTOR };
+	listenerpos.z = -1.0f * FMOD_DistanceFactor;
+	// listenerpos  = { 0.0f, 0.0f, -1.0f * FMOD_DistanceFactor };
 	unsigned int     version;
 	void            *extradriverdata = 0;
 
@@ -165,34 +165,51 @@ void sltn::FmodStartup()
 	Set the distance units. (meters/feet etc).
 	*/
 
-	result = system->set3DSettings(1.0, DISTANCEFACTOR, 1.0f);
+	result = system->set3DSettings(1.0, FMOD_DistanceFactor, 1.0f);
 	ERRCHECK(result);
 
 	fmod_mainFunction();
 }
 
-FMOD::Sound* sltn::getSound(const char* str)
+FMOD::Sound* sltn::getSound(const char* ptr)
 {
+	string str(ptr);
+
+	// Check if the sound is already loaded
+	std::map<std::string, FMOD::Sound*>::const_iterator it = m_Sounds.find(str); //map<string,sf::Texture>::const_iterator
+	if (it != m_Sounds.end()) return (*it).second;
+
+	// We don't wan't' fmod to concern about errors
+	if (!FileExists(str)) {
+		cerr << "File sound not found: " << str << "\n";
+		return nullptr;
+	}
+
+	// Realy load the stuff:
 	FMOD_RESULT      result;
-	FMOD::Sound* ptr;
-	result = system->createSound(Common_MediaPath(str), FMOD_3D, 0, &ptr);
+	FMOD::Sound* pSound;
+	result = system->createSound(Common_MediaPath(ptr), FMOD_3D, 0, &pSound);
 	ERRCHECK(result);
-	result = ptr->set3DMinMaxDistance(0.5f * DISTANCEFACTOR, 5000.0f * DISTANCEFACTOR);
+	result = pSound->set3DMinMaxDistance(0.5f * FMOD_DistanceFactor, 5000.0f * FMOD_DistanceFactor);
 	ERRCHECK(result);
 	// result = ptr->setMode(FMOD_LOOP_NORMAL);
 	// ERRCHECK(result);
 
-	m_Sounds.push_back(ptr);
-	return ptr;
+	m_Sounds.insert(std::pair<std::string, FMOD::Sound*>(str, pSound));
+	return pSound;
 }
 
 void sltn::playSound(FMOD::Sound* soundPtr)
 {
-	FMOD_RESULT      result;
-
-	FMOD_VECTOR pos = { -10.0f * DISTANCEFACTOR, 0.0f, 0.0f };
+	FMOD_VECTOR pos = { 0.0f * FMOD_DistanceFactor, 0.0f, 0.0f };
 	FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
+	playSound(soundPtr, pos, vel);
+}
+void sltn::playSound(FMOD::Sound* soundPtr, FMOD_VECTOR pos, FMOD_VECTOR vel)
+{
+	if (soundPtr == nullptr) return;
 
+	FMOD_RESULT      result;
 	result = system->playSound(soundPtr, 0, true, &channel1);
 	ERRCHECK(result);
 	result = channel1->set3DAttributes(&pos, &vel);
@@ -216,14 +233,14 @@ int sltn::fmod_mainFunction()
 
 	// result = system->createSound(Common_MediaPath("./resources/PY7.wav"), FMOD_3D, 0, &sound1);
 	// ERRCHECK(result);
-	// result = sound1->set3DMinMaxDistance(0.5f * DISTANCEFACTOR, 5000.0f * DISTANCEFACTOR);
+	// result = sound1->set3DMinMaxDistance(0.5f * FMOD_DistanceFactor, 5000.0f * FMOD_DistanceFactor);
 	// ERRCHECK(result);
 	// result = sound1->setMode(FMOD_LOOP_NORMAL);
 	// ERRCHECK(result);
 	// 
 	// result = system->createSound(Common_MediaPath("./resources/RifleFire.wav"), FMOD_3D, 0, &sound2);
 	// ERRCHECK(result);
-	// result = sound2->set3DMinMaxDistance(0.5f * DISTANCEFACTOR, 5000.0f * DISTANCEFACTOR);
+	// result = sound2->set3DMinMaxDistance(0.5f * FMOD_DistanceFactor, 5000.0f * FMOD_DistanceFactor);
 	// ERRCHECK(result);
 	// result = sound2->setMode(FMOD_LOOP_NORMAL);
 	// ERRCHECK(result);
@@ -234,7 +251,7 @@ int sltn::fmod_mainFunction()
 	// Play sounds at certain positions
 
 	// {
-	// 	FMOD_VECTOR pos = { -10.0f * DISTANCEFACTOR, 0.0f, 0.0f };
+	// 	FMOD_VECTOR pos = { -10.0f * FMOD_DistanceFactor, 0.0f, 0.0f };
 	// 	FMOD_VECTOR vel = {  0.0f, 0.0f, 0.0f };
 	// 
 	// 	result = system->playSound(sound1, 0, true, &channel1);
@@ -246,7 +263,7 @@ int sltn::fmod_mainFunction()
 	// }
 	// 
 	// {
-	// 	FMOD_VECTOR pos = { 15.0f * DISTANCEFACTOR, 0.0f, 0.0f };
+	// 	FMOD_VECTOR pos = { 15.0f * FMOD_DistanceFactor, 0.0f, 0.0f };
 	// 	FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
 	// 
 	// 	result = system->playSound(sound2, 0, true, &channel2);
@@ -292,19 +309,19 @@ int sltn::fmod_mainFunction()
 	{
 	if (Common_BtnDown(BTN_LEFT))
 	{
-	listenerpos.x -= 1.0f * DISTANCEFACTOR;
-	if (listenerpos.x < -24 * DISTANCEFACTOR)
+	listenerpos.x -= 1.0f * FMOD_DistanceFactor;
+	if (listenerpos.x < -24 * FMOD_DistanceFactor)
 	{
-	listenerpos.x = -24 * DISTANCEFACTOR;
+	listenerpos.x = -24 * FMOD_DistanceFactor;
 	}
 	}
 
 	if (Common_BtnDown(BTN_RIGHT))
 	{
-	listenerpos.x += 1.0f * DISTANCEFACTOR;
-	if (listenerpos.x > 23 * DISTANCEFACTOR)
+	listenerpos.x += 1.0f * FMOD_DistanceFactor;
+	if (listenerpos.x > 23 * FMOD_DistanceFactor)
 	{
-	listenerpos.x = 23 * DISTANCEFACTOR;
+	listenerpos.x = 23 * FMOD_DistanceFactor;
 	}
 	}
 	}
@@ -321,7 +338,7 @@ int sltn::fmod_mainFunction()
 
 	if (listenerflag)
 	{
-	listenerpos.x = (float)sin(t * 0.05f) * 24.0f * DISTANCEFACTOR; // left right pingpong
+	listenerpos.x = (float)sin(t * 0.05f) * 24.0f * FMOD_DistanceFactor; // left right pingpong
 	}
 
 	// ********* NOTE ******* READ NEXT COMMENT!!!!!
@@ -344,7 +361,7 @@ int sltn::fmod_mainFunction()
 
 	// Create small visual display.
 	char s[80] = "|.............<1>......................<2>.......|";
-	s[(int)(listenerpos.x / DISTANCEFACTOR) + 25] = 'L';
+	s[(int)(listenerpos.x / FMOD_DistanceFactor) + 25] = 'L';
 
 	Common_Draw("==================================================");
 	Common_Draw("3D Example.");

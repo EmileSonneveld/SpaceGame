@@ -19,7 +19,7 @@ public:
 	std::vector<sf::Vertex> m_vertices;
 
 	void SetAsOval(const b2Vec2 pos, const b2Vec2 radius);
-	b2Body* m_Body;
+	b2Body* m_b2Body;
 
 	unsigned int m_pointCount;
 	b2Vec2 m_radius;

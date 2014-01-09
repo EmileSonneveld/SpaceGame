@@ -58,3 +58,15 @@ struct NoAssert { \
 
 #define GAME_ENGINE (GameEngine::GetSingleton())
 */
+
+
+
+void AddThickLine(sf::VertexArray& vertices, const sf::Vector2f& point1, const sf::Vector2f& point2);
+bool AreLinqued(b2Body* bodyA, b2Body* bodyB);
+bool CCW(b2Vec2 p1, b2Vec2 p2, b2Vec2 p3);
+bool ConnectTry(b2Body* bodyA, b2Body* bodyB); // Gameplay safties
+bool ConnectBodys(b2Body* bodyA, b2Body* bodyB); // Just Do it!
+unsigned int CountJoints(b2Body* body);
+bool isIntersect(b2Vec2 p1, b2Vec2 p2, b2Vec2 q3, b2Vec2 q4);
+bool FileExists(const string& filename);
+bool FileExists(const wstring& filename);
