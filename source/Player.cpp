@@ -9,7 +9,7 @@
 Player::Player(sf::Vector2f pos) :
 BallBase(pos, 4.0f), m_AnimationFlow(0), m_ShootTimer(0)
 {
-
+	m_lives = 99999;
 	this->setTexture(Sltn::getInst().GetTexture("resources/Wheatley.png"));
 
 
@@ -108,7 +108,7 @@ void Player::CustomTick(float dt)
 
 		auto ball = new Ball(targetPos);
 		//ball->setTexture(Sltn::getInst().GetTexture("resources/blue-sphere_512.png"));
-		//  ball->setFilter(UserData::player, -1 & ~UserData::player); // BUG
+		//  ball->setFilter(UserData::player, -1 & ~UserData::player);
 		gp.EnqueueAddToList(ball);
 
 		//gp.ConnectWithOthers(ball);

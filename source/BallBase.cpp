@@ -65,8 +65,8 @@ void BallBase::Tick(float dt) // 0.0166
 	CustomTick(dt);
 	if (m_b2Body) // Sync body to sprite
 	{
-		auto filter = m_b2Body->GetFixtureList()->GetFilterData();
-		Sprite::setColor(sf::Color(filter.categoryBits * 50 % 255, filter.maskBits % 255, 0));
+		// auto filter = m_b2Body->GetFixtureList()->GetFilterData();
+		// Sprite::setColor(sf::Color(filter.categoryBits * 50 % 255, filter.maskBits % 255, 0));
 
 		auto pos = m_b2Body->GetPosition();
 		Sprite::setPosition(pos.x, pos.y);

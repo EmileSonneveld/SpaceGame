@@ -29,15 +29,15 @@ Gameplay& Gameplay::getInst() // get the singleton reference
 Gameplay::Gameplay(void) :
 m_player(nullptr)
 , m_View(sf::FloatRect(0, 0, 100, 60))
-, m_mouseTimer(0), m_Font(), m_NrOfKills()
+, m_timer(0), m_Font(), m_NrOfKills()
 {
 	m_player = new Player(sf::Vector2f(70, 50));
 	m_player->Initialize();
 
 	m_Font.loadFromFile("C:/Windows/Fonts/Arial.TTF");
 
-	m_BallsToAdd.reserve(3000); // not performant
-	m_SpawnPointVec.reserve(5);
+	m_BallsToAdd.reserve(300); // not performant
+	m_SpawnPointVec.reserve(10);
 	m_Balls.reserve(3000);
 
 	auto bgSound = Sltn::getInst().getSound("");
@@ -57,13 +57,12 @@ m_player(nullptr)
 	EnqueueAddToList(new SpaceStation(sf::Vector2f(360, 118)));
 	//m_entities.push_back();
 
-	const unsigned int arrSize = 2;
-	m_SpawnPointVec.push_back(new SpawnPoint(sf::Vector2f(50, 50)));
+	// m_SpawnPointVec.push_back(new SpawnPoint(sf::Vector2f(50, 50)));
 
-	// sf::Vector2f place(20.0f, 20.0f);
-	// for (float len = 7.0f; len < 25; len += 3.0f){
-	// 	MakeCircle(place, len);
-	// }
+	sf::Vector2f place(20.0f, 20.0f);
+	for (float len = 7.0f; len < 25; len += 3.0f){
+		MakeCircle(place, len, BallBase::semiGlobal_minDistance);
+	}
 
 	LoadInktscapeFile(("resources/LevelFile.svg"));
 }
@@ -390,7 +389,7 @@ void Gameplay::Tick(const float deltaTime)
 	//        m_player->GetB2Body()->GetJointList()->joint);
 	//    m_player->GetB2Body()->GetJointList()->joint = nullptr;
 	//}
-	m_mouseTimer += deltaTime;
+	m_timer += deltaTime;
 
 	for (auto ptr : m_SpawnPointVec)
 		ptr->Tick(deltaTime);
@@ -401,12 +400,12 @@ void Gameplay::Tick(const float deltaTime)
 	for (auto* jointIt = Sltn::getInst().m_world->GetJointList(); jointIt; jointIt = jointIt->GetNext()){
 		b2Vec2 reactionForce = jointIt->GetReactionForce(1 / deltaTime);
 		float forceModuleSq = reactionForce.LengthSquared();
-		if (forceModuleSq > 11000 * 11000)
-			Sltn::getInst().EnqueDestroyPhysicsEntity(jointIt);
+		float tmp = 11000 * 11000;
+		if (forceModuleSq > 944000111)			Sltn::getInst().EnqueDestroyPhysicsEntity(jointIt);
 		//Sltn::getInst().m_world->DestroyJoint(jointIt);
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) // || std::fmodf(m_timer, 1) < 0.01 -=> weird fmod check :p
 		LoadInktscapeFile(("resources/LevelFile.svg"));
 
 	m_player->Tick(deltaTime);
@@ -551,7 +550,7 @@ void Gameplay::Paint(sf::RenderWindow& window)
 	for (auto& object : m_SpriteAnimationList){
 		if (object == nullptr) continue;
 		if (tex == nullptr) tex = object->getTexture();
-		float x = (float)tex->getSize().y;
+		float x = tex ? (float)tex->getSize().y : 1;
 		//window.draw(*object);
 		float s = 3.0f; // size
 		spriteVertexArray.append(sf::Vertex(object->getPosition() + sf::Vector2f(-s, -s), sf::Color::White, sf::Vector2f(0, 0)));
@@ -595,6 +594,7 @@ void Gameplay::StickBodyToWorld(b2Body* body){
 		// connect the last ball with the rest
 		ConnectTry(ball1->GetB2Body(), body);
 	}
+	ConnectTry(m_player->GetB2Body(), body);
 }
 
 void Gameplay::LoadInktscapeFile(const char* HitregionsFile)
@@ -607,9 +607,8 @@ void Gameplay::LoadInktscapeFile(const char* HitregionsFile)
 	pugi::xml_document xmlDoc;
 	pugi::xml_parse_result result = xmlDoc.load_file(HitregionsFile);
 
-	for (auto ptr : m_Drawables)
-		delete ptr;
-	m_Drawables.clear();
+	for (auto ptr : m_Drawables) delete ptr; m_Drawables.clear();
+	for (auto ptr : m_SpawnPointVec) delete ptr; m_SpawnPointVec.clear();
 
 
 	//xmlDoc.child( ("g"));
@@ -633,7 +632,6 @@ void Gameplay::LoadInktscapeFile(const char* HitregionsFile)
 		}
 
 		// transform/translate Matrix/snizzle  //////////
-		sf::Transformable matRotate;// matRotate.SetAsIdentity();
 		auto transformAttr = elementNode.attribute("transform");
 		if (transformAttr != 0){
 			string strMat = transformAttr.as_string();
@@ -697,7 +695,7 @@ void Gameplay::LoadInktscapeFile(const char* HitregionsFile)
 			m_Drawables.push_back(new Pickup(pos));
 			continue;
 		}
-		else if (nameStr.find(("EnemySpawner")) != string::npos){
+		else if (nameStr.find(("point")) != string::npos){
 			m_SpawnPointVec.push_back(new SpawnPoint(to_Vector2(pos)));
 			continue; // volgende item in de svg
 		}

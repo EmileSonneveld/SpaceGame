@@ -103,7 +103,7 @@ private:
 
 
 	sf::View m_View;
-	double m_mouseTimer;
+	double m_timer;
 
 
 

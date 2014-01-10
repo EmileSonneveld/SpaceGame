@@ -38,7 +38,7 @@ void Enemy::Initialize()
 
 	m_b2Body->ApplyForceToCenter(b2Vec2(rand() % 2000 - 1000, rand() % 2000 - 1000));
 
-	Gameplay::getInst().MakeCircle(to_Vector2(m_b2Body->GetPosition()), 6, 3);
+	//Gameplay::getInst().MakeCircle(to_Vector2(m_b2Body->GetPosition()), 6, 3);
 	Gameplay::getInst().MakeCircle(to_Vector2(m_b2Body->GetPosition()), 7, 3);
 }
 
@@ -60,7 +60,7 @@ void Enemy::CustomTick(float dt)
 
 	if (m_isBursting){
 		if (m_burstTimer > 0.5) { m_isBursting = !m_isBursting; m_burstTimer = 0; }
-		if (m_ShootTimer > 0.05){
+		if (m_ShootTimer > 0.1){
 			m_ShootTimer = 0;
 
 			Shoot(Gameplay::getInst().GetPlayerPos());
@@ -68,7 +68,7 @@ void Enemy::CustomTick(float dt)
 		}
 	}
 	else{
-		if (m_burstTimer > 1) { m_isBursting = !m_isBursting; m_burstTimer = 0; }
+		if (m_burstTimer > 2) { m_isBursting = !m_isBursting; m_burstTimer = 0; }
 		//f (m_ShootTimer > 5){
 		//	m_isBursting = true;
 		//

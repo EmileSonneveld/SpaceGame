@@ -20,7 +20,7 @@ BgElement::~BgElement()
 void BgElement::SetAsOval(const b2Vec2 pos, const b2Vec2 radius)
 {
 	m_radius = radius;
-	m_pointCount = 10 + (unsigned int)m_radius.x / 4;
+	m_pointCount = 10U + std::min(18U, (unsigned int)m_radius.x / 5U);
 	this->setPosition(pos.x - radius.x, pos.y - radius.y);
 
 

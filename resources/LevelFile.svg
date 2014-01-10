@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.8"
-     inkscape:cx="293.92431"
-     inkscape:cy="922.72601"
+     inkscape:zoom="1.4"
+     inkscape:cx="290.33752"
+     inkscape:cy="802.60923"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -243,7 +243,7 @@
        sodipodi:rx="12.678572"
        sodipodi:ry="12.678572"
        d="m 340.00001,158.25504 a 12.678572,12.678572 0 1 1 -25.35714,0 12.678572,12.678572 0 1 1 25.35714,0 z"
-       transform="translate(155.56349,33.335034)" />
+       transform="translate(157.07872,31.314728)" />
     <path
        sodipodi:type="arc"
        style="fill:#6b7854;fill-opacity:1;stroke:none"
@@ -299,13 +299,6 @@
        x="299.52286"
        y="289.54074" />
     <image
-       y="302.3696"
-       x="46.007618"
-       id="image4054"
-       xlink:href="file:///C:/C_ImportantStuffUnited/_DAE_/3DAE_GD_13/Portefolio/EmileS_SpaceGame/resources/point.png"
-       height="9"
-       width="9" />
-    <image
        y="86.702034"
        x="696.5459"
        id="image4054-7"
@@ -340,5 +333,134 @@
        xlink:href="file:///C:/C_ImportantStuffUnited/_DAE_/3DAE_GD_13/Portefolio/EmileS_SpaceGame/resources/pickup1.gif"
        height="14.502525"
        width="14.502525" />
+    <path
+       transform="translate(498.43826,-153.23223)"
+       sodipodi:type="arc"
+       style="fill:#6b6554;fill-opacity:0.93488369;stroke:none"
+       id="path3867-1"
+       sodipodi:cx="398.25266"
+       sodipodi:cy="363.18561"
+       sodipodi:rx="115.915"
+       sodipodi:ry="115.915"
+       d="m 514.16766,363.18561 a 115.915,115.915 0 1 1 -231.83001,0 115.915,115.915 0 1 1 231.83001,0 z" />
+    <path
+       transform="translate(225.31877,59.890863)"
+       sodipodi:type="arc"
+       style="fill:#6b6554;fill-opacity:0.93488369;stroke:none"
+       id="path3867-7"
+       sodipodi:cx="398.25266"
+       sodipodi:cy="363.18561"
+       sodipodi:rx="115.915"
+       sodipodi:ry="115.915"
+       d="m 514.16766,363.18561 a 115.915,115.915 0 1 1 -231.83001,0 115.915,115.915 0 1 1 231.83001,0 z" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#6b7854;fill-opacity:1;stroke:none"
+       id="path3012-4"
+       sodipodi:cx="187.14285"
+       sodipodi:cy="90.933609"
+       sodipodi:rx="12.142858"
+       sodipodi:ry="12.142858"
+       d="m 199.28571,90.933609 a 12.142858,12.142858 0 1 1 -24.28571,0 12.142858,12.142858 0 1 1 24.28571,0 z"
+       transform="translate(312.88266,85.121241)" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#6b7854;fill-opacity:1;stroke:none"
+       id="path3012-0"
+       sodipodi:cx="187.14285"
+       sodipodi:cy="90.933609"
+       sodipodi:rx="12.142858"
+       sodipodi:ry="12.142858"
+       d="m 199.28571,90.933609 a 12.142858,12.142858 0 1 1 -24.28571,0 12.142858,12.142858 0 1 1 24.28571,0 z"
+       transform="translate(329.80271,71.989258)" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#6b7854;fill-opacity:1;stroke:none"
+       id="path3012-9"
+       sodipodi:cx="187.14285"
+       sodipodi:cy="90.933609"
+       sodipodi:rx="12.142858"
+       sodipodi:ry="12.142858"
+       d="m 199.28571,90.933609 a 12.142858,12.142858 0 1 1 -24.28571,0 12.142858,12.142858 0 1 1 24.28571,0 z"
+       transform="translate(348.49053,64.160576)" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#6b7854;fill-opacity:1;stroke:none"
+       id="path3012-48"
+       sodipodi:cx="187.14285"
+       sodipodi:cy="90.933609"
+       sodipodi:rx="12.142858"
+       sodipodi:ry="12.142858"
+       d="m 199.28571,90.933609 a 12.142858,12.142858 0 1 1 -24.28571,0 12.142858,12.142858 0 1 1 24.28571,0 z"
+       transform="translate(367.93597,66.938495)" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#6b7854;fill-opacity:1;stroke:none"
+       id="path3012-8"
+       sodipodi:cx="187.14285"
+       sodipodi:cy="90.933609"
+       sodipodi:rx="12.142858"
+       sodipodi:ry="12.142858"
+       d="m 199.28571,90.933609 a 12.142858,12.142858 0 1 1 -24.28571,0 12.142858,12.142858 0 1 1 24.28571,0 z"
+       transform="translate(385.86618,79.060326)" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#6b7854;fill-opacity:1;stroke:none"
+       id="path3012-2"
+       sodipodi:cx="187.14285"
+       sodipodi:cy="90.933609"
+       sodipodi:rx="12.142858"
+       sodipodi:ry="12.142858"
+       d="m 199.28571,90.933609 a 12.142858,12.142858 0 1 1 -24.28571,0 12.142858,12.142858 0 1 1 24.28571,0 z"
+       transform="translate(396.22025,95.222766)" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#9de093;fill-opacity:1"
+       id="path3872"
+       sodipodi:cx="1114.1982"
+       sodipodi:cy="703.85956"
+       sodipodi:rx="217.1828"
+       sodipodi:ry="217.1828"
+       d="m 1331.381,703.85956 a 217.1828,217.1828 0 1 1 -434.36556,0 217.1828,217.1828 0 1 1 434.36556,0 z" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#9de093;fill-opacity:1"
+       id="path3874"
+       sodipodi:cx="733.37073"
+       sodipodi:cy="-206.28789"
+       sodipodi:rx="165.66502"
+       sodipodi:ry="165.66502"
+       d="m 899.03575,-206.28789 a 165.66502,165.66502 0 1 1 -331.33005,0 165.66502,165.66502 0 1 1 331.33005,0 z" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#9de093;fill-opacity:1"
+       id="path3876"
+       sodipodi:cx="-248.49753"
+       sodipodi:cy="-20.419819"
+       sodipodi:rx="125.25892"
+       sodipodi:ry="125.25892"
+       d="m -123.23861,-20.419819 a 125.25892,125.25892 0 1 1 -250.51784,0 125.25892,125.25892 0 1 1 250.51784,0 z"
+       transform="translate(1.0101525,134.35029)" />
+    <image
+       y="95.793404"
+       x="34.895947"
+       id="image4054-4"
+       xlink:href="file:///C:/C_ImportantStuffUnited/_DAE_/3DAE_GD_13/Portefolio/EmileS_SpaceGame/resources/point.png"
+       height="9"
+       width="9" />
+    <image
+       y="463.57645"
+       x="1083.3572"
+       id="image4054-4-5"
+       xlink:href="file:///C:/C_ImportantStuffUnited/_DAE_/3DAE_GD_13/Portefolio/EmileS_SpaceGame/resources/point.png"
+       height="9"
+       width="9" />
+    <image
+       y="615.7193"
+       x="890.85712"
+       id="image4054-4-5-5"
+       xlink:href="file:///C:/C_ImportantStuffUnited/_DAE_/3DAE_GD_13/Portefolio/EmileS_SpaceGame/resources/point.png"
+       height="9"
+       width="9" />
   </g>
 </svg>

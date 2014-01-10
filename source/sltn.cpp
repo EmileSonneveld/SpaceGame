@@ -13,6 +13,21 @@ Sltn::Sltn() :m_world(new b2World(b2Vec2(0, 0)))   {
 	//m_world = new b2World(b2Vec2(0,0));
 	//auto dbg= m_world->DrawDebugData();
 	FmodStartup();
+
+	/*{
+		b2BodyDef bd;
+		bd.type = b2_staticBody;
+		bd.allowSleep = false;
+		bd.userData = nullptr;
+		bd.position.Set(0.0f, 250.0f);//(float)Sltn::getInst().m_ScreenSize.y
+		b2Body* body = Sltn::getInst().m_world->CreateBody(&bd);
+
+		b2PolygonShape shape;
+		shape.SetAsBox(1100, 50); // (float)Sltn::getInst().m_ScreenSize.x
+		//shape.SetAsBox(0.125f, 0.125f);
+		body->CreateFixture(&shape, 1.0f);
+	}*/
+
 }
 Sltn::~Sltn()
 {

@@ -36,7 +36,7 @@ public:
 	void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
 	{ /* handle post-solve event */
 		//return;
-		if (*impulse->normalImpulses > 150.0f)
+		if (*impulse->normalImpulses > 120.0f)
 		{
 			auto bodyA = contact->GetFixtureA()->GetBody();
 			auto bodyB = contact->GetFixtureB()->GetBody();
@@ -48,10 +48,10 @@ public:
 
 
 			if ((udA->kind == UserData::player || udB->kind == UserData::player)){
-				FMOD::Sound* sound;
-				if (*impulse->normalImpulses > 100.0f)
+				FMOD::Sound* sound = nullptr;
+				if (*impulse->normalImpulses > 500.0f)
 					sound = Sltn::getInst().getSound("resources/MetalRicochet1.wav");
-				else
+				else if (*impulse->normalImpulses > 300.0f)
 					sound = Sltn::getInst().getSound("resources/MetalRicochet2.wav");
 				Sltn::getInst().playSound(sound);
 
@@ -69,38 +69,45 @@ public:
 			}
 
 			if ((udA->kind == UserData::bullet || udB->kind == UserData::bullet)){
-				if (udA->kind == UserData::bullet){
-					Gameplay::getInst().EnqueueRemoveFromList(udA->creator);
-					Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
-				}
-				if (udB->kind == UserData::bullet){
-					Gameplay::getInst().EnqueueRemoveFromList(udB->creator);
-					Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureB()->GetBody());
-					//Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
-				}
-				if ((udA->kind == UserData::Ball || udB->kind == UserData::Ball)){
 
-					//Gameplay::getInst().EnqueueRemoveFromList(udB->creator);
-					// this can be called multiple times in one frame
-					Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
-					//Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureB()->GetBody());
-					//Gameplay::getInst().Remove( ( ud )->creator );
-				}
+				// // The bulet get destroyed
+				// if (udA->kind == UserData::bullet){
+				// 	Gameplay::getInst().EnqueueRemoveFromList(udA->creator);
+				// 	Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
+				// }
+				// if (udB->kind == UserData::bullet){
+				// 	Gameplay::getInst().EnqueueRemoveFromList(udB->creator);
+				// 	Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureB()->GetBody());
+				// 	//Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
+				// }
 
-
-				if (udA->kind == UserData::Enemy) {
+				if (udA->kind == UserData::Ball || udA->kind == UserData::Enemy || udA->kind == UserData::player) {
 					auto bullet = ((Bullet*)udB->creator);
 					((BallBase*)udA->creator)->DoDammage(bullet->GetDammage());
 					bullet->StartToDie();
 					//Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureB()->GetBody());
 				}
 
-				if (udB->kind == UserData::Enemy) {
+				if (udB->kind == UserData::Ball || udA->kind == UserData::Enemy || udA->kind == UserData::player) {
 					auto bullet = ((Bullet*)udA->creator);
 					((BallBase*)udB->creator)->DoDammage(bullet->GetDammage());
 					bullet->StartToDie();
 					//Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
 				}
+
+				// if (udA->kind == UserData::Enemy) {
+				// 	auto bullet = ((Bullet*)udB->creator);
+				// 	((BallBase*)udA->creator)->DoDammage(bullet->GetDammage());
+				// 	bullet->StartToDie();
+				// 	//Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureB()->GetBody());
+				// }
+				// 
+				// if (udB->kind == UserData::Enemy) {
+				// 	auto bullet = ((Bullet*)udA->creator);
+				// 	((BallBase*)udB->creator)->DoDammage(bullet->GetDammage());
+				// 	bullet->StartToDie();
+				// 	//Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
+				// }
 
 			}
 

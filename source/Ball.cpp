@@ -18,12 +18,12 @@ Ball::~Ball()
 {
 	Sltn::getInst().EnqueDestroyPhysicsEntity(m_b2Body);
 	m_b2Body = nullptr;
-	Gameplay::getInst().AddKill();
 }
 
 void Ball::Initialize()
 {
 	BallBase::CreateBall();
+	m_b2Body->GetFixtureList()->SetDensity(0.2f);
 
 	//((UserData*)m_b2Body->GetUserData())->kind = UserData::Ball;
 	auto ud = (UserData*)m_b2Body->GetUserData();
