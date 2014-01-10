@@ -23,7 +23,7 @@ public:
 		}
 	}
 
-	virtual void Initialize() { };
+	virtual void Initialize() = 0;
 
 #ifdef _DEBUG
 	static const unsigned int magicSize = 10;

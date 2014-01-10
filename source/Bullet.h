@@ -10,6 +10,7 @@ class Bullet : public entityBase
 public:
 	Bullet(sf::Vector2f pos, float angle, bool useSound = false);
 	virtual ~Bullet();
+	virtual void Initialize(){};
 
 	void Tick(float dt);
 

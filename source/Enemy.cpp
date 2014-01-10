@@ -23,7 +23,7 @@ Enemy::~Enemy()
 
 void Enemy::Initialize()
 {
-	BallBase::Initialize();
+	BallBase::CreateBall();
 
 	//((UserData*)m_b2Body->GetUserData())->kind = UserData::Enemy;
 	auto ud = (UserData*)m_b2Body->GetUserData();

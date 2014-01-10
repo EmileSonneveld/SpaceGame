@@ -1,6 +1,7 @@
 #include "Gameplay.h"
 
-#include "BallBase.h"
+#include "Ball.h"
+#include "BallBase.h" //
 #include "Bullet.h"
 #include "Enemy.h"
 #include "Player.h"
@@ -31,9 +32,11 @@ m_player(nullptr)
 , m_mouseTimer(0), m_Font(), m_NrOfKills()
 {
 	m_player = new Player(sf::Vector2f(70, 50));
+	m_player->Initialize();
 
 	m_Font.loadFromFile("C:/Windows/Fonts/Arial.TTF");
 
+	m_BallsToAdd.reserve(3000); // not performant
 	m_SpawnPointVec.reserve(5);
 	m_Balls.reserve(3000);
 
@@ -51,7 +54,8 @@ m_player(nullptr)
 	prevRect.height = 99999;
 	backgroundSpr.setTextureRect(prevRect);
 
-	m_entities.push_back(new SpaceStation(sf::Vector2f(360, 118)));
+	EnqueueAddToList(new SpaceStation(sf::Vector2f(360, 118)));
+	//m_entities.push_back();
 
 	const unsigned int arrSize = 2;
 	m_SpawnPointVec.push_back(new SpawnPoint(sf::Vector2f(50, 50)));
@@ -579,17 +583,19 @@ void Gameplay::MakeCircle(sf::Vector2f place, float len, float distance = BallBa
 
 		auto pos = sf::Vector2f(len*cos(radial), len*sin(radial));
 		pos += place;
-		EnqueueAddToList(new BallBase(pos));
+		EnqueueAddToList(new Ball(pos));
 		//m_Balls.push_back(new BallBase(pos));
 
-		for (auto ball1 : m_Balls){
-			if (ball1 == nullptr) continue;
-			// connect the last ball with the rest
-			ConnectTry(ball1->GetB2Body(), m_Balls.back()->GetB2Body());
-		}
 	}
 }
+void Gameplay::StickBodyToWorld(b2Body* body){
 
+	for (auto ball1 : m_Balls){
+		if (ball1 == nullptr) continue;
+		// connect the last ball with the rest
+		ConnectTry(ball1->GetB2Body(), body);
+	}
+}
 
 void Gameplay::LoadInktscapeFile(const char* HitregionsFile)
 {
@@ -706,7 +712,7 @@ void Gameplay::LoadInktscapeFile(const char* HitregionsFile)
 		if (elementNode.attribute(("width")) != 0){
 			scaledSize.x = elementNode.attribute(("width")).as_float();
 			scaledSize.y = elementNode.attribute(("height")).as_float();
-			int imageSizeX = 108, imageSizeY = 108;
+			float imageSizeX = 108, imageSizeY = 108;
 			string file = ("./resources/level/") + nameStr + ("_sprite.png");
 			//God::GetImageSizeEx(file.c_str(), &imageSizeX, &imageSizeY);
 			imageSize = sf::Vector2f(imageSizeX, imageSizeY);
@@ -724,4 +730,27 @@ void Gameplay::LoadInktscapeFile(const char* HitregionsFile)
 		//God::GetSingleton()->AddHitStuk(matTotalTransform, nameStr);
 
 	}
+}
+
+
+
+void Gameplay::ApplyAddToQueue(){
+	//auto world = Sltn::getInst().m_world;
+	for (auto ptr : m_entitiesToAdd){
+		ptr->Initialize();
+		m_entities.push_back(ptr);
+	}
+	m_entitiesToAdd.clear();
+
+	for (unsigned int i = 0; i < m_BallsToAdd.size(); ++i){
+		m_Balls.push_back(m_BallsToAdd[i]);
+		m_BallsToAdd[i]->Initialize();
+	}
+	m_BallsToAdd.clear();
+}
+void  Gameplay::ApplyRemoveFrom(){
+	for (auto ptr : m_entitiesRemoveFrom){
+		RemoveFrom(ptr);
+	}
+	m_entitiesRemoveFrom.clear();
 }

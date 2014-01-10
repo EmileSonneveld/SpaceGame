@@ -64,6 +64,8 @@ void Sltn::EnqueDestroyPhysicsEntity(b2Body* body){
 		if (bodyIt == body)
 			found = true;
 	}
+	assert(found);
+
 	if (!found || body->GetContactList() == (b2ContactEdge*)0xfdfdfdfdfdfdfdfd)
 		int ha = 5;
 
@@ -75,7 +77,7 @@ void Sltn::EnqueDestroyPhysicsEntity(b2Body* body){
 
 	auto ud = (UserData*)body->GetUserData();
 	b2Assert(ud);
-	(ud)->creator->nullB2Body();
+	if (ud->creator) ud->creator->nullB2Body();
 }
 
 void Sltn::EnqueDestroyPhysicsEntity(b2Joint* body){

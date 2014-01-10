@@ -39,11 +39,11 @@ m_Texture(&Sltn::getInst().GetTexture("resources/pickup1.gif"))  //SpaceCore.jpg
 
 	// update();
 
-
+	Vector2f s((float)m_Texture->getSize().x, (float)m_Texture->getSize().y);
 	m_vertices.push_back(Vertex(Vector2f(-size, -size), Vector2f(0, 0)));
-	m_vertices.push_back(Vertex(Vector2f(+size, -size), Vector2f(m_Texture->getSize().x, 0)));
-	m_vertices.push_back(Vertex(Vector2f(+size, +size), Vector2f(m_Texture->getSize().x, m_Texture->getSize().y)));
-	m_vertices.push_back(Vertex(Vector2f(-size, +size), Vector2f(0, m_Texture->getSize().y)));
+	m_vertices.push_back(Vertex(Vector2f(+size, -size), Vector2f(s.x, 0)));
+	m_vertices.push_back(Vertex(Vector2f(+size, +size), Vector2f(s.x, s.y)));
+	m_vertices.push_back(Vertex(Vector2f(-size, +size), Vector2f(0, s.y)));
 
 }
 

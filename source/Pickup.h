@@ -15,7 +15,7 @@ class Pickup : public sf::Drawable , sf::Transformable
 public:
 	Pickup(b2Vec2 pos);
 	virtual ~Pickup();
-
+	
 
 	b2Body* m_b2Body;
 

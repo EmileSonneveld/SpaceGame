@@ -38,8 +38,11 @@ public:
 		//return;
 		if (*impulse->normalImpulses > 150.0f)
 		{
+			auto bodyA = contact->GetFixtureA()->GetBody();
+			auto bodyB = contact->GetFixtureB()->GetBody();
+
 			// Detroy stuff
-			auto udA = (UserData*)contact->GetFixtureA()->GetBody()->GetUserData();
+			auto udA = (UserData*)bodyA->GetUserData();
 			if (udA == nullptr) return;
 			auto udB = (UserData*)contact->GetFixtureB()->GetBody()->GetUserData();
 
@@ -52,13 +55,15 @@ public:
 					sound = Sltn::getInst().getSound("resources/MetalRicochet2.wav");
 				Sltn::getInst().playSound(sound);
 
-				if(udA->kind == UserData::Pickup){
-					Gameplay::getInst().MakeCircle(to_Vector2(contact->GetFixtureA()->GetBody()->GetPosition()), 6, 3);
-					Gameplay::getInst().EnqueueRemoveFromList(udA->creator);
+				if (udA->kind == UserData::Pickup){
+					Gameplay::getInst().MakeCircle(to_Vector2(bodyA->GetPosition()), 6, 3);
+					Sltn::getInst().EnqueDestroyPhysicsEntity(bodyA);
+					//Gameplay::getInst().EnqueueRemoveFromList(udA->creator);
 				}
-				else if(udB->kind == UserData::Pickup){
-					Gameplay::getInst().MakeCircle(to_Vector2(contact->GetFixtureA()->GetBody()->GetPosition()), 6, 3);
-					Gameplay::getInst().EnqueueRemoveFromList(udB->creator);
+				else if (udB->kind == UserData::Pickup){
+					Gameplay::getInst().MakeCircle(to_Vector2(bodyB->GetPosition()), 6, 3);
+					Sltn::getInst().EnqueDestroyPhysicsEntity(bodyB);
+					//Gameplay::getInst().EnqueueRemoveFromList(udB->creator);
 				}
 
 			}
@@ -73,7 +78,7 @@ public:
 					Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureB()->GetBody());
 					//Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
 				}
-				if ((udA->kind == UserData::ball || udB->kind == UserData::ball)){
+				if ((udA->kind == UserData::Ball || udB->kind == UserData::Ball)){
 
 					//Gameplay::getInst().EnqueueRemoveFromList(udB->creator);
 					// this can be called multiple times in one frame

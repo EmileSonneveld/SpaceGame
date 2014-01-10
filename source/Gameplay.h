@@ -44,6 +44,7 @@ public:
 
 	b2Vec2 GetPlayerPos();
 
+	void StickBodyToWorld(b2Body* body);
 
 	void zoom(float delta){
 		m_View.setSize(m_View.getSize()*delta);
@@ -91,25 +92,8 @@ private:
 
 	std::vector<SpawnPoint*> m_SpawnPointVec;
 
-	void ApplyAddToQueue(){
-		//auto world = Sltn::getInst().m_world;
-		for (auto ptr : m_entitiesToAdd){
-			ptr->Initialize();
-			m_entities.push_back(ptr);
-		}
-		m_entitiesToAdd.clear();
-
-		for (auto ptr : m_BallsToAdd){
-			m_Balls.push_back(ptr);
-		}
-		m_BallsToAdd.clear();
-	}
-	void ApplyRemoveFrom(){
-		for (auto ptr : m_entitiesRemoveFrom){
-			RemoveFrom(ptr);
-		}
-		m_entitiesRemoveFrom.clear();
-	}
+	void ApplyAddToQueue();
+	void ApplyRemoveFrom();
 
 	void RemoveFrom(entityBase* entity);
 	// std::vector<Enemy*> m_EnemyVec;

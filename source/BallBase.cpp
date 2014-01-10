@@ -29,22 +29,19 @@ BallBase::~BallBase()
 {
 }
 
-void BallBase::Initialize(){
-	BallBase::CreateBall();
-}
 
 void BallBase::CreateBall()
 {
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
+	bodyDef.awake = false;
 	bodyDef.position.Set(sf::Transformable::getPosition().x, sf::Transformable::getPosition().y);
 	if (!bodyDef.position.IsValid()) return;
-	bodyDef.awake = false;
 	auto userData = new UserData(this);
-	//userData->creator = this;
-	userData->kind = UserData::ball;
+	userData->kind = UserData::Ball;
 	bodyDef.userData = userData;
-	m_b2Body = Sltn::getInst().m_world->CreateBody(&bodyDef); // Sltn::getInst().m_world
+
+	m_b2Body = Sltn::getInst().m_world->CreateBody(&bodyDef); 
 
 	b2CircleShape shape;	shape.m_radius = m_radius / 2;
 	b2FixtureDef fixtureDef;
@@ -53,6 +50,7 @@ void BallBase::CreateBall()
 	fixtureDef.density = 1;
 	//fixtureDef.restitution = 0.1;
 	//fixtureDef.filter.groupIndex = 0;
+
 	m_b2Body->CreateFixture(&fixtureDef);
 
 	//b2Filter filter;

@@ -16,6 +16,7 @@ class SpaceStation : public entityBase
 public:
 	SpaceStation(sf::Vector2f pos);
 	virtual ~SpaceStation();
+	virtual void Initialize(){};
 
 	void Tick(float dt);
 	

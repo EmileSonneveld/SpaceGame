@@ -66,6 +66,9 @@
     <ClCompile Include="source\BallBase.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="source\Ball.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="libsndfile-1.dll">
@@ -180,6 +183,9 @@
     </ClInclude>
     <ClInclude Include="source\BallBase.h">
       <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Ball.h">
+      <Filter>fmod</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

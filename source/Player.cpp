@@ -4,6 +4,7 @@
 #include "main.h"
 #include "Gameplay.h"
 #include "Bullet.h"
+#include "Ball.h"
 
 Player::Player(sf::Vector2f pos) :
 BallBase(pos, 4.0f), m_AnimationFlow(0), m_ShootTimer(0)
@@ -23,6 +24,8 @@ Player::~Player()
 
 void Player::Initialize()
 {
+	BallBase::CreateBall();
+
 	auto ud = (UserData*)m_b2Body->GetUserData();
 	ud->kind = UserData::player;
 	ud->isCore = true;
@@ -103,9 +106,9 @@ void Player::CustomTick(float dt)
 	if (m_ShootTimer > 0.2f && sf::Mouse::isButtonPressed(sf::Mouse::Right)){
 		m_ShootTimer = 0;
 
-		auto ball = new BallBase(targetPos);
+		auto ball = new Ball(targetPos);
 		//ball->setTexture(Sltn::getInst().GetTexture("resources/blue-sphere_512.png"));
-		ball->setFilter(UserData::player, -1 & ~UserData::player);
+		//  ball->setFilter(UserData::player, -1 & ~UserData::player); // BUG
 		gp.EnqueueAddToList(ball);
 
 		//gp.ConnectWithOthers(ball);

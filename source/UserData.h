@@ -12,7 +12,7 @@ struct UserData
 		unspecified = 0,
 		player = 0x0004,
 		bullet = 0x0008,
-		ball = 0x0001,
+		Ball = 0x0001,
 		Enemy = 0x0010,
 		SpriteAnimation = -0x0040,
 		Static= 0x1000,

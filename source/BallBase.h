@@ -11,7 +11,6 @@ class BallBase : public entityBase
 public:
 	BallBase(sf::Vector2f pos, float radius = 2.0f);
 	virtual ~BallBase();
-	virtual void Initialize();
 
 	void Tick(float dt);
 
