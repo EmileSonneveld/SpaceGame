@@ -1,4 +1,4 @@
-#include "sltn.h"
+#include "Sltn.h"
 #include "UserData.h"
 #include "entityBase.h"
 #include <Box2D\Box2D.h>
@@ -7,14 +7,14 @@
 
 #include "GameDefines.h"
 //void DrawShape(b2Fixture* fixture, const b2Transform& xf, const b2Color& color);
-sltn* sltn::instance = nullptr;
+Sltn* Sltn::instance = nullptr;
 
-sltn::sltn() :m_world(new b2World(b2Vec2(0, 0)))   {
+Sltn::Sltn() :m_world(new b2World(b2Vec2(0, 0)))   {
 	//m_world = new b2World(b2Vec2(0,0));
 	//auto dbg= m_world->DrawDebugData();
 	FmodStartup();
 }
-sltn::~sltn()
+Sltn::~Sltn()
 {
 	ExcecuteDestroyPhysicsEntities();
 	delete m_world;
@@ -34,7 +34,7 @@ sltn::~sltn()
 	Common_Close();
 	instance = nullptr;
 }
-const sf::Texture& sltn::GetTexture(const std::string& path){
+const sf::Texture& Sltn::GetTexture(const std::string& path){
 	map<string, sf::Texture>::const_iterator it = m_SpriteMap.find(path); //map<string,sf::Texture>::const_iterator
 	if (it == m_SpriteMap.end()) {
 		//sf::Texture tex;
@@ -52,7 +52,7 @@ const sf::Texture& sltn::GetTexture(const std::string& path){
 	return m_SpriteMap[path];
 }
 
-void sltn::EnqueDestroyPhysicsEntity(b2Body* body){
+void Sltn::EnqueDestroyPhysicsEntity(b2Body* body){
 
 	if (body == nullptr) return;
 	//if( !m_world->IsLocked() )
@@ -60,7 +60,7 @@ void sltn::EnqueDestroyPhysicsEntity(b2Body* body){
 	//else 
 	bool found = false;
 	for (b2Body* bodyIt = m_world->GetBodyList(); bodyIt; bodyIt = bodyIt->GetNext()){
-		//for (b2Body* body= sltn::getInst().m_world->GetBodyList(); body; body = body->GetNext()){
+		//for (b2Body* body= Sltn::getInst().m_world->GetBodyList(); body; body = body->GetNext()){
 		if (bodyIt == body)
 			found = true;
 	}
@@ -78,7 +78,7 @@ void sltn::EnqueDestroyPhysicsEntity(b2Body* body){
 	(ud)->creator->nullB2Body();
 }
 
-void sltn::EnqueDestroyPhysicsEntity(b2Joint* body){
+void Sltn::EnqueDestroyPhysicsEntity(b2Joint* body){
 
 	if (body == nullptr) return;
 	//if( !m_world->IsLocked() )
@@ -86,7 +86,7 @@ void sltn::EnqueDestroyPhysicsEntity(b2Joint* body){
 	//else 
 	bool found = false;
 	for (auto* bodyIt = m_world->GetJointList(); bodyIt; bodyIt = bodyIt->GetNext()){
-		//for (b2Body* body= sltn::getInst().m_world->GetBodyList(); body; body = body->GetNext()){
+		//for (b2Body* body= Sltn::getInst().m_world->GetBodyList(); body; body = body->GetNext()){
 		if (bodyIt == body)
 			found = true;
 	}
@@ -104,7 +104,7 @@ void sltn::EnqueDestroyPhysicsEntity(b2Joint* body){
 	// ( ud )->creator->nullB2Body();
 }
 
-void sltn::ExcecuteDestroyPhysicsEntities(){
+void Sltn::ExcecuteDestroyPhysicsEntities(){
 	assert(!m_world->IsLocked());
 	if (m_world->IsLocked())
 		int kak = 5;
@@ -133,7 +133,7 @@ void sltn::ExcecuteDestroyPhysicsEntities(){
 
 const int   INTERFACE_UPDATETIME = 50;      // 50ms update for interface
 
-void sltn::FmodStartup()
+void Sltn::FmodStartup()
 {
 	FMOD_RESULT      result;
 	listenerpos.x = 0;
@@ -171,7 +171,7 @@ void sltn::FmodStartup()
 	fmod_mainFunction();
 }
 
-FMOD::Sound* sltn::getSound(const char* ptr)
+FMOD::Sound* Sltn::getSound(const char* ptr)
 {
 	string str(ptr);
 
@@ -199,13 +199,13 @@ FMOD::Sound* sltn::getSound(const char* ptr)
 	return pSound;
 }
 
-void sltn::playSound(FMOD::Sound* soundPtr)
+void Sltn::playSound(FMOD::Sound* soundPtr)
 {
 	FMOD_VECTOR pos = { 0.0f * FMOD_DistanceFactor, 0.0f, 0.0f };
 	FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
 	playSound(soundPtr, pos, vel);
 }
-void sltn::playSound(FMOD::Sound* soundPtr, FMOD_VECTOR pos, FMOD_VECTOR vel)
+void Sltn::playSound(FMOD::Sound* soundPtr, FMOD_VECTOR pos, FMOD_VECTOR vel)
 {
 	if (soundPtr == nullptr) return;
 
@@ -218,7 +218,7 @@ void sltn::playSound(FMOD::Sound* soundPtr, FMOD_VECTOR pos, FMOD_VECTOR vel)
 	ERRCHECK(result);
 }
 
-int sltn::fmod_mainFunction()
+int Sltn::fmod_mainFunction()
 {
 	return 0;
 	//FMOD::System    *system;

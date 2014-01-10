@@ -1,47 +1,55 @@
 #include "Enemy.h"
-#include "sltn.h"
+#include "Sltn.h"
 #include "Gameplay.h"
 #include <Box2D\Box2D.h>
 #include "main.h"
 
 
 Enemy::Enemy(sf::Vector2f pos) :
-Ball(pos, 5.0f), m_ShootTimer(0), m_isBursting(false), m_burstTimer(0), m_chasingPlayer(false)
+BallBase(pos, 5.0f), m_ShootTimer(0), m_isBursting(false), m_burstTimer(0), m_chasingPlayer(false)
 {
-	//((UserData*)m_b2Body->GetUserData())->kind = UserData::Enemy;
-	auto ud = (UserData*)m_b2Body->GetUserData();
-	ud->kind = UserData::Enemy;
-	ud->isCore = true;
-
-	this->setTexture(sltn::getInst().GetTexture("resources/Wheatley.png"));
-	
-	//setFilterGroup(-3); // random number
-	//setFilter(UserData::Enemy, UserData::ball | UserData::player | UserData::Enemy);
-	//setFilter(UserData::Enemy, -1 & ~UserData::Enemy);
-	setFilter(UserData::Enemy, ~(UserData::Enemy << 1));
+	this->setTexture(Sltn::getInst().GetTexture("resources/Wheatley.png"));
 	Sprite::setScale(Sprite::getScale()*2.0f);
-
-	Gameplay::getInst().MakeCircle(pos, 6, 3);
-	Gameplay::getInst().MakeCircle(pos, 7, 3);
 }
 
 
 
 Enemy::~Enemy()
 {
-	sltn::getInst().EnqueDestroyPhysicsEntity(m_b2Body);
+	Sltn::getInst().EnqueDestroyPhysicsEntity(m_b2Body);
 	m_b2Body = nullptr;
 	Gameplay::getInst().AddKill();
 }
 
+void Enemy::Initialize()
+{
+	BallBase::Initialize();
 
+	//((UserData*)m_b2Body->GetUserData())->kind = UserData::Enemy;
+	auto ud = (UserData*)m_b2Body->GetUserData();
+	ud->kind = UserData::Enemy;
+	ud->isCore = true;
+
+
+	//setFilterGroup(-3); // random number
+	//setFilter(UserData::Enemy, UserData::ball | UserData::player | UserData::Enemy);
+	//setFilter(UserData::Enemy, -1 & ~UserData::Enemy);
+	setFilter(UserData::Enemy, ~(UserData::Enemy << 1));
+
+	m_b2Body->ApplyForceToCenter(b2Vec2(rand() % 2000 - 1000, rand() % 2000 - 1000));
+
+	Gameplay::getInst().MakeCircle(to_Vector2(m_b2Body->GetPosition()), 6, 3);
+	Gameplay::getInst().MakeCircle(to_Vector2(m_b2Body->GetPosition()), 7, 3);
+}
 
 void Enemy::CustomTick(float dt)
 {
 	if (!m_chasingPlayer){
-		auto force = Gameplay::getInst().GetPlayerPos() - m_b2Body->GetPosition();
-		auto len = force.Length();
-		if (len < 100) m_chasingPlayer = true;
+		if (m_b2Body){
+			auto force = Gameplay::getInst().GetPlayerPos() - m_b2Body->GetPosition();
+			auto len = force.Length();
+			if (len < 100) m_chasingPlayer = true;
+		}
 		return;
 	}
 

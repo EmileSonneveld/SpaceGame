@@ -1,14 +1,14 @@
 #include "Pickup.h"
 #include <Box2D/Box2D.h>
 #include "UserData.h"
-#include "sltn.h"
+#include "Sltn.h"
 //#include "GameDefines.h"
 using namespace sf;
 
 
 Pickup::Pickup(b2Vec2 pos) : m_vertices(),
 m_b2Body(nullptr),
-m_Texture(&sltn::getInst().GetTexture("resources/pickup1.gif"))  //SpaceCore.jpg")  
+m_Texture(&Sltn::getInst().GetTexture("resources/pickup1.gif"))  //SpaceCore.jpg")  
 {
 	Transformable::setPosition(pos.x, pos.y);
 	float size = 2;
@@ -22,9 +22,9 @@ m_Texture(&sltn::getInst().GetTexture("resources/pickup1.gif"))  //SpaceCore.jpg
 	bodyDef.awake = false;
 	auto userData = new UserData(nullptr);
 	//userData->creator = this;
-	userData->kind = UserData::Static;
+	userData->kind = UserData::Pickup;
 	bodyDef.userData = userData;
-	auto m_b2Body = sltn::getInst().m_world->CreateBody(&bodyDef);
+	auto m_b2Body = Sltn::getInst().m_world->CreateBody(&bodyDef);
 
 	b2CircleShape shape;
 	shape.m_radius = size;
@@ -50,7 +50,7 @@ m_Texture(&sltn::getInst().GetTexture("resources/pickup1.gif"))  //SpaceCore.jpg
 
 Pickup::~Pickup()
 {
-	sltn::getInst().EnqueDestroyPhysicsEntity(m_b2Body);
+	Sltn::getInst().EnqueDestroyPhysicsEntity(m_b2Body);
 }
 
 

@@ -1,14 +1,16 @@
 #pragma once
 #include "entityBase.h"
-#include "Ball.h"
+#include "BallBase.h"
 
 class b2Body;
 
-class Enemy : public Ball
+class Enemy : public BallBase
 {
 public:
 	Enemy(sf::Vector2f pos);
 	virtual ~Enemy();
+
+	virtual void Initialize();
 
 	//virtual void draw(RenderTarget& target, RenderStates states) const;
 	virtual void CustomTick(float dt); // Inherited object can implement stuff each Tick;

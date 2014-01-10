@@ -1,22 +1,17 @@
 #include "Player.h"
-#include "sltn.h"
+#include "Sltn.h"
 #include <Box2D\Box2D.h>
 #include "main.h"
 #include "Gameplay.h"
 #include "Bullet.h"
 
 Player::Player(sf::Vector2f pos) :
-Ball(pos, 4.0f), m_AnimationFlow(0), m_ShootTimer(0)
+BallBase(pos, 4.0f), m_AnimationFlow(0), m_ShootTimer(0)
 {
-	auto ud = (UserData*)m_b2Body->GetUserData();
-	ud->kind = UserData::player;
-	ud->isCore = true;
 
-	this->setTexture(sltn::getInst().GetTexture("resources/Wheatley.png"));
+	this->setTexture(Sltn::getInst().GetTexture("resources/Wheatley.png"));
 
-	m_b2Body->GetFixtureList()->SetFriction(10.5f);
 
-	setFilter(UserData::player, ~(UserData::player << 1));
 
 	Sprite::setScale(Sprite::getScale()*2.0f);
 }
@@ -24,6 +19,16 @@ Ball(pos, 4.0f), m_AnimationFlow(0), m_ShootTimer(0)
 
 Player::~Player()
 {
+}
+
+void Player::Initialize()
+{
+	auto ud = (UserData*)m_b2Body->GetUserData();
+	ud->kind = UserData::player;
+	ud->isCore = true;
+	m_b2Body->GetFixtureList()->SetFriction(10.5f);
+	setFilter(UserData::player, ~(UserData::player << 1));
+
 }
 
 void Player::CustomTick(float dt)
@@ -67,7 +72,7 @@ void Player::CustomTick(float dt)
 	}
 
 
-	auto targetPos = sltn::getInst().GetMousePos();
+	auto targetPos = Sltn::getInst().GetMousePos();
 	Gameplay& gp = Gameplay::getInst();
 
 	if (m_ShootTimer > 0.05f && sf::Mouse::isButtonPressed(sf::Mouse::Left))	{
@@ -98,11 +103,11 @@ void Player::CustomTick(float dt)
 	if (m_ShootTimer > 0.2f && sf::Mouse::isButtonPressed(sf::Mouse::Right)){
 		m_ShootTimer = 0;
 
-		auto ball = new Ball(targetPos);
-		//ball->setTexture(sltn::getInst().GetTexture("resources/blue-sphere_512.png"));
+		auto ball = new BallBase(targetPos);
+		//ball->setTexture(Sltn::getInst().GetTexture("resources/blue-sphere_512.png"));
 		ball->setFilter(UserData::player, -1 & ~UserData::player);
 		gp.EnqueueAddToList(ball);
-		 
+
 		//gp.ConnectWithOthers(ball);
 		ConnectTry(this->GetB2Body(), ball->GetB2Body());
 

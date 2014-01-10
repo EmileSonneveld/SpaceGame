@@ -17,7 +17,7 @@ void SpawnPoint::Tick(float dt)
 	if (m_Timer > 7){
 		m_Timer = 0;
 		auto ennemy = new Enemy(m_Pos);
-		ennemy->GetB2Body()->ApplyForceToCenter(b2Vec2(rand() % 2000 - 1000, rand() % 2000 - 1000));
+		
 		Gameplay::getInst().EnqueueAddToList(ennemy);
 	}
 }

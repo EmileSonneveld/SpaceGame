@@ -5,7 +5,7 @@
 #include "main.h"
 #include "MyWorldCallbacks.hpp"
 #include "Gameplay.h"
-#include "sltn.h"
+#include "Sltn.h"
 
 //using namespace std;
 
@@ -22,7 +22,7 @@ int main(int argc, const char* argv[])
 
 	// Delete singletons to exit grasefully
 	delete &Gameplay::getInst();
-	delete &sltn::getInst();
+	delete &Sltn::getInst();
 
 #ifdef DEBUG
 //	_CrtDumpMemoryLeaks();
@@ -33,10 +33,10 @@ MainClass::MainClass() :
 m_window(sf::RenderWindow(sf::VideoMode(1280, 720), "SFML Space game By Emile"))
 {
 	m_window.setVerticalSyncEnabled(true);
-	sltn::getInst().m_ScreenSize = m_window.getSize();
+	Sltn::getInst().m_ScreenSize = m_window.getSize();
 
-	sltn::getInst().m_world->SetContactListener(new MyContactListener());
-	sltn::getInst().m_world->SetDestructionListener(new MyDestructionListener());
+	Sltn::getInst().m_world->SetContactListener(new MyContactListener());
+	Sltn::getInst().m_world->SetDestructionListener(new MyDestructionListener());
 	m_window.setView(sf::View(sf::FloatRect()));
 
 
@@ -45,11 +45,11 @@ m_window(sf::RenderWindow(sf::VideoMode(1280, 720), "SFML Space game By Emile"))
 		bd.type = b2_staticBody;
 		bd.allowSleep = false;
 		bd.userData = nullptr;
-		bd.position.Set(0.0f, 250.0f);//(float)sltn::getInst().m_ScreenSize.y
-		b2Body* body = sltn::getInst().m_world->CreateBody(&bd);
+		bd.position.Set(0.0f, 250.0f);//(float)Sltn::getInst().m_ScreenSize.y
+		b2Body* body = Sltn::getInst().m_world->CreateBody(&bd);
 
 		b2PolygonShape shape;
-		shape.SetAsBox(1100, 50); // (float)sltn::getInst().m_ScreenSize.x
+		shape.SetAsBox(1100, 50); // (float)Sltn::getInst().m_ScreenSize.x
 		//shape.SetAsBox(0.125f, 0.125f);
 		body->CreateFixture(&shape, 1.0f);
 	}
@@ -95,7 +95,7 @@ void MainClass::gameLoop(){
 		time = min(0.25f, time); // geen physics explosion plz 4FPS min
 		Clock.restart();
 
-		sltn::getInst().SetMousePos(
+		Sltn::getInst().SetMousePos(
 			m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window))
 			);
 
@@ -105,8 +105,8 @@ void MainClass::gameLoop(){
 
 
 
-		sltn::getInst().ExcecuteDestroyPhysicsEntities();
-		sltn::getInst().m_world->Step(0.01f, 8, 3); //time
+		Sltn::getInst().ExcecuteDestroyPhysicsEntities();
+		Sltn::getInst().m_world->Step(0.01f, 8, 3); //time
 
 		m_window.display();
 	}
@@ -124,8 +124,8 @@ void MainClass::Paint(sf::RenderWindow& window)
 
 
 void MainClass::DebugDraw(){
-auto drawer= this; //sltn::getInst().m_world;
-for (b2Body* b = sltn::getInst().m_world->GetBodyList(); b; b = b->GetNext())
+auto drawer= this; //Sltn::getInst().m_world;
+for (b2Body* b = Sltn::getInst().m_world->GetBodyList(); b; b = b->GetNext())
 {
 const b2Transform& xf = b->GetTransform();
 for (b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext())

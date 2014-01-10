@@ -2,7 +2,7 @@
 
 class entityBase;
 
-class Ball;
+class BallBase;
 class Bullet;
 class Enemy;
 class Player;
@@ -15,7 +15,7 @@ class BgElement;
 
 #include <SFML/Graphics.hpp>
 
-//#include "sltn.h"
+//#include "Sltn.h"
 #include "entityBase.h"
 #include "UserData.h"
 //#include <Box2D/Box2D.h>
@@ -50,11 +50,11 @@ public:
 	}
 	void MakeCircle(sf::Vector2f place, float len, float distance );
 
-	void ConnectWithOthers(Ball* ballA);
+	void ConnectWithOthers(BallBase* ballA);
 	void EnqueueRemoveFromList(entityBase* ptr){
 		m_entitiesRemoveFrom.push_back(ptr);
 	}
-	void EnqueueAddToList(Ball* ptr){
+	void EnqueueAddToList(BallBase* ptr){
 		m_BallsToAdd.push_back(ptr);
 		this->ConnectWithOthers(ptr);
 	}
@@ -84,16 +84,19 @@ private:
 	std::vector<entityBase*> m_entities;
 	std::vector<entityBase*> m_entitiesToAdd;
 	std::vector<entityBase*> m_entitiesRemoveFrom;
-	std::vector<Ball*> m_Balls;
-	std::vector<Ball*> m_BallsToAdd;
+	std::vector<BallBase*> m_Balls;
+	std::vector<BallBase*> m_BallsToAdd;
 	std::forward_list<Bullet*> m_bulletVec;
 	std::vector<SpriteAnimation*> m_SpriteAnimationList;
 
 	std::vector<SpawnPoint*> m_SpawnPointVec;
 
 	void ApplyAddToQueue(){
-		for (auto ptr : m_entitiesToAdd)
+		//auto world = Sltn::getInst().m_world;
+		for (auto ptr : m_entitiesToAdd){
+			ptr->Initialize();
 			m_entities.push_back(ptr);
+		}
 		m_entitiesToAdd.clear();
 
 		for (auto ptr : m_BallsToAdd){

@@ -168,7 +168,7 @@
     <ClCompile Include="fmod_inc\common_platform.cpp" />
     <ClCompile Include="source\Enemy.cpp" />
     <ClCompile Include="source\Gameplay.cpp" />
-    <ClCompile Include="source\Ball.cpp" />
+    <ClCompile Include="source\BallBase.cpp" />
     <ClCompile Include="source\Bullet.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\Pickup.cpp" />
@@ -205,7 +205,7 @@
     <ClInclude Include="source\Enemy.h" />
     <ClInclude Include="source\GameDefines.h" />
     <ClInclude Include="source\Gameplay.h" />
-    <ClInclude Include="source\Ball.h" />
+    <ClInclude Include="source\BallBase.h" />
     <ClInclude Include="source\Bullet.h" />
     <ClInclude Include="source\entityBase.h" />
     <ClInclude Include="source\main.h" />

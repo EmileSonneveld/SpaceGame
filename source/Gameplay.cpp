@@ -1,6 +1,6 @@
 #include "Gameplay.h"
 
-#include "Ball.h"
+#include "BallBase.h"
 #include "Bullet.h"
 #include "Enemy.h"
 #include "Player.h"
@@ -37,13 +37,13 @@ m_player(nullptr)
 	m_SpawnPointVec.reserve(5);
 	m_Balls.reserve(3000);
 
-	auto bgSound = sltn::getInst().getSound("");
-	sltn::getInst().playSound(bgSound);
+	auto bgSound = Sltn::getInst().getSound("");
+	Sltn::getInst().playSound(bgSound);
 
-	m_entities.push_back(new VertexFigure(sf::Vector2f(10, 10)));
+	// m_entities.push_back(new VertexFigure(sf::Vector2f(10, 10)));
 
 	//texture.setRepeated(true); tiled
-	backgroundSpr.setTexture(sltn::getInst().GetTexture("resources/space.jpg"));
+	backgroundSpr.setTexture(Sltn::getInst().GetTexture("resources/space.jpg"));
 	backgroundSpr.setScale(0.2f, 0.2f);
 	backgroundSpr.setPosition(sf::Vector2f(-99 / 2, -99 / 2));
 	auto prevRect = backgroundSpr.getTextureRect();
@@ -128,12 +128,15 @@ void Gameplay::RemoveFrom(entityBase* entity){
 			return;
 		}
 	}
-	//sltn::getInst().RemoveBody(entity.)
+	//Sltn::getInst().RemoveBody(entity.)
 }
 
 
 b2Vec2 Gameplay::GetPlayerPos(){
-	return m_player->GetB2Body()->GetPosition();
+	if (m_player && m_player->GetB2Body())
+		return m_player->GetB2Body()->GetPosition();
+	else
+		return b2Vec2(108, 108);
 }
 
 bool AreLinqued(b2Body* bodyA, b2Body* bodyB)
@@ -234,7 +237,7 @@ bool ConnectTry(b2Body* bodyA, b2Body* bodyB){
 
 	auto diffVec = (bodyA->GetPosition() - bodyB->GetPosition());
 	auto squared = diffVec.LengthSquared();
-	if (squared > Ball::semiGlobal_minDistanceSquared) return false;
+	if (squared > BallBase::semiGlobal_minDistanceSquared) return false;
 	if (squared<4)
 		return false;
 
@@ -274,7 +277,7 @@ bool ConnectBodys(b2Body* bodyA, b2Body* bodyB){
 	//jd.maxMotorTorque = 1e8f;
 	//jd.enableMotor = true;
 	*/
-	sltn::getInst().m_world->CreateJoint(&jd);
+	Sltn::getInst().m_world->CreateJoint(&jd);
 
 	auto udA = (UserData*)(bodyA->GetUserData());
 	auto udB = (UserData*)(bodyB->GetUserData());
@@ -306,7 +309,7 @@ bool ConnectBodys(b2Body* bodyA, b2Body* bodyB){
 }
 
 
-void Gameplay::ConnectWithOthers(Ball* ballNew)
+void Gameplay::ConnectWithOthers(BallBase* ballNew)
 {
 	assert(ballNew);
 	//if (ballNew == nullptr)return;
@@ -315,9 +318,9 @@ void Gameplay::ConnectWithOthers(Ball* ballNew)
 
 	for (auto ballB : m_Balls){
 
-		if (ballB == nullptr)continue;
+		if (ballB == nullptr) continue;
 		b2Body* bodyB = ballB->GetB2Body();
-		if (bodyB == nullptr)continue;
+		if (bodyB == nullptr) continue;
 
 
 		ConnectTry(bodyA, bodyB);
@@ -379,7 +382,7 @@ void Gameplay::Tick(const float deltaTime)
 {
 	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)){
 	//    if( m_player->GetB2Body() ==nullptr ) return;
-	//    sltn::getInst().m_world->DestroyJoint(
+	//    Sltn::getInst().m_world->DestroyJoint(
 	//        m_player->GetB2Body()->GetJointList()->joint);
 	//    m_player->GetB2Body()->GetJointList()->joint = nullptr;
 	//}
@@ -388,15 +391,15 @@ void Gameplay::Tick(const float deltaTime)
 	for (auto ptr : m_SpawnPointVec)
 		ptr->Tick(deltaTime);
 
-	// m_View.setSize((float)sltn::getInst().m_ScreenSize.x,(float)sltn::getInst().m_ScreenSize.y);
+	// m_View.setSize((float)Sltn::getInst().m_ScreenSize.x,(float)Sltn::getInst().m_ScreenSize.y);
 
 
-	for (auto* jointIt = sltn::getInst().m_world->GetJointList(); jointIt; jointIt = jointIt->GetNext()){
+	for (auto* jointIt = Sltn::getInst().m_world->GetJointList(); jointIt; jointIt = jointIt->GetNext()){
 		b2Vec2 reactionForce = jointIt->GetReactionForce(1 / deltaTime);
 		float forceModuleSq = reactionForce.LengthSquared();
 		if (forceModuleSq > 11000 * 11000)
-			sltn::getInst().EnqueDestroyPhysicsEntity(jointIt);
-		//sltn::getInst().m_world->DestroyJoint(jointIt);
+			Sltn::getInst().EnqueDestroyPhysicsEntity(jointIt);
+		//Sltn::getInst().m_world->DestroyJoint(jointIt);
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
@@ -491,9 +494,9 @@ void Gameplay::Paint(sf::RenderWindow& window)
 	ha.draw(backgroundSpr);
 
 	// Debug draw the connections
-	unsigned int bCount = sltn::getInst().m_world->GetBodyCount();
+	unsigned int bCount = Sltn::getInst().m_world->GetBodyCount();
 	sf::VertexArray vertexArray(sf::Quads, bCount * 4);
-	for (b2Body* body = sltn::getInst().m_world->GetBodyList(); body; body = body->GetNext()){
+	for (b2Body* body = Sltn::getInst().m_world->GetBodyList(); body; body = body->GetNext()){
 		for (b2JointEdge* j = body->GetJointList(); j; j = j->next){
 
 			AddThickLine(vertexArray,
@@ -569,14 +572,15 @@ void Gameplay::Paint(sf::RenderWindow& window)
 	window.setView(m_View);
 }
 
-void Gameplay::MakeCircle(sf::Vector2f place, float len, float distance = Ball::semiGlobal_minDistance){
+void Gameplay::MakeCircle(sf::Vector2f place, float len, float distance = BallBase::semiGlobal_minDistance){
 	float pi = 3.14159265f;
 	float contour = 2.0f *len* pi;
 	for (float radial = 0; radial < 2.0f * pi; radial += 2.0f*pi / (contour / distance)){
 
 		auto pos = sf::Vector2f(len*cos(radial), len*sin(radial));
 		pos += place;
-		m_Balls.push_back(new Ball(pos));
+		EnqueueAddToList(new BallBase(pos));
+		//m_Balls.push_back(new BallBase(pos));
 
 		for (auto ball1 : m_Balls){
 			if (ball1 == nullptr) continue;
@@ -664,7 +668,7 @@ void Gameplay::LoadInktscapeFile(const char* HitregionsFile)
 				}
 				catch (int e){}
 
-				ptr->setTexture(&sltn::getInst().GetTexture("resources/mars.jpg"));
+				ptr->setTexture(&Sltn::getInst().GetTexture("resources/mars.jpg"));
 
 				ptr->SetAsOval(
 					pos, radius

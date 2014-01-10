@@ -2,7 +2,7 @@
 #include "Player.h"
 #include "Gameplay.h"
 #include "SpriteAnimation.h"
-#include "sltn.h"
+#include "Sltn.h"
 #include <Box2D\Box2D.h>
 
 FMOD::Sound* Bullet::m_sound = nullptr;
@@ -11,8 +11,8 @@ Bullet::Bullet(sf::Vector2f pos, float angle, bool useSound) : entityBase(), m_r
 {
 	setPosition(pos);
 	if (useSound){
-		if (m_sound == nullptr) m_sound = sltn::getInst().getSound("./resources/PY7.wav");
-		sltn::getInst().playSound(m_sound);
+		if (m_sound == nullptr) m_sound = Sltn::getInst().getSound("./resources/PY7.wav");
+		Sltn::getInst().playSound(m_sound);
 	}
 
 	b2BodyDef bd;
@@ -23,7 +23,7 @@ Bullet::Bullet(sf::Vector2f pos, float angle, bool useSound) : entityBase(), m_r
 	//ud->creator = this;
 	ud->kind = UserData::bullet;
 	bd.userData = ud;
-	m_b2Body = sltn::getInst().m_world->CreateBody(&bd);
+	m_b2Body = Sltn::getInst().m_world->CreateBody(&bd);
 	m_b2Body->SetTransform(to_b2Vec2(pos), angle); // b2Vec2()
 
 	b2CircleShape shape;
@@ -38,7 +38,7 @@ Bullet::Bullet(sf::Vector2f pos, float angle, bool useSound) : entityBase(), m_r
 	m_b2Body->CreateFixture(&fixtureDef);
 
 
-	setTexture(sltn::getInst().GetTexture("resources/bullet.png"));
+	setTexture(Sltn::getInst().GetTexture("resources/bullet.png"));
 
 }
 
@@ -50,7 +50,7 @@ Bullet::~Bullet()
 
 void Bullet::DestroyBody()
 {
-	sltn::getInst().EnqueDestroyPhysicsEntity(m_b2Body);
+	Sltn::getInst().EnqueDestroyPhysicsEntity(m_b2Body);
 	m_b2Body = nullptr;
 }
 

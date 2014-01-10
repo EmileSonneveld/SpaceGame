@@ -1,7 +1,7 @@
 #include "BgElement.h"
 #include <Box2D/Box2D.h>
 #include "UserData.h"
-#include "sltn.h"
+#include "Sltn.h"
 //#include "GameDefines.h"
 using namespace sf;
 
@@ -14,7 +14,7 @@ BgElement::BgElement() : m_vertices(), m_b2Body(nullptr), m_pointCount(0), m_rad
 
 BgElement::~BgElement()
 {
-	sltn::getInst().EnqueDestroyPhysicsEntity(m_b2Body);
+	Sltn::getInst().EnqueDestroyPhysicsEntity(m_b2Body);
 }
 
 void BgElement::SetAsOval(const b2Vec2 pos, const b2Vec2 radius)
@@ -35,7 +35,7 @@ void BgElement::SetAsOval(const b2Vec2 pos, const b2Vec2 radius)
 	//userData->creator = this;
 	userData->kind = UserData::Static;
 	bodyDef.userData = userData;
-	auto m_b2Body = sltn::getInst().m_world->CreateBody(&bodyDef);
+	auto m_b2Body = Sltn::getInst().m_world->CreateBody(&bodyDef);
 
 	b2CircleShape shape;
 	shape.m_radius = min(radius.x, radius.y);

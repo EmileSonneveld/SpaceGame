@@ -1,6 +1,6 @@
 #include "SpaceStation.h"
 #include "Player.h"
-#include "sltn.h"
+#include "Sltn.h"
 #include "Gameplay.h"
 #include <Box2D\Box2D.h>
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -16,7 +16,7 @@ SpaceStation::SpaceStation(sf::Vector2f pos) : entityBase(), m_va(sf::VertexArra
 	//ud->creator= this;
 	ud->kind= UserData::unspecified;
 	bd.userData= ud;
-	m_b2Body = sltn::getInst().m_world->CreateBody(&bd);
+	m_b2Body = Sltn::getInst().m_world->CreateBody(&bd);
 
 	m_b2Body->SetAngularVelocity(0.5);
 	originalPos= m_b2Body->GetPosition();
@@ -28,7 +28,7 @@ SpaceStation::SpaceStation(sf::Vector2f pos) : entityBase(), m_va(sf::VertexArra
 	shape[2].SetAsBox(2,size, b2Vec2(0,-size*2.5f), 0);	  m_b2Body->CreateFixture(shape+2, 2.0f);
 	shape[3].SetAsBox(2,size, b2Vec2(0,+size*2.5f), 0);	  m_b2Body->CreateFixture(shape+3, 2.0f);
 
-	setTexture(sltn::getInst().GetTexture("resources/foto.jpg")); //Exp_yellow_maya blue-sphere_512
+	setTexture(Sltn::getInst().GetTexture("resources/foto.jpg")); //Exp_yellow_maya blue-sphere_512
 
 
 	for (auto fixture = m_b2Body->GetFixtureList(); fixture; fixture = fixture->GetNext()){
@@ -45,7 +45,7 @@ SpaceStation::SpaceStation(sf::Vector2f pos) : entityBase(), m_va(sf::VertexArra
 
 SpaceStation::~SpaceStation()
 {
-	if( m_b2Body ) sltn::getInst().EnqueDestroyPhysicsEntity(m_b2Body);
+	if( m_b2Body ) Sltn::getInst().EnqueDestroyPhysicsEntity(m_b2Body);
 	m_b2Body=nullptr;
 }
 

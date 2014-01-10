@@ -4,7 +4,7 @@
 entityBase::entityBase() : sf::Sprite(), m_b2Body(nullptr)
 {
 #ifdef _DEBUG
-	memcpy(memoryMagic, "UserData", magicSize);
+	memcpy(memoryMagic, "entityBase", magicSize);
 #endif
 }
 void entityBase::setFilterGroup(int16 group){

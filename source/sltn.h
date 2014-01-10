@@ -28,7 +28,7 @@ std::vector<std::string> &split(const std::string &s, char delim, std::vector<st
 const float FMOD_DistanceFactor = 1.0f;          // Units per meter.  I.e feet would = 3.28.  centimeters would = 100.
 
 // Singleton
-class sltn // final 
+class Sltn // final 
 {
 public:
 
@@ -36,18 +36,18 @@ public:
 	b2World * const m_world;
 
 private:
-	static sltn*    instance;
+	static Sltn*    instance;
 public:
-	// sltn::getInst().
-	static sltn& getInst() // get the singleton reference
+	// Sltn::getInst().
+	static Sltn& getInst() // get the singleton reference
 	{
-		//static sltn    instance; // Guaranteed to be destroyed.
+		//static Sltn    instance; // Guaranteed to be destroyed.
 		// Instantiated on first use.
-		if (instance == nullptr) instance = new sltn();
+		if (instance == nullptr) instance = new Sltn();
 		return *instance;
 	}
 
-	~sltn();
+	~Sltn();
 
 
 	const sf::Texture& GetTexture(const std::string& path);
@@ -80,7 +80,7 @@ public:
 	FMOD_VECTOR      listenerpos;
 
 private:
-	sltn();
+	Sltn();
 	sf::Vector2f m_mousePos;
 
 	vector<b2Body*> m_BodysHaveBeenDeleted;
@@ -88,7 +88,7 @@ private:
 	vector<b2Joint*> m_JointsToDelete;
 	map<std::string, sf::Texture> m_SpriteMap;
 
-	sltn(sltn const&);              // Don't Implement
-	void operator=(sltn const&); // Don't implement
+	Sltn(Sltn const&);              // Don't Implement
+	void operator=(Sltn const&); // Don't implement
 };
 

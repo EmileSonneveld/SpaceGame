@@ -5,7 +5,7 @@
 #include <Box2D\Dynamics\b2WorldCallbacks.h>
 
 #include "Gameplay.h"
-#include "sltn.h"
+#include "Sltn.h"
 #include "Enemy.h"
 #include "Bullet.h"
 
@@ -47,44 +47,54 @@ public:
 			if ((udA->kind == UserData::player || udB->kind == UserData::player)){
 				FMOD::Sound* sound;
 				if (*impulse->normalImpulses > 100.0f)
-					sound = sltn::getInst().getSound("resources/MetalRicochet1.wav");
+					sound = Sltn::getInst().getSound("resources/MetalRicochet1.wav");
 				else
-					sound = sltn::getInst().getSound("resources/MetalRicochet2.wav");
-				sltn::getInst().playSound(sound);
+					sound = Sltn::getInst().getSound("resources/MetalRicochet2.wav");
+				Sltn::getInst().playSound(sound);
+
+				if(udA->kind == UserData::Pickup){
+					Gameplay::getInst().MakeCircle(to_Vector2(contact->GetFixtureA()->GetBody()->GetPosition()), 6, 3);
+					Gameplay::getInst().EnqueueRemoveFromList(udA->creator);
+				}
+				else if(udB->kind == UserData::Pickup){
+					Gameplay::getInst().MakeCircle(to_Vector2(contact->GetFixtureA()->GetBody()->GetPosition()), 6, 3);
+					Gameplay::getInst().EnqueueRemoveFromList(udB->creator);
+				}
+
 			}
 
 			if ((udA->kind == UserData::bullet || udB->kind == UserData::bullet)){
 				if (udA->kind == UserData::bullet){
 					Gameplay::getInst().EnqueueRemoveFromList(udA->creator);
-					sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
+					Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
 				}
 				if (udB->kind == UserData::bullet){
 					Gameplay::getInst().EnqueueRemoveFromList(udB->creator);
-					sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureB()->GetBody());
-					//sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
+					Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureB()->GetBody());
+					//Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
 				}
 				if ((udA->kind == UserData::ball || udB->kind == UserData::ball)){
 
 					//Gameplay::getInst().EnqueueRemoveFromList(udB->creator);
 					// this can be called multiple times in one frame
-					sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
-					//sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureB()->GetBody());
+					Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
+					//Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureB()->GetBody());
 					//Gameplay::getInst().Remove( ( ud )->creator );
 				}
 
 
 				if (udA->kind == UserData::Enemy) {
 					auto bullet = ((Bullet*)udB->creator);
-					((Ball*)udA->creator)->DoDammage(bullet->GetDammage());
+					((BallBase*)udA->creator)->DoDammage(bullet->GetDammage());
 					bullet->StartToDie();
-					//sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureB()->GetBody());
+					//Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureB()->GetBody());
 				}
 
 				if (udB->kind == UserData::Enemy) {
 					auto bullet = ((Bullet*)udA->creator);
-					((Ball*)udB->creator)->DoDammage(bullet->GetDammage());
+					((BallBase*)udB->creator)->DoDammage(bullet->GetDammage());
 					bullet->StartToDie();
-					//sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
+					//Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
 				}
 
 			}
