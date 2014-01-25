@@ -36,9 +36,12 @@ class Gameplay
 
 public:
 
+	sf::RenderTexture m_RenderTexture;
+	//sf::Transform m_RenderPieceTransform;
+	sf::View m_renderViewport;
 
 	void Tick(const float deltaTime);
-	void Paint(sf::RenderWindow& window);
+	void Paint(sf::RenderTarget& window);
 
 	void LoadInktscapeFile(const char* HitregionsFile);
 
@@ -73,14 +76,16 @@ public:
 
 private:
 	int m_NrOfKills;
-	void PaintGui(sf::RenderWindow& window);
+	void PaintGui(sf::RenderTarget& window);
 	sf::Font m_Font;
+
+	void RealPaintLogic(sf::RenderTarget& renderTarget);
 
 	bool TryConnect();
 
 	std::vector<sf::Drawable*> m_Drawables;
 
-	sf::Sprite backgroundSpr;
+	sf::Sprite m_BackgroundSpr;
 	Player* m_player;
 	std::vector<entityBase*> m_entities;
 	std::vector<entityBase*> m_entitiesToAdd;

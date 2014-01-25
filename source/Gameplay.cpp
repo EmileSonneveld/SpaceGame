@@ -26,11 +26,17 @@ Gameplay& Gameplay::getInst() // get the singleton reference
 	return *instance;
 }
 
-Gameplay::Gameplay(void) :
-m_player(nullptr)
+Gameplay::Gameplay(void)
+: m_RenderTexture()
+, m_renderViewport(sf::FloatRect(0, 0, 100, 100))
+, m_player(nullptr)
 , m_View(sf::FloatRect(0, 0, 100, 60))
 , m_timer(0), m_Font(), m_NrOfKills()
 {
+	m_RenderTexture.create(1024, 1024);
+	m_RenderTexture.setView(m_renderViewport);
+	m_RenderTexture.clear(sf::Color(0, 255, 0, 128));
+
 	m_player = new Player(sf::Vector2f(70, 50));
 	m_player->Initialize();
 
@@ -46,13 +52,14 @@ m_player(nullptr)
 	// m_entities.push_back(new VertexFigure(sf::Vector2f(10, 10)));
 
 	//texture.setRepeated(true); tiled
-	backgroundSpr.setTexture(Sltn::getInst().GetTexture("resources/space.jpg"));
-	backgroundSpr.setScale(0.2f, 0.2f);
-	backgroundSpr.setPosition(sf::Vector2f(-99 / 2, -99 / 2));
-	auto prevRect = backgroundSpr.getTextureRect();
+	m_BackgroundSpr.setTexture(Sltn::getInst().GetTexture("resources/space.jpg"));
+	m_BackgroundSpr.setScale(0.2f, 0.2f);
+	m_BackgroundSpr.setPosition(sf::Vector2f(-99 / 2, -99 / 2));
+	auto prevRect = m_BackgroundSpr.getTextureRect();
 	prevRect.width = 99999;
 	prevRect.height = 99999;
-	backgroundSpr.setTextureRect(prevRect);
+	m_BackgroundSpr.setTextureRect(prevRect);
+	m_BackgroundSpr.setColor(sf::Color(255, 255, 255, 1));
 
 	EnqueueAddToList(new SpaceStation(sf::Vector2f(360, 118)));
 	//m_entities.push_back();
@@ -70,8 +77,9 @@ m_player(nullptr)
 
 Gameplay::~Gameplay()
 {
+	m_RenderTexture.getTexture().copyToImage().saveToFile("resources/bgSave.png");
 	ApplyAddToQueue();
-	ApplyRemoveFrom();
+	ApplyRemoveFrom(); // slow delete
 	for (auto& ptr : m_entities){
 		delete ptr;
 		ptr = nullptr;
@@ -383,6 +391,8 @@ void Gameplay::ConnectWithOthers(BallBase* ballNew)
 
 void Gameplay::Tick(const float deltaTime)
 {
+
+	m_renderViewport.rotate(20.f*deltaTime);
 	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)){
 	//    if( m_player->GetB2Body() ==nullptr ) return;
 	//    Sltn::getInst().m_world->DestroyJoint(
@@ -456,7 +466,7 @@ void AddThickLine(sf::VertexArray& vertices, const sf::Vector2f& point1, const s
 	// vertices[2].position = point2 - offset;
 	// vertices[3].position = point1 - offset;
 }
-void Gameplay::PaintGui(sf::RenderWindow& window)
+void Gameplay::PaintGui(sf::RenderTarget& window)
 {
 	window.setView(sf::View());
 
@@ -477,24 +487,9 @@ void Gameplay::PaintGui(sf::RenderWindow& window)
 	window.draw(text);
 }
 
-void Gameplay::Paint(sf::RenderWindow& window)
+void Gameplay::RealPaintLogic(sf::RenderTarget& renderTarget)
 {
-
-	window.setView(m_View);
-
-
-	//sf::RenderTexture* texture= new sf::RenderTexture(); texture->create(4096, 2048);
-	window.draw(backgroundSpr);
-
-
-
-	//auto tex= sf::Texture();
-	//tex.create(32,32);
-	//tex.draw(backgroundSpr);
-
-	auto ha = sf::RenderTexture();
-	ha.pushGLStates();
-	ha.draw(backgroundSpr);
+	renderTarget.draw(m_BackgroundSpr);
 
 	// Debug draw the connections
 	unsigned int bCount = Sltn::getInst().m_world->GetBodyCount();
@@ -519,26 +514,26 @@ void Gameplay::Paint(sf::RenderWindow& window)
 	//    vertexArray.append(sf::Vertex(
 	//        object.getPosition(), sf::Color::Red ));
 	//}
-	window.draw(vertexArray);
+	renderTarget.draw(vertexArray);
 
 	vertexArray.clear();
 
 	for (auto object : m_Drawables)
-		window.draw(*object);
+		renderTarget.draw(*object);
 
 	for (auto& object : m_Balls)
 	if (object != nullptr)
-		window.draw(*object);
+		renderTarget.draw(*object);
 
 	for (auto& object : m_entities)
 	if (object != nullptr)
-		window.draw(*object);
+		renderTarget.draw(*object);
 
 
-	window.draw(*m_player);
+	renderTarget.draw(*m_player);
 
 	for (auto object : m_bulletVec)
-		window.draw(*object);
+		renderTarget.draw(*object);
 
 
 	int counter = 0;
@@ -566,13 +561,53 @@ void Gameplay::Paint(sf::RenderWindow& window)
 			//sf::Transform::Identity
 			auto rs = sf::RenderStates(tex); // (*it)->getTexture()
 			// rs.blendMode= sf::BlendMode::BlendAdd; //,m_View.getTransform, 
-			window.draw(spriteVertexArray, rs);
+			renderTarget.draw(spriteVertexArray, rs);
 		}
 	}
+}
 
-
-	PaintGui(window);
+void Gameplay::Paint(sf::RenderTarget& window)
+{
 	window.setView(m_View);
+	m_RenderTexture.setView(m_renderViewport);
+	m_RenderTexture.display();
+	//m_RenderTexture.clear(sf::Color(0, 255, 0, 1));
+
+	RealPaintLogic(m_RenderTexture);
+	RealPaintLogic(window);
+
+	auto sp = sf::Sprite(m_RenderTexture.getTexture());
+	sp.setScale(m_renderViewport.getSize() / 1024.0f);
+	sp.setRotation(m_renderViewport.getRotation());
+	sp.setPosition(m_renderViewport.getCenter());
+	sp.setOrigin(m_RenderTexture.getSize().x / 2U, m_RenderTexture.getSize().y / 2U);
+	window.draw(sp);
+
+	auto vw = m_RenderTexture.getView();
+
+	/*float s = 1024;
+	float sx = s, sy=s;
+	sx = 1;
+	sy = 1;
+	sf::Vertex vArr[4];
+	vArr[0].position = sf::Vector2f(00, 00);
+	vArr[1].position = sf::Vector2f(sx, 00);
+	vArr[2].position = sf::Vector2f(sx, sy);
+	vArr[3].position = sf::Vector2f(00, sy);
+	vArr[0].texCoords = sf::Vector2f(0, 0);
+	vArr[1].texCoords = sf::Vector2f(s, 0);
+	vArr[2].texCoords = sf::Vector2f(s, s);
+	vArr[3].texCoords = sf::Vector2f(0, s);
+
+
+	auto states = sf::RenderStates(&m_RenderTexture.getTexture());
+	states.transform = m_RenderTexture.getView().getInverseTransform();
+
+	m_RenderTexture.display();
+
+	window.draw(vArr, 4, sf::PrimitiveType::Quads, states);
+	*/
+	PaintGui(window);
 }
 
 void Gameplay::MakeCircle(sf::Vector2f place, float len, float distance = BallBase::semiGlobal_minDistance){

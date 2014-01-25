@@ -7,11 +7,12 @@
 #include "Gameplay.h"
 #include "Sltn.h"
 
-//using namespace std;
+
+// #define DETECT_MEMLEAKS
 
 int main(int argc, const char* argv[])
 {
-#ifdef DEBUG
+#ifdef DETECT_MEMLEAKS
 	// _crtBreakAlloc= 161;
 	_CrtSetBreakAlloc(1);
 #endif
@@ -20,12 +21,12 @@ int main(int argc, const char* argv[])
 	auto mainClass = new MainClass();
 	mainClass->gameLoop();
 
+
+#ifdef DETECT_MEMLEAKS
 	// Delete singletons to exit grasefully
 	delete &Gameplay::getInst();
 	delete &Sltn::getInst();
-
-#ifdef DEBUG
-//	_CrtDumpMemoryLeaks();
+	_CrtDumpMemoryLeaks();
 #endif
 }
 
@@ -67,11 +68,10 @@ void MainClass::gameLoop(){
 					m_window.close();
 				}
 			}
-			else if (event.type == sf::Event::MouseButtonPressed)
-			{
-				sf::Mouse::getPosition() - m_window.getPosition();
-
-			}
+			//else if (event.type == sf::Event::MouseButtonPressed)
+			//{
+			//	sf::Mouse::getPosition() - m_window.getPosition();
+			//}
 			//if (event.type == sf::Event::Resized)
 			//{
 			//    m_window.setSize(sf::Vector2u(event.size.width,event.size.height));
@@ -83,14 +83,14 @@ void MainClass::gameLoop(){
 		time = min(0.25f, time); // geen physics explosion plz 4FPS min
 		Clock.restart();
 
-		Sltn::getInst().SetMousePos(
-			m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window))
-			);
 
 		m_window.clear(sf::Color(40, 40, 80));
 		Gameplay::getInst().Tick(time);
 		Gameplay::getInst().Paint(m_window);
 
+		Sltn::getInst().SetMousePos(
+			m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window))
+			);
 
 
 		Sltn::getInst().ExcecuteDestroyPhysicsEntities();
