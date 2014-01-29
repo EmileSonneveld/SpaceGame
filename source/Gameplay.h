@@ -29,16 +29,16 @@ class BgElement;
 #include <forward_list>
 #include <list>
 
-
+class BackgroundTarget;
 
 class Gameplay
 {
 
 public:
 
-	sf::RenderTexture m_RenderTexture;
-	//sf::Transform m_RenderPieceTransform;
-	sf::View m_renderViewport;
+	std::vector<BackgroundTarget*> m_BackgroundTargets;
+	//sf::RenderTexture m_RenderTexture;
+	//sf::View m_renderViewport;
 
 	void Tick(const float deltaTime);
 	void Paint(sf::RenderTarget& window);
@@ -52,7 +52,7 @@ public:
 	void zoom(float delta){
 		m_View.setSize(m_View.getSize()*delta);
 	}
-	void MakeCircle(sf::Vector2f place, float len, float distance );
+	void MakeCircle(sf::Vector2f place, float len, float distance);
 
 	void ConnectWithOthers(BallBase* ballA);
 	void EnqueueRemoveFromList(entityBase* ptr){

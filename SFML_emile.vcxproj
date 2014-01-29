@@ -162,6 +162,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\BackgroundTarget.cpp" />
     <ClCompile Include="source\Ball.cpp" />
     <ClCompile Include="source\BgElement.cpp" />
     <ClCompile Include="source\entityBase.cpp" />
@@ -186,6 +187,7 @@
     <None Include="openal32.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\BackgroundTarget.h" />
     <ClInclude Include="source\Ball.h" />
     <ClInclude Include="source\BgElement.h" />
     <ClInclude Include="Box2D_v2.3.0\Box2D\Box2D\Common\b2BlockAllocator.h" />

@@ -13,6 +13,7 @@
 #include "BgElement.h"
 #include "Pickup.h"
 #include "pugiXml\pugixml.hpp"
+#include "BackgroundTarget.h"
 //using namespace pugi;
 //#include <math.h>
 
@@ -27,15 +28,12 @@ Gameplay& Gameplay::getInst() // get the singleton reference
 }
 
 Gameplay::Gameplay(void)
-: m_RenderTexture()
-, m_renderViewport(sf::FloatRect(0, 0, 100, 100))
-, m_player(nullptr)
+: m_player(nullptr)
 , m_View(sf::FloatRect(0, 0, 100, 60))
 , m_timer(0), m_Font(), m_NrOfKills()
 {
-	m_RenderTexture.create(1024, 1024);
-	m_RenderTexture.setView(m_renderViewport);
-	m_RenderTexture.clear(sf::Color(0, 255, 0, 128));
+	m_BackgroundTargets.push_back(new BackgroundTarget(2000, 2000));
+	m_BackgroundTargets.push_back(new BackgroundTarget(200, 200));
 
 	m_player = new Player(sf::Vector2f(70, 50));
 	m_player->Initialize();
@@ -77,7 +75,7 @@ Gameplay::Gameplay(void)
 
 Gameplay::~Gameplay()
 {
-	m_RenderTexture.getTexture().copyToImage().saveToFile("resources/bgSave.png");
+	m_BackgroundTargets[0]->getTexture()->copyToImage().saveToFile("resources/bgSave.png");
 	ApplyAddToQueue();
 	ApplyRemoveFrom(); // slow delete
 	for (auto& ptr : m_entities){
@@ -392,7 +390,7 @@ void Gameplay::ConnectWithOthers(BallBase* ballNew)
 void Gameplay::Tick(const float deltaTime)
 {
 
-	m_renderViewport.rotate(20.f*deltaTime);
+	//m_renderViewport.rotate(20.f*deltaTime);
 	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)){
 	//    if( m_player->GetB2Body() ==nullptr ) return;
 	//    Sltn::getInst().m_world->DestroyJoint(
@@ -421,20 +419,20 @@ void Gameplay::Tick(const float deltaTime)
 	m_player->Tick(deltaTime);
 
 	for (auto& object : m_Balls)
-	if (object != nullptr)
-		object->Tick(deltaTime);
+		if (object != nullptr)
+			object->Tick(deltaTime);
 
 	for (auto& object : m_entities)
-	if (object != nullptr)
-		object->Tick(deltaTime);
+		if (object != nullptr)
+			object->Tick(deltaTime);
 
 	for (auto object : m_bulletVec)
-	if (object != nullptr)
-		object->Tick(deltaTime);
+		if (object != nullptr)
+			object->Tick(deltaTime);
 
 	for (auto object : m_SpriteAnimationList)
-	if (object != nullptr)
-		object->Tick(deltaTime);
+		if (object != nullptr)
+			object->Tick(deltaTime);
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 		sf::sleep(sf::milliseconds(50));
@@ -522,12 +520,12 @@ void Gameplay::RealPaintLogic(sf::RenderTarget& renderTarget)
 		renderTarget.draw(*object);
 
 	for (auto& object : m_Balls)
-	if (object != nullptr)
-		renderTarget.draw(*object);
+		if (object != nullptr)
+			renderTarget.draw(*object);
 
 	for (auto& object : m_entities)
-	if (object != nullptr)
-		renderTarget.draw(*object);
+		if (object != nullptr)
+			renderTarget.draw(*object);
 
 
 	renderTarget.draw(*m_player);
@@ -569,21 +567,17 @@ void Gameplay::RealPaintLogic(sf::RenderTarget& renderTarget)
 void Gameplay::Paint(sf::RenderTarget& window)
 {
 	window.setView(m_View);
-	m_RenderTexture.setView(m_renderViewport);
-	m_RenderTexture.display();
+	//m_RenderTexture.setView(m_renderViewport);
+	//m_RenderTexture.display();
 	//m_RenderTexture.clear(sf::Color(0, 255, 0, 1));
 
-	RealPaintLogic(m_RenderTexture);
 	RealPaintLogic(window);
+	for (BackgroundTarget* ptr : m_BackgroundTargets)
+		RealPaintLogic(ptr->GetTarget());
 
-	auto sp = sf::Sprite(m_RenderTexture.getTexture());
-	sp.setScale(m_renderViewport.getSize() / 1024.0f);
-	sp.setRotation(m_renderViewport.getRotation());
-	sp.setPosition(m_renderViewport.getCenter());
-	sp.setOrigin(m_RenderTexture.getSize().x / 2U, m_RenderTexture.getSize().y / 2U);
-	window.draw(sp);
+	for (BackgroundTarget* ptr : m_BackgroundTargets)
+		window.draw(*ptr);
 
-	auto vw = m_RenderTexture.getView();
 
 	/*float s = 1024;
 	float sx = s, sy=s;
@@ -601,12 +595,13 @@ void Gameplay::Paint(sf::RenderTarget& window)
 
 
 	auto states = sf::RenderStates(&m_RenderTexture.getTexture());
-	states.transform = m_RenderTexture.getView().getInverseTransform();
-
-	m_RenderTexture.display();
+	//states.transform = m_RenderTexture.getView().getInverseTransform();
+	states.transform = tr.getTransform();
+	//m_RenderTexture.display();
 
 	window.draw(vArr, 4, sf::PrimitiveType::Quads, states);
 	*/
+
 	PaintGui(window);
 }
 
