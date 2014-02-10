@@ -187,6 +187,7 @@
     <None Include="openal32.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\memLeakDetect.h" />
     <ClInclude Include="source\BackgroundTarget.h" />
     <ClInclude Include="source\Ball.h" />
     <ClInclude Include="source\BgElement.h" />

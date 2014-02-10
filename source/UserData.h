@@ -4,6 +4,7 @@ class entityBase;
 
 #include <memory>
 #include <Box2D/Common/b2Settings.h>
+#include "memLeakDetect.h"
 
 struct UserData
 {
@@ -18,10 +19,11 @@ struct UserData
 		Static= 0x1000,
 		Pickup= 0x2000
 	};
-#ifdef _DEBUG
-	static const unsigned int magicSize = 11;
-	char memoryMagic[magicSize]; // view object in memory
+
+#ifdef DETECT_MEMLEAKS
+	char memoryMagic[g_magicSize]; // view object in memory
 #endif
+
 	Kind kind;
 	bool isCore;
 	bool isConectedToCluster;
@@ -33,8 +35,8 @@ struct UserData
 		isConectedToCluster(false), kind(knd), isCore(false)
 	{
 		//typeid(isConectedToCluster).raw_name();
-#ifdef _DEBUG
-		memcpy(memoryMagic, "UserData ;)", magicSize);
+#ifdef DETECT_MEMLEAKS
+		memcpy(memoryMagic, "UserData ;)", g_magicSize);
 #endif
 	}
 

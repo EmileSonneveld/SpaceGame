@@ -26,12 +26,25 @@ Sltn::Sltn() :m_world(new b2World(b2Vec2(0, 0)))   {
 		shape.SetAsBox(1100, 50); // (float)Sltn::getInst().m_ScreenSize.x
 		//shape.SetAsBox(0.125f, 0.125f);
 		body->CreateFixture(&shape, 1.0f);
-	}*/
+		}*/
 
 }
 Sltn::~Sltn()
 {
 	ExcecuteDestroyPhysicsEntities();
+	//auto body = m_world->GetBodyList();
+	//auto bodyBefore = body;
+	//while (body){
+	//	//if (!body) break;
+	//	m_world->DestroyBody(body);
+	//	bodyBefore = body;
+	//	body = body->GetNext();
+	//}
+
+	//for (b2Body* body = Sltn::getInst().m_world->GetBodyList(); body; body = body->GetNext()){
+	//	m_world->DestroyBody(body);
+	//}
+
 	delete m_world;
 
 

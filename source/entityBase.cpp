@@ -3,8 +3,8 @@
 
 entityBase::entityBase() : sf::Sprite(), m_b2Body(nullptr)
 {
-#ifdef _DEBUG
-	memcpy(memoryMagic, "entityBase", magicSize);
+#ifdef DETECT_MEMLEAKS
+	memcpy(memoryMagic, "entityBase", g_magicSize);
 #endif
 }
 void entityBase::setFilterGroup(int16 group){

@@ -8,7 +8,7 @@
 #include "Sltn.h"
 
 
-// #define DETECT_MEMLEAKS
+
 
 int main(int argc, const char* argv[])
 {
@@ -26,6 +26,7 @@ int main(int argc, const char* argv[])
 	// Delete singletons to exit grasefully
 	delete &Gameplay::getInst();
 	delete &Sltn::getInst();
+	delete mainClass;
 	_CrtDumpMemoryLeaks();
 #endif
 }

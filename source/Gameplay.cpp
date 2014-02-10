@@ -23,7 +23,7 @@ Gameplay& Gameplay::getInst() // get the singleton reference
 {
 	//static Gameplay    instance; // Guaranteed to be destroyed.
 	// Instantiated on first use.
-	if (instance == nullptr)instance = new Gameplay();
+	if (instance == nullptr) instance = new Gameplay();
 	return *instance;
 }
 
@@ -32,8 +32,17 @@ Gameplay::Gameplay(void)
 , m_View(sf::FloatRect(0, 0, 100, 60))
 , m_timer(0), m_Font(), m_NrOfKills()
 {
-	m_BackgroundTargets.push_back(new BackgroundTarget(2000, 2000));
-	m_BackgroundTargets.push_back(new BackgroundTarget(200, 200));
+	float size = 200;
+	m_BackgroundTargets.push_back(new BackgroundTarget(2000, 2000, sf::Vector2f(0, size)));
+
+	sf::Vector2f tmpPos(0, 0);
+	int cols = 500;
+	for (int i = 0; i < 5; ++i)
+	{
+		tmpPos.x = size *(i % cols);
+		tmpPos.y = size * (i / cols);
+		m_BackgroundTargets.push_back(new BackgroundTarget(size, size, tmpPos));
+	}
 
 	m_player = new Player(sf::Vector2f(70, 50));
 	m_player->Initialize();
@@ -572,8 +581,12 @@ void Gameplay::Paint(sf::RenderTarget& window)
 	//m_RenderTexture.clear(sf::Color(0, 255, 0, 1));
 
 	RealPaintLogic(window);
-	for (BackgroundTarget* ptr : m_BackgroundTargets)
+	auto tmpView = m_View;
+	for (BackgroundTarget* ptr : m_BackgroundTargets){
+		//tmpView.setCenter(ptr->getPosition());
+		tmpView.setViewport(sf::FloatRect(ptr->getPosition(), ptr->getScale()));
 		RealPaintLogic(ptr->GetTarget());
+	}
 
 	for (BackgroundTarget* ptr : m_BackgroundTargets)
 		window.draw(*ptr);
@@ -603,6 +616,7 @@ void Gameplay::Paint(sf::RenderTarget& window)
 	*/
 
 	PaintGui(window);
+	window.setView(m_View); // andere code verwacht dit
 }
 
 void Gameplay::MakeCircle(sf::Vector2f place, float len, float distance = BallBase::semiGlobal_minDistance){
