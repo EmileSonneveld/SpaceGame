@@ -7,15 +7,79 @@
 #include "Gameplay.h"
 #include "Sltn.h"
 
+#include <signal.h>
+#include "../Lua/Lua.hpp"
 
+static int report(lua_State *L, int status) {
+	if (status != LUA_OK && !lua_isnil(L, -1)) {
+		const char *msg = lua_tostring(L, -1);
+		if (msg == NULL) msg = "(error object is not a string)";
+		cerr << ("lua", msg);
+		lua_pop(L, 1);
+		/* force a complete garbage collection in case of errors */
+		lua_gc(L, LUA_GCCOLLECT, 0);
+	}
+	return status;
+}
+
+/* the next function is called unprotected, so it must avoid errors */
+static void finalreport(lua_State *L, int status) {
+	if (status != LUA_OK) {
+		const char *msg = (lua_type(L, -1) == LUA_TSTRING) ? lua_tostring(L, -1)
+			: NULL;
+		if (msg == NULL) msg = "(error object is not a string)";
+		cerr << ("lua", msg);
+		lua_pop(L, 1);
+	}
+}
+
+static int traceback(lua_State *L) {
+	const char *msg = lua_tostring(L, 1);
+	if (msg)
+		luaL_traceback(L, L, msg, 1);
+	else if (!lua_isnoneornil(L, 1)) {  /* is there an error object? */
+		if (!luaL_callmeta(L, 1, "__tostring"))  /* try its 'tostring' metamethod */
+			lua_pushliteral(L, "(no error message)");
+	}
+	return 1;
+}
+
+static int docall(lua_State *L, int narg, int nres) {
+	int status;
+	int base = lua_gettop(L) - narg;  /* function index */
+	lua_pushcfunction(L, traceback);  /* push traceback function */
+	lua_insert(L, base);  /* put it under chunk and args */
+	//globalL = L;  /* to be available to 'laction' */
+	//signal(SIGINT, laction);
+	status = lua_pcall(L, narg, nres, base);
+	signal(SIGINT, SIG_DFL);
+	lua_remove(L, base);  /* remove traceback function */
+	return status;
+}
+
+static int dofile(lua_State *L, const char *name) {
+	int status = luaL_loadfile(L, name);
+	if (status == LUA_OK) status = docall(L, 0, 0);
+	return report(L, status);
+}
+
+static int l_sin(lua_State *L) {
+	double d = lua_tonumber(L, 1);  /* get argument */
+	lua_pushnumber(L, sin(d));  /* push result */
+	return 1;  /* number of results */
+}
 
 
 int main(int argc, const char* argv[])
 {
+
 #ifdef DETECT_MEMLEAKS
 	// _crtBreakAlloc= 161;
 	_CrtSetBreakAlloc(1);
 #endif
+
+
+
 
 	//auto g_mainClass= new MainClass();
 	auto mainClass = new MainClass();
@@ -29,6 +93,7 @@ int main(int argc, const char* argv[])
 	delete mainClass;
 	_CrtDumpMemoryLeaks();
 #endif
+
 }
 
 MainClass::MainClass() :
@@ -42,12 +107,29 @@ m_window(sf::RenderWindow(sf::VideoMode(1280, 720), "SFML Space game By Emile"))
 	m_window.setView(sf::View(sf::FloatRect()));
 
 
-	
 }
 
-void MainClass::gameLoop(){
+int MainClass::gameLoop(){
+
+
+	int status, result;
+	lua_State *L = luaL_newstate();  /* create state */
+	if (L == NULL) {
+		cerr << ("Lua: cannot create state: not enough memory");
+		return EXIT_FAILURE;
+	}
+	/* call 'pmain' in protected mode */
+	//lua_pushcfunction(L, &pmain);
+	dofile(L, "resources/stuff.lua");
+	//lua_pushinteger(L, argc);  /* 1st argument */
+	//lua_pushlightuserdata(L, argv); /* 2nd argument */
+	status = lua_pcall(L, 2, 1, 0);
+	result = lua_toboolean(L, -1);  /* get result */
+
+
+
 	sf::Clock Clock;
-	float time = 0.01f;
+	float deltaTime = 0.01f;
 	while (m_window.isOpen())
 	{
 		sf::Event event;
@@ -80,13 +162,20 @@ void MainClass::gameLoop(){
 		}
 
 
-		time += (Clock.getElapsedTime().asSeconds() - time) / 10.0f;
-		time = min(0.25f, time); // geen physics explosion plz 4FPS min
+		// Smootherd dt
+		deltaTime += (Clock.getElapsedTime().asSeconds() - deltaTime) / 10.0f;
+		deltaTime = min(0.25f, deltaTime); // geen physics explosion plz 4FPS min
 		Clock.restart();
 
 
 		m_window.clear(sf::Color(40, 40, 80));
-		Gameplay::getInst().Tick(time);
+
+		// Lua Wip
+		// lua_getglobal(L, "UpdateMyStuff");
+		// lua_pushnumber(L, deltaTime);
+		// lua_call(L, 1, 0);
+
+		Gameplay::getInst().Tick(deltaTime);
 		Gameplay::getInst().Paint(m_window);
 
 		Sltn::getInst().SetMousePos(
@@ -95,10 +184,15 @@ void MainClass::gameLoop(){
 
 
 		Sltn::getInst().ExcecuteDestroyPhysicsEntities();
-		Sltn::getInst().m_world->Step(0.01f, 8, 3); //time
+		Sltn::getInst().m_world->Step(0.01f, 8, 3); //deltaTime
 
 		m_window.display();
 	}
+
+
+	finalreport(L, status);
+	lua_close(L);
+	return (result && status == LUA_OK) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 /*
