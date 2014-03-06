@@ -1,4 +1,4 @@
-# Install script for directory: C:/C_ImportantStuffUnited/_DAE_/3DAE_GD_13/Portefolio/EmileS_SpaceGame/Box2D_v2.3.0/Box2D
+# Install script for directory: C:/Users/Emile/Documents/GitHub/SpaceGame/Box2D_v2.3.0/Box2D
 
 # Set the install prefix
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -29,7 +29,11 @@ ENDIF(NOT CMAKE_INSTALL_COMPONENT)
 
 IF(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  INCLUDE("C:/C_ImportantStuffUnited/_DAE_/3DAE_GD_13/Portefolio/EmileS_SpaceGame/Box2D_v2.3.0/Box2D_build/Box2D/cmake_install.cmake")
+  INCLUDE("C:/Users/Emile/Documents/GitHub/SpaceGame/Box2D_v2.3.0/Box2D_build/Box2D/cmake_install.cmake")
+  INCLUDE("C:/Users/Emile/Documents/GitHub/SpaceGame/Box2D_v2.3.0/Box2D_build/HelloWorld/cmake_install.cmake")
+  INCLUDE("C:/Users/Emile/Documents/GitHub/SpaceGame/Box2D_v2.3.0/Box2D_build/freeglut/cmake_install.cmake")
+  INCLUDE("C:/Users/Emile/Documents/GitHub/SpaceGame/Box2D_v2.3.0/Box2D_build/glui/cmake_install.cmake")
+  INCLUDE("C:/Users/Emile/Documents/GitHub/SpaceGame/Box2D_v2.3.0/Box2D_build/Testbed/cmake_install.cmake")
 
 ENDIF(NOT CMAKE_INSTALL_LOCAL_ONLY)
 
@@ -39,7 +43,7 @@ ELSE(CMAKE_INSTALL_COMPONENT)
   SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 ENDIF(CMAKE_INSTALL_COMPONENT)
 
-FILE(WRITE "C:/C_ImportantStuffUnited/_DAE_/3DAE_GD_13/Portefolio/EmileS_SpaceGame/Box2D_v2.3.0/Box2D_build/${CMAKE_INSTALL_MANIFEST}" "")
+FILE(WRITE "C:/Users/Emile/Documents/GitHub/SpaceGame/Box2D_v2.3.0/Box2D_build/${CMAKE_INSTALL_MANIFEST}" "")
 FOREACH(file ${CMAKE_INSTALL_MANIFEST_FILES})
-  FILE(APPEND "C:/C_ImportantStuffUnited/_DAE_/3DAE_GD_13/Portefolio/EmileS_SpaceGame/Box2D_v2.3.0/Box2D_build/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
+  FILE(APPEND "C:/Users/Emile/Documents/GitHub/SpaceGame/Box2D_v2.3.0/Box2D_build/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
 ENDFOREACH(file)

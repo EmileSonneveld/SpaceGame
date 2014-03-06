@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_callbacks.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_cursor.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_display.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_ext.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_font_data.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_font.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_gamemode.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_geometry.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_glutfont_definitions.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_init.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_input_devices.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_joystick.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_menu.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_misc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_overlay.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_spaceball.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_state.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_stroke_mono_roman.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_stroke_roman.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_structure.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_teapot.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_videoresize.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_window.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_teapot_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_ext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\freeglut_std.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\freeglut\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{8B914AA0-BF85-40BB-AFB5-B089B4A13F8A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{36A47330-BF75-48AC-B08E-D371C8B9FFCB}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

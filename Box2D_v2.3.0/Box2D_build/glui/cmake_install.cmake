@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/Emile/Documents/GitHub/SpaceGame/Box2D_v2.3.0/Box2D/Box2D
+# Install script for directory: C:/Users/Emile/Documents/GitHub/SpaceGame/Box2D_v2.3.0/Box2D/glui
 
 # Set the install prefix
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)

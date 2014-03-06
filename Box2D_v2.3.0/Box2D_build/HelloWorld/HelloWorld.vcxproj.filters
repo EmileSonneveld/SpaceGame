@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\HelloWorld\HelloWorld.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Emile\Documents\GitHub\SpaceGame\Box2D_v2.3.0\Box2D\HelloWorld\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{8B914AA0-BF85-40BB-AFB5-B089B4A13F8A}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
