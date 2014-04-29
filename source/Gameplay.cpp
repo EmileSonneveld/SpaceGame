@@ -14,6 +14,7 @@
 #include "Pickup.h"
 #include "pugiXml\pugixml.hpp"
 #include "BackgroundTarget.h"
+#include "Turret.h"
 //using namespace pugi;
 //#include <math.h>
 
@@ -403,6 +404,10 @@ void Gameplay::Tick(const float deltaTime)
 	{
 		m_DoFancyBackgroundStuff = !m_DoFancyBackgroundStuff;
 	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::T))
+	{
+        EnqueueAddToList(new Turret(Sltn::getInst().GetMousePos()));
+	}
 
 	//m_renderViewport.rotate(20.f*deltaTime);
 	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)){
@@ -722,7 +727,7 @@ void Gameplay::LoadInktscapeFile(const char* HitregionsFile)
 					ss << std::hex << colorStr.substr(4, 2); ss >> b; ss.clear();
 					ptr->setFillColor(sf::Color(r, g, b));
 				}
-				catch (int e){}
+				catch (...){}
 
 				ptr->setTexture(&Sltn::getInst().GetTexture("resources/mars.jpg"));
 

@@ -4,11 +4,11 @@
 
 class b2Body;
 
-class Ball : public BallBase
+class Turret : public BallBase
 {
 public:
-	Ball(sf::Vector2f pos);
-	virtual ~Ball();
+	Turret(sf::Vector2f pos);
+	virtual ~Turret();
 	virtual void Initialize();
 
 
@@ -16,5 +16,11 @@ public:
 	virtual void CustomTick(float dt); // Inherited object can implement stuff each Tick;
 
 private:
+	//b2Vec2 target;
+	float m_ShootTimer;
+	bool m_isBursting;
+	float m_burstTimer;
+    sf::Sprite m_turretSprite;
+	bool m_chasingPlayer;
 };
 

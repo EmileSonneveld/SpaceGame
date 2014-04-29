@@ -6,7 +6,7 @@
 
 
 Ball::Ball(sf::Vector2f pos) :
-BallBase(pos, 5.0f + Random(5)), m_ShootTimer(0), m_isBursting(false), m_burstTimer(0), m_chasingPlayer(false)
+BallBase(pos, 5.0f + Random(5))
 {
 	this->setTexture(Sltn::getInst().GetTexture("resources/blue-sphere_512.png"));
 	Sprite::setScale(Sprite::getScale()*.5f);

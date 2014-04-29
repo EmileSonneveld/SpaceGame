@@ -15,19 +15,21 @@ Shift: Accelerate
 Arrow: Move
 LMB: shoot
 
+
 TODO:
 -----
 - Clean up the source code
-	- More typedefs (COUNT and INDEX for examle)
+	- Don't inerit from sf::Sprite, but make a register system like in MOJITO
+	- More typedefs (COUNT and INDEX for example)
 	- Make classes clearer
 	- Make a binary compatible vector3 betwen Box2D and SFML
 	- Place the dependend repos in the main repos
-	- Port to linux
+	- Port to Linux
 - Better level
 	- level editor (extend SVG usage?)
 - Easy edit spaceship
 	- Editor state
-	- GUI (HTML5 from chromium?)
+	- GUI (HTML5 http://www.awesomium.com/ ?)
 V Shooting Kills
 - a Masive spaceship as level
 - Ai

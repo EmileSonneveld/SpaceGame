@@ -211,6 +211,7 @@
     <ClCompile Include="source\sltn.cpp" />
     <ClCompile Include="source\SpaceStation.cpp" />
     <ClCompile Include="source\SpriteAnimation.cpp" />
+    <ClCompile Include="source\Turret.cpp" />
     <ClCompile Include="source\VertexFigure.cpp" />
     <ClCompile Include="source\SpawnPoint.cpp" />
   </ItemGroup>
@@ -279,6 +280,7 @@
     <ClInclude Include="source\sltn.h" />
     <ClInclude Include="source\SpaceStation.h" />
     <ClInclude Include="source\SpriteAnimation.h" />
+    <ClInclude Include="source\Turret.h" />
     <ClInclude Include="source\UserData.h" />
     <ClInclude Include="source\VertexFigure.h" />
     <ClInclude Include="source\SpawnPoint.h" />
