@@ -111,7 +111,7 @@ private:
 	double m_timer;
 
 
-
+	bool m_DoFancyBackgroundStuff;
 
 	// Singleton stuff:
 public:

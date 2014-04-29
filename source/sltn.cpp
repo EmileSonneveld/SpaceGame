@@ -158,8 +158,17 @@ void Sltn::ExcecuteDestroyPhysicsEntities(){
 }
 
 
+#define DONT_USE_SOUND
+#ifdef DONT_USE_SOUND
 
+void Sltn::FmodStartup(){}
+FMOD::Sound* Sltn::getSound(const char* ptr) { return nullptr; }
 
+int Sltn::fmod_mainFunction(){ return 0; }
+void Sltn::playSound(FMOD::Sound* soundPtr){}
+void Sltn::playSound(FMOD::Sound* soundPtr, FMOD_VECTOR pos, FMOD_VECTOR vel){}
+
+#elif
 
 const int   INTERFACE_UPDATETIME = 50;      // 50ms update for interface
 
@@ -432,8 +441,7 @@ int Sltn::fmod_mainFunction()
 	return 0;
 } // */
 
-
-
+#endif
 
 
 

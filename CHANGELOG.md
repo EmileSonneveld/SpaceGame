@@ -29,3 +29,11 @@ Fmod basics
 2013 12 27
 cluster tracking
 Enemies can shoot
+
+
+2014 03 6
+Box2D in project
+
+stronger balls + variable size
+easier to construct stuff
+project compiles fast enouf to not use Lua

@@ -30,7 +30,8 @@ Gameplay& Gameplay::getInst() // get the singleton reference
 Gameplay::Gameplay(void)
 : m_player(nullptr)
 , m_View(sf::FloatRect(0, 0, 100, 60))
-, m_timer(0), m_Font(), m_NrOfKills()
+, m_timer(0), m_Font(), m_NrOfKills(),
+m_DoFancyBackgroundStuff(false)
 {
 	float size = 200;
 	m_BackgroundTargets.push_back(new BackgroundTarget(2000, 2000, sf::Vector2f(0, size)));
@@ -398,6 +399,10 @@ void Gameplay::ConnectWithOthers(BallBase* ballNew)
 
 void Gameplay::Tick(const float deltaTime)
 {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::B))
+	{
+		m_DoFancyBackgroundStuff = !m_DoFancyBackgroundStuff;
+	}
 
 	//m_renderViewport.rotate(20.f*deltaTime);
 	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)){
@@ -580,16 +585,19 @@ void Gameplay::Paint(sf::RenderTarget& window)
 	//m_RenderTexture.display();
 	//m_RenderTexture.clear(sf::Color(0, 255, 0, 1));
 
-	RealPaintLogic(window);
-	auto tmpView = m_View;
-	for (BackgroundTarget* ptr : m_BackgroundTargets){
-		//tmpView.setCenter(ptr->getPosition());
-		tmpView.setViewport(sf::FloatRect(ptr->getPosition(), ptr->getScale()));
-		RealPaintLogic(ptr->GetTarget());
-	}
-
 	for (BackgroundTarget* ptr : m_BackgroundTargets)
 		window.draw(*ptr);
+
+	RealPaintLogic(window);
+
+	if (m_DoFancyBackgroundStuff){
+		auto tmpView = m_View;
+		for (BackgroundTarget* ptr : m_BackgroundTargets){
+			//tmpView.setCenter(ptr->getPosition());
+			tmpView.setViewport(sf::FloatRect(ptr->getPosition(), ptr->getScale()));
+			RealPaintLogic(ptr->GetTarget());
+		}
+	}
 
 
 	/*float s = 1024;

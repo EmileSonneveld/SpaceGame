@@ -16,7 +16,6 @@ class b2World;
 #include "../fmod_inc/common.h"
 
 using namespace std;
-
 b2Vec2 to_b2Vec2(const sf::Vector2f& vec);
 b2Vec2 to_b2Vec2(const sf::Vector2<int>& vec);
 b2Vec2 to_b2Vec2(const sf::Vector2<unsigned int>& vec);
@@ -26,6 +25,12 @@ sf::Vector2<float> to_Vector2(const b2Vec2 vec);
 std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems);
 
 const float FMOD_DistanceFactor = 1.0f;          // Units per meter.  I.e feet would = 3.28.  centimeters would = 100.
+namespace {
+	float Random(float max){
+		return (float)(rand() % 2048) / 2048.0f;
+	}
+
+}
 
 // Singleton
 class Sltn // final 
@@ -69,9 +74,9 @@ public:
 	FMOD::Sound* getSound(const char* ptr);
 	void playSound(FMOD::Sound* soundPtr);
 	void playSound(FMOD::Sound* soundPtr,
-		FMOD_VECTOR pos ,
-		FMOD_VECTOR vel 
-	);
+		FMOD_VECTOR pos,
+		FMOD_VECTOR vel
+		);
 	void FmodStartup();
 
 	int fmod_mainFunction();
