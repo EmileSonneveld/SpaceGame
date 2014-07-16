@@ -26,7 +26,7 @@
 #include <SFML/Graphics.hpp>
 //#include "Globals.h"
 
-class DebugDraw : public b2DebugDraw
+class DebugDraw : public b2Draw
 {
 public:
 	DebugDraw(sf::RenderWindow &window);

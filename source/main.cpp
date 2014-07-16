@@ -8,7 +8,8 @@
 #include "Sltn.h"
 
 #include <signal.h>
-#include "../Lua/Lua.hpp"
+#define _CRT_SECURE_NO_WARNINGS
+#include <Lua.hpp>
 
 static int report(lua_State *L, int status) {
 	if (status != LUA_OK && !lua_isnil(L, -1)) {

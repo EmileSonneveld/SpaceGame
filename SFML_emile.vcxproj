@@ -75,7 +75,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>.\SFML-2.1\include;.\Box2D_v2.3.0\Box2D;$(IncludePath)</IncludePath>
+    <IncludePath>.\SFML-2.1\include;.\Box2D_v2.3.0\Box2D;lua-5.2.3/src;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)</OutDir>
     <TargetName>$(ProjectName)_d</TargetName>
   </PropertyGroup>
@@ -85,7 +85,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>.\SFML-2.1\include;.\Box2D_v2.3.0\Box2D;$(IncludePath)</IncludePath>
+    <IncludePath>.\SFML-2.1\include;.\Box2D_v2.3.0\Box2D;lua-5.2.3/src;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)</OutDir>
     <TargetName>$(ProjectName)_release</TargetName>
   </PropertyGroup>
@@ -162,38 +162,38 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Lua\lapi.c" />
-    <ClCompile Include="Lua\lauxlib.c" />
-    <ClCompile Include="Lua\lbaselib.c" />
-    <ClCompile Include="Lua\lbitlib.c" />
-    <ClCompile Include="Lua\lcode.c" />
-    <ClCompile Include="Lua\lcorolib.c" />
-    <ClCompile Include="Lua\lctype.c" />
-    <ClCompile Include="Lua\ldblib.c" />
-    <ClCompile Include="Lua\ldebug.c" />
-    <ClCompile Include="Lua\ldo.c" />
-    <ClCompile Include="Lua\ldump.c" />
-    <ClCompile Include="Lua\lfunc.c" />
-    <ClCompile Include="Lua\lgc.c" />
-    <ClCompile Include="Lua\linit.c" />
-    <ClCompile Include="Lua\liolib.c" />
-    <ClCompile Include="Lua\llex.c" />
-    <ClCompile Include="Lua\lmathlib.c" />
-    <ClCompile Include="Lua\lmem.c" />
-    <ClCompile Include="Lua\loadlib.c" />
-    <ClCompile Include="Lua\lobject.c" />
-    <ClCompile Include="Lua\lopcodes.c" />
-    <ClCompile Include="Lua\loslib.c" />
-    <ClCompile Include="Lua\lparser.c" />
-    <ClCompile Include="Lua\lstate.c" />
-    <ClCompile Include="Lua\lstring.c" />
-    <ClCompile Include="Lua\lstrlib.c" />
-    <ClCompile Include="Lua\ltable.c" />
-    <ClCompile Include="Lua\ltablib.c" />
-    <ClCompile Include="Lua\ltm.c" />
-    <ClCompile Include="Lua\lundump.c" />
-    <ClCompile Include="Lua\lvm.c" />
-    <ClCompile Include="Lua\lzio.c" />
+    <ClCompile Include="lua-5.2.3\src\lapi.c" />
+    <ClCompile Include="lua-5.2.3\src\lauxlib.c" />
+    <ClCompile Include="lua-5.2.3\src\lbaselib.c" />
+    <ClCompile Include="lua-5.2.3\src\lbitlib.c" />
+    <ClCompile Include="lua-5.2.3\src\lcode.c" />
+    <ClCompile Include="lua-5.2.3\src\lcorolib.c" />
+    <ClCompile Include="lua-5.2.3\src\lctype.c" />
+    <ClCompile Include="lua-5.2.3\src\ldblib.c" />
+    <ClCompile Include="lua-5.2.3\src\ldebug.c" />
+    <ClCompile Include="lua-5.2.3\src\ldo.c" />
+    <ClCompile Include="lua-5.2.3\src\ldump.c" />
+    <ClCompile Include="lua-5.2.3\src\lfunc.c" />
+    <ClCompile Include="lua-5.2.3\src\lgc.c" />
+    <ClCompile Include="lua-5.2.3\src\linit.c" />
+    <ClCompile Include="lua-5.2.3\src\liolib.c" />
+    <ClCompile Include="lua-5.2.3\src\llex.c" />
+    <ClCompile Include="lua-5.2.3\src\lmathlib.c" />
+    <ClCompile Include="lua-5.2.3\src\lmem.c" />
+    <ClCompile Include="lua-5.2.3\src\loadlib.c" />
+    <ClCompile Include="lua-5.2.3\src\lobject.c" />
+    <ClCompile Include="lua-5.2.3\src\lopcodes.c" />
+    <ClCompile Include="lua-5.2.3\src\loslib.c" />
+    <ClCompile Include="lua-5.2.3\src\lparser.c" />
+    <ClCompile Include="lua-5.2.3\src\lstate.c" />
+    <ClCompile Include="lua-5.2.3\src\lstring.c" />
+    <ClCompile Include="lua-5.2.3\src\lstrlib.c" />
+    <ClCompile Include="lua-5.2.3\src\ltable.c" />
+    <ClCompile Include="lua-5.2.3\src\ltablib.c" />
+    <ClCompile Include="lua-5.2.3\src\ltm.c" />
+    <ClCompile Include="lua-5.2.3\src\lundump.c" />
+    <ClCompile Include="lua-5.2.3\src\lvm.c" />
+    <ClCompile Include="lua-5.2.3\src\lzio.c" />
     <ClCompile Include="source\BackgroundTarget.cpp" />
     <ClCompile Include="source\Ball.cpp" />
     <ClCompile Include="source\BgElement.cpp" />
@@ -220,31 +220,31 @@
     <None Include="openal32.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Lua\lapi.h" />
-    <ClInclude Include="Lua\lauxlib.h" />
-    <ClInclude Include="Lua\lcode.h" />
-    <ClInclude Include="Lua\lctype.h" />
-    <ClInclude Include="Lua\ldebug.h" />
-    <ClInclude Include="Lua\ldo.h" />
-    <ClInclude Include="Lua\lfunc.h" />
-    <ClInclude Include="Lua\lgc.h" />
-    <ClInclude Include="Lua\llex.h" />
-    <ClInclude Include="Lua\llimits.h" />
-    <ClInclude Include="Lua\lmem.h" />
-    <ClInclude Include="Lua\lobject.h" />
-    <ClInclude Include="Lua\lopcodes.h" />
-    <ClInclude Include="Lua\lparser.h" />
-    <ClInclude Include="Lua\lstate.h" />
-    <ClInclude Include="Lua\lstring.h" />
-    <ClInclude Include="Lua\ltable.h" />
-    <ClInclude Include="Lua\ltm.h" />
-    <ClInclude Include="Lua\lua.h" />
-    <ClInclude Include="Lua\lua.hpp" />
-    <ClInclude Include="Lua\luaconf.h" />
-    <ClInclude Include="Lua\lualib.h" />
-    <ClInclude Include="Lua\lundump.h" />
-    <ClInclude Include="Lua\lvm.h" />
-    <ClInclude Include="Lua\lzio.h" />
+    <ClInclude Include="lua-5.2.3\src\lapi.h" />
+    <ClInclude Include="lua-5.2.3\src\lauxlib.h" />
+    <ClInclude Include="lua-5.2.3\src\lcode.h" />
+    <ClInclude Include="lua-5.2.3\src\lctype.h" />
+    <ClInclude Include="lua-5.2.3\src\ldebug.h" />
+    <ClInclude Include="lua-5.2.3\src\ldo.h" />
+    <ClInclude Include="lua-5.2.3\src\lfunc.h" />
+    <ClInclude Include="lua-5.2.3\src\lgc.h" />
+    <ClInclude Include="lua-5.2.3\src\llex.h" />
+    <ClInclude Include="lua-5.2.3\src\llimits.h" />
+    <ClInclude Include="lua-5.2.3\src\lmem.h" />
+    <ClInclude Include="lua-5.2.3\src\lobject.h" />
+    <ClInclude Include="lua-5.2.3\src\lopcodes.h" />
+    <ClInclude Include="lua-5.2.3\src\lparser.h" />
+    <ClInclude Include="lua-5.2.3\src\lstate.h" />
+    <ClInclude Include="lua-5.2.3\src\lstring.h" />
+    <ClInclude Include="lua-5.2.3\src\ltable.h" />
+    <ClInclude Include="lua-5.2.3\src\ltm.h" />
+    <ClInclude Include="lua-5.2.3\src\lua.h" />
+    <ClInclude Include="lua-5.2.3\src\lua.hpp" />
+    <ClInclude Include="lua-5.2.3\src\luaconf.h" />
+    <ClInclude Include="lua-5.2.3\src\lualib.h" />
+    <ClInclude Include="lua-5.2.3\src\lundump.h" />
+    <ClInclude Include="lua-5.2.3\src\lvm.h" />
+    <ClInclude Include="lua-5.2.3\src\lzio.h" />
     <ClInclude Include="source\memLeakDetect.h" />
     <ClInclude Include="source\BackgroundTarget.h" />
     <ClInclude Include="source\Ball.h" />

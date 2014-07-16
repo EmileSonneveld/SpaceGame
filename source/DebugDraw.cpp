@@ -34,7 +34,7 @@ sf::Color DebugDraw::B2SFColor(const b2Color &color, int alpha = 255)
 	sf::Color result((sf::Uint8)(color.r*255), (sf::Uint8)(color.g*255), (sf::Uint8)(color.b*255), (sf::Uint8) alpha);
 	return result;
 }
-
+/*
 void DebugDraw::DrawAABB(b2AABB* aabb, const b2Color& color)
 {
 	sf::Shape polygon;
@@ -172,3 +172,4 @@ void DebugDraw::DrawMouseJoint(b2Vec2& p1, b2Vec2& p2, const b2Color &boxColor, 
     this->window->Draw(line);
 }
 
+//*/

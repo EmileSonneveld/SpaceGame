@@ -3,7 +3,7 @@
 #include "Sltn.h"
 #include "Gameplay.h"
 #include <Box2D\Box2D.h>
-#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics.hpp>
 
 SpaceStation::SpaceStation(sf::Vector2f pos) : entityBase(), m_va(sf::VertexArray(sf::PrimitiveType::Quads))
 {
