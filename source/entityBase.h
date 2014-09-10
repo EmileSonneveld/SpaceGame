@@ -7,6 +7,7 @@ class b2World;
 #include <Box2D/Common/b2Settings.h>
 #include <Box2D/Dynamics/b2Fixture.h>
 #include "Sltn.h"
+#include "GameDefines.h"
 #include "memLeakDetect.h"
 
 // Just to have a virtual destructor and sf::Sprite

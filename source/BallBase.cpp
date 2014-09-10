@@ -3,7 +3,7 @@
 #include "Bullet.h"
 #include "Sltn.h"
 #include "Gameplay.h"
-#include <Box2D\Box2D.h>
+#include <Box2D/Box2D.h>
 #include <Box2D/Dynamics/b2Fixture.h>
 #include <math.h>
 
@@ -41,7 +41,7 @@ void BallBase::CreateBall()
 	userData->kind = UserData::Ball;
 	bodyDef.userData = userData;
 
-	m_b2Body = Sltn::getInst().m_world->CreateBody(&bodyDef); 
+	m_b2Body = Sltn::getInst().m_world->CreateBody(&bodyDef);
 
 	b2CircleShape shape;	shape.m_radius = m_radius / 2;
 	b2FixtureDef fixtureDef;
@@ -87,7 +87,7 @@ void BallBase::setTexture(const sf::Texture& texture, bool calculateFramesFromSq
 	Sprite::setTexture(texture, false);
 	if (calculateFramesFromSquare){
 		float tmp = (float)getTexture()->getSize().x / (float)getTexture()->getSize().y;
-		assert(std::fmodf(tmp, 1) < 0.01); // , "bad texture size, must be strip of squares"
+		// assert(std::fmodf(tmp, 1) < 0.01); // , "bad texture size, must be strip of squares"
 
 		int nrOfFrames = (int)std::floor(tmp);
 		m_nrOfFrames = (int)nrOfFrames;
@@ -139,7 +139,7 @@ void BallBase::Shoot(const b2Vec2 target, bool ai)
 		);
 
 	force *= 65000.0f;
-	bullet->GetB2Body()->ApplyForceToCenter(force);
+	bullet->GetB2Body()->ApplyForceToCenter(force, true);
 
 	gp.EnqueueAddToList(bullet);
 

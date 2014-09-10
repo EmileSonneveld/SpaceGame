@@ -1,12 +1,12 @@
 #include "Turret.h"
 #include "Sltn.h"
 #include "Gameplay.h"
-#include <Box2D\Box2D.h>
+#include <Box2D/Box2D.h>
 #include "main.h"
 
 
 Turret::Turret(sf::Vector2f pos) :
-    BallBase(pos, 5.0f + Random(5)), m_ShootTimer(0), m_isBursting(false), 
+    BallBase(pos, 5.0f + Random(5)), m_ShootTimer(0), m_isBursting(false),
     m_burstTimer(0), m_chasingPlayer(false), m_turretSprite()
 {
 	this->setTexture(Sltn::getInst().GetTexture("resources/blue-sphere_512.png"));

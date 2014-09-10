@@ -5,9 +5,9 @@ class b2Joint;
 class b2World;
 
 #include <SFML/System/Vector2.hpp>
-#include <SFML/Graphics/texture.hpp>
+#include <SFML/Graphics/Texture.hpp>
 
-#include <Box2D\Common\b2Math.h>
+#include <Box2D/Common/b2Math.h>
 #include <string>
 #include <map>
 #include <typeinfo>
@@ -33,7 +33,7 @@ namespace {
 }
 
 // Singleton
-class Sltn // final 
+class Sltn // final
 {
 public:
 

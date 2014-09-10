@@ -2,7 +2,7 @@
 #include "Player.h"
 #include "Sltn.h"
 #include "Gameplay.h"
-#include <Box2D\Box2D.h>
+#include <Box2D/Box2D.h>
 #include <SFML/Graphics/RenderTarget.hpp>
 
 #include <iostream>

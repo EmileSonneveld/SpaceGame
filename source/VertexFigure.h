@@ -6,7 +6,7 @@ class b2Body;
 struct b2Vec2;
 class RenderTarget;
 
-#include <Box2D\Box2D.h>
+#include <Box2D/Box2D.h>
 
 //#include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics.hpp>
@@ -18,7 +18,7 @@ public:
 	virtual ~VertexFigure();
 
 	void Tick(float dt);
-	
+
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 protected:

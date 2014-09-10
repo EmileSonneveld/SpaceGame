@@ -1,7 +1,7 @@
 #include "Sltn.h"
 #include "UserData.h"
 #include "entityBase.h"
-#include <Box2D\Box2D.h>
+#include <Box2D/Box2D.h>
 #include <iostream>
 #include <sstream>
 
@@ -85,7 +85,7 @@ void Sltn::EnqueDestroyPhysicsEntity(b2Body* body){
 	if (body == nullptr) return;
 	//if( !m_world->IsLocked() )
 	//    m_world->DestroyBody(body);
-	//else 
+	//else
 	bool found = false;
 	for (b2Body* bodyIt = m_world->GetBodyList(); bodyIt; bodyIt = bodyIt->GetNext()){
 		//for (b2Body* body= Sltn::getInst().m_world->GetBodyList(); body; body = body->GetNext()){
@@ -113,7 +113,7 @@ void Sltn::EnqueDestroyPhysicsEntity(b2Joint* body){
 	if (body == nullptr) return;
 	//if( !m_world->IsLocked() )
 	//    m_world->DestroyBody(body);
-	//else 
+	//else
 	bool found = false;
 	for (auto* bodyIt = m_world->GetJointList(); bodyIt; bodyIt = bodyIt->GetNext()){
 		//for (b2Body* body= Sltn::getInst().m_world->GetBodyList(); body; body = body->GetNext()){
@@ -276,14 +276,14 @@ int Sltn::fmod_mainFunction()
 	// ERRCHECK(result);
 	// result = sound1->setMode(FMOD_LOOP_NORMAL);
 	// ERRCHECK(result);
-	// 
+	//
 	// result = system->createSound(Common_MediaPath("./resources/RifleFire.wav"), FMOD_3D, 0, &sound2);
 	// ERRCHECK(result);
 	// result = sound2->set3DMinMaxDistance(0.5f * FMOD_DistanceFactor, 5000.0f * FMOD_DistanceFactor);
 	// ERRCHECK(result);
 	// result = sound2->setMode(FMOD_LOOP_NORMAL);
 	// ERRCHECK(result);
-	// 
+	//
 	// result = system->createSound(Common_MediaPath("./resources/FlamerActive.wav"), FMOD_SOFTWARE | FMOD_2D, 0, &sound3);
 	// ERRCHECK(result);
 
@@ -292,7 +292,7 @@ int Sltn::fmod_mainFunction()
 	// {
 	// 	FMOD_VECTOR pos = { -10.0f * FMOD_DistanceFactor, 0.0f, 0.0f };
 	// 	FMOD_VECTOR vel = {  0.0f, 0.0f, 0.0f };
-	// 
+	//
 	// 	result = system->playSound(sound1, 0, true, &channel1);
 	// 	ERRCHECK(result);
 	// 	result = channel1->set3DAttributes(&pos, &vel);
@@ -300,11 +300,11 @@ int Sltn::fmod_mainFunction()
 	// 	result = channel1->setPaused(false);
 	// 	ERRCHECK(result);
 	// }
-	// 
+	//
 	// {
 	// 	FMOD_VECTOR pos = { 15.0f * FMOD_DistanceFactor, 0.0f, 0.0f };
 	// 	FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
-	// 
+	//
 	// 	result = system->playSound(sound2, 0, true, &channel2);
 	// 	ERRCHECK(result);
 	// 	result = channel2->set3DAttributes(&pos, &vel);
@@ -430,12 +430,12 @@ int Sltn::fmod_mainFunction()
 	// ERRCHECK(result);
 	// result = sound3->release();
 	// ERRCHECK(result);
-	// 
+	//
 	// result = system->close();
 	// ERRCHECK(result);
 	// result = system->release();
 	// ERRCHECK(result);
-	// 
+	//
 	// Common_Close();
 
 	return 0;

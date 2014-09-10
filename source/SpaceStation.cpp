@@ -2,7 +2,7 @@
 #include "Player.h"
 #include "Sltn.h"
 #include "Gameplay.h"
-#include <Box2D\Box2D.h>
+#include <Box2D/Box2D.h>
 #include <SFML/Graphics.hpp>
 
 SpaceStation::SpaceStation(sf::Vector2f pos) : entityBase(), m_va(sf::VertexArray(sf::PrimitiveType::Quads))
@@ -92,7 +92,7 @@ void SpaceStation::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	//target.draw(*this, states);
 
 
-	
+
 
 	target.draw(m_va, states);
 

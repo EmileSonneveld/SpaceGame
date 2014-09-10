@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include <Box2D\Box2D.h>
+#include <Box2D/Box2D.h>
 #include <vector>
 #include "main.h"
 #include "MyWorldCallbacks.hpp"
@@ -9,7 +9,7 @@
 
 #include <signal.h>
 #define _CRT_SECURE_NO_WARNINGS
-#include <Lua.hpp>
+#include <lua.hpp>
 
 static int report(lua_State *L, int status) {
 	if (status != LUA_OK && !lua_isnil(L, -1)) {

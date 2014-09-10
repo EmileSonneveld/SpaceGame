@@ -1,8 +1,8 @@
 #pragma once
 
-//#include <Box2D\Box2D.h>
-#include <Box2D\Dynamics\b2WorldCallbacks.h>
-#include <Box2D\Dynamics\b2WorldCallbacks.h>
+//#include <Box2D/Box2D.h>
+#include <Box2D/Dynamics/b2WorldCallbacks.h>
+#include <Box2D/Dynamics/b2WorldCallbacks.h>
 
 #include "Gameplay.h"
 #include "Sltn.h"
@@ -101,7 +101,7 @@ public:
 				// 	bullet->StartToDie();
 				// 	//Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureB()->GetBody());
 				// }
-				// 
+				//
 				// if (udB->kind == UserData::Enemy) {
 				// 	auto bullet = ((Bullet*)udA->creator);
 				// 	((BallBase*)udB->creator)->DoDammage(bullet->GetDammage());

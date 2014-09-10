@@ -390,7 +390,7 @@ private:
 	friend class b2ContactManager;
 	friend class b2ContactSolver;
 	friend class b2Contact;
-	
+
 	friend class b2DistanceJoint;
 	friend class b2FrictionJoint;
 	friend class b2GearJoint;
@@ -754,7 +754,7 @@ inline void b2Body::ApplyForce(const b2Vec2& force, const b2Vec2& point, bool wa
 	}
 }
 
-inline void b2Body::ApplyForceToCenter(const b2Vec2& force, bool wake)
+inline void b2Body::ApplyForceToCenter(const b2Vec2& force, bool wake = true) // why this awake crap? -- Emile
 {
 	if (m_type != b2_dynamicBody)
 	{

@@ -1,6 +1,6 @@
 #include "Player.h"
 #include "Sltn.h"
-#include <Box2D\Box2D.h>
+#include <Box2D/Box2D.h>
 #include "main.h"
 #include "Gameplay.h"
 #include "Bullet.h"

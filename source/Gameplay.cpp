@@ -12,7 +12,7 @@
 
 #include "BgElement.h"
 #include "Pickup.h"
-#include "pugiXml\pugixml.hpp"
+#include "pugiXml/pugixml.hpp"
 #include "BackgroundTarget.h"
 #include "Turret.h"
 //using namespace pugi;
@@ -217,13 +217,13 @@ bool FileExists(const string& filename)
 	}
 	return false; // openFile zit in de stack en word dus nu gedelete
 }
-bool FileExists(const wstring& filename)
-{
-	if (wifstream(filename.c_str())){ //openFile
-		return true;
-	}
-	return false; // openFile zit in de stack en word dus nu gedelete
-}
+// bool FileExists(const wstring& filename)
+// {
+// 	if (wifstream(filename.c_str())){ //openFile
+// 		return true;
+// 	}
+// 	return false; // openFile zit in de stack en word dus nu gedelete
+// }
 
 // recursevely infect te cluster
 //void SpreadFilterGroup(b2Body* bodyA, int16 groupIndex){
@@ -381,7 +381,7 @@ void Gameplay::ConnectWithOthers(BallBase* ballNew)
 //	}
 //	if (chosenBodys.size() <= 0) return false;
 //
-//	// if( chosenBodys.size()<2 ) 
+//	// if( chosenBodys.size()<2 )
 //	float minDistance = 9999999.0f;
 //	ChosenBody cb = ChosenBody();
 //	for (auto chosenBody : chosenBodys)
@@ -554,7 +554,7 @@ void Gameplay::RealPaintLogic(sf::RenderTarget& renderTarget)
 
 
 	int counter = 0;
-	//size_t 
+	//size_t
 	sf::VertexArray spriteVertexArray(sf::PrimitiveType::Quads, (unsigned int)(4U * m_SpriteAnimationList.size()));
 
 	const sf::Texture* tex = nullptr;
@@ -577,7 +577,7 @@ void Gameplay::RealPaintLogic(sf::RenderTarget& renderTarget)
 			auto it = m_SpriteAnimationList.begin();
 			//sf::Transform::Identity
 			auto rs = sf::RenderStates(tex); // (*it)->getTexture()
-			// rs.blendMode= sf::BlendMode::BlendAdd; //,m_View.getTransform, 
+			// rs.blendMode= sf::BlendMode::BlendAdd; //,m_View.getTransform,
 			renderTarget.draw(spriteVertexArray, rs);
 		}
 	}

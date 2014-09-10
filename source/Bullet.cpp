@@ -3,7 +3,7 @@
 #include "Gameplay.h"
 #include "SpriteAnimation.h"
 #include "Sltn.h"
-#include <Box2D\Box2D.h>
+#include <Box2D/Box2D.h>
 
 FMOD::Sound* Bullet::m_sound = nullptr;
 
@@ -45,7 +45,7 @@ Bullet::Bullet(sf::Vector2f pos, float angle, bool useSound) : entityBase(), m_r
 
 Bullet::~Bullet()
 {
-	
+
 }
 
 void Bullet::DestroyBody()
