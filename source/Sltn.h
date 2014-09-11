@@ -48,7 +48,7 @@ public:
 	{
 		//static Sltn    instance; // Guaranteed to be destroyed.
 		// Instantiated on first use.
-		if (instance == nullptr) instance = new Sltn();
+		if (instance == 0) instance = new Sltn();
 		return *instance;
 	}
 

@@ -9,66 +9,66 @@
 
 #include <signal.h>
 #define _CRT_SECURE_NO_WARNINGS
-#include <lua.hpp>
-
-static int report(lua_State *L, int status) {
-	if (status != LUA_OK && !lua_isnil(L, -1)) {
-		const char *msg = lua_tostring(L, -1);
-		if (msg == NULL) msg = "(error object is not a string)";
-		cerr << ("lua", msg);
-		lua_pop(L, 1);
-		/* force a complete garbage collection in case of errors */
-		lua_gc(L, LUA_GCCOLLECT, 0);
-	}
-	return status;
-}
-
-/* the next function is called unprotected, so it must avoid errors */
-static void finalreport(lua_State *L, int status) {
-	if (status != LUA_OK) {
-		const char *msg = (lua_type(L, -1) == LUA_TSTRING) ? lua_tostring(L, -1)
-			: NULL;
-		if (msg == NULL) msg = "(error object is not a string)";
-		cerr << ("lua", msg);
-		lua_pop(L, 1);
-	}
-}
-
-static int traceback(lua_State *L) {
-	const char *msg = lua_tostring(L, 1);
-	if (msg)
-		luaL_traceback(L, L, msg, 1);
-	else if (!lua_isnoneornil(L, 1)) {  /* is there an error object? */
-		if (!luaL_callmeta(L, 1, "__tostring"))  /* try its 'tostring' metamethod */
-			lua_pushliteral(L, "(no error message)");
-	}
-	return 1;
-}
-
-static int docall(lua_State *L, int narg, int nres) {
-	int status;
-	int base = lua_gettop(L) - narg;  /* function index */
-	lua_pushcfunction(L, traceback);  /* push traceback function */
-	lua_insert(L, base);  /* put it under chunk and args */
-	//globalL = L;  /* to be available to 'laction' */
-	//signal(SIGINT, laction);
-	status = lua_pcall(L, narg, nres, base);
-	signal(SIGINT, SIG_DFL);
-	lua_remove(L, base);  /* remove traceback function */
-	return status;
-}
-
-static int dofile(lua_State *L, const char *name) {
-	int status = luaL_loadfile(L, name);
-	if (status == LUA_OK) status = docall(L, 0, 0);
-	return report(L, status);
-}
-
-static int l_sin(lua_State *L) {
-	double d = lua_tonumber(L, 1);  /* get argument */
-	lua_pushnumber(L, sin(d));  /* push result */
-	return 1;  /* number of results */
-}
+// #include <lua.hpp>
+//
+// static int report(lua_State *L, int status) {
+// 	if (status != LUA_OK && !lua_isnil(L, -1)) {
+// 		const char *msg = lua_tostring(L, -1);
+// 		if (msg == NULL) msg = "(error object is not a string)";
+// 		cerr << ("lua", msg);
+// 		lua_pop(L, 1);
+// 		/* force a complete garbage collection in case of errors */
+// 		lua_gc(L, LUA_GCCOLLECT, 0);
+// 	}
+// 	return status;
+// }
+//
+// /* the next function is called unprotected, so it must avoid errors */
+// static void finalreport(lua_State *L, int status) {
+// 	if (status != LUA_OK) {
+// 		const char *msg = (lua_type(L, -1) == LUA_TSTRING) ? lua_tostring(L, -1)
+// 			: NULL;
+// 		if (msg == NULL) msg = "(error object is not a string)";
+// 		cerr << ("lua", msg);
+// 		lua_pop(L, 1);
+// 	}
+// }
+//
+// static int traceback(lua_State *L) {
+// 	const char *msg = lua_tostring(L, 1);
+// 	if (msg)
+// 		luaL_traceback(L, L, msg, 1);
+// 	else if (!lua_isnoneornil(L, 1)) {  /* is there an error object? */
+// 		if (!luaL_callmeta(L, 1, "__tostring"))  /* try its 'tostring' metamethod */
+// 			lua_pushliteral(L, "(no error message)");
+// 	}
+// 	return 1;
+// }
+//
+// static int docall(lua_State *L, int narg, int nres) {
+// 	int status;
+// 	int base = lua_gettop(L) - narg;  /* function index */
+// 	lua_pushcfunction(L, traceback);  /* push traceback function */
+// 	lua_insert(L, base);  /* put it under chunk and args */
+// 	//globalL = L;  /* to be available to 'laction' */
+// 	//signal(SIGINT, laction);
+// 	status = lua_pcall(L, narg, nres, base);
+// 	signal(SIGINT, SIG_DFL);
+// 	lua_remove(L, base);  /* remove traceback function */
+// 	return status;
+// }
+//
+// static int dofile(lua_State *L, const char *name) {
+// 	int status = luaL_loadfile(L, name);
+// 	if (status == LUA_OK) status = docall(L, 0, 0);
+// 	return report(L, status);
+// }
+//
+// static int l_sin(lua_State *L) {
+// 	double d = lua_tonumber(L, 1);  /* get argument */
+// 	lua_pushnumber(L, sin(d));  /* push result */
+// 	return 1;  /* number of results */
+// }
 
 
 int main(int argc, const char* argv[])
@@ -98,7 +98,7 @@ int main(int argc, const char* argv[])
 }
 
 MainClass::MainClass() :
-m_window(sf::RenderWindow(sf::VideoMode(1280, 720), "SFML Space game By Emile"))
+m_window(sf::VideoMode(1280, 720), "SFML Space game By Emile")
 {
 	m_window.setVerticalSyncEnabled(true);
 	Sltn::getInst().m_ScreenSize = m_window.getSize();
@@ -113,19 +113,19 @@ m_window(sf::RenderWindow(sf::VideoMode(1280, 720), "SFML Space game By Emile"))
 int MainClass::gameLoop(){
 
 
-	int status, result;
-	lua_State *L = luaL_newstate();  /* create state */
-	if (L == NULL) {
-		cerr << ("Lua: cannot create state: not enough memory");
-		return EXIT_FAILURE;
-	}
-	/* call 'pmain' in protected mode */
-	//lua_pushcfunction(L, &pmain);
-	dofile(L, "resources/stuff.lua");
-	//lua_pushinteger(L, argc);  /* 1st argument */
-	//lua_pushlightuserdata(L, argv); /* 2nd argument */
-	status = lua_pcall(L, 2, 1, 0);
-	result = lua_toboolean(L, -1);  /* get result */
+	//  int status, result;
+	//  lua_State *L = luaL_newstate();  /* create state */
+	//  if (L == NULL) {
+	//  	cerr << ("Lua: cannot create state: not enough memory");
+	//  	return EXIT_FAILURE;
+	//  }
+	//  /* call 'pmain' in protected mode */
+	//  //lua_pushcfunction(L, &pmain);
+	//  dofile(L, "resources/stuff.lua");
+	//  //lua_pushinteger(L, argc);  /* 1st argument */
+	//  //lua_pushlightuserdata(L, argv); /* 2nd argument */
+	//  status = lua_pcall(L, 2, 1, 0);
+	//  result = lua_toboolean(L, -1);  /* get result */
 
 
 
@@ -191,9 +191,10 @@ int MainClass::gameLoop(){
 	}
 
 
-	finalreport(L, status);
-	lua_close(L);
-	return (result && status == LUA_OK) ? EXIT_SUCCESS : EXIT_FAILURE;
+	//finalreport(L, status);
+	//lua_close(L);
+	//return (result && status == LUA_OK) ? EXIT_SUCCESS : EXIT_FAILURE;
+	return 0;
 }
 
 /*

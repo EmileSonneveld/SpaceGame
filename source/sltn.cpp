@@ -48,18 +48,18 @@ Sltn::~Sltn()
 	delete m_world;
 
 
-	FMOD_RESULT      result;
-	for (auto soundPtr : m_Sounds){
-		result = soundPtr.second->release();
-		ERRCHECK(result);
-	}
+	// FMOD_RESULT      result;
+	// for (auto soundPtr : m_Sounds){
+	// 	result = soundPtr.second->release();
+	// 	ERRCHECK(result);
+	// }
+	//
+	// result = system->close();
+	// ERRCHECK(result);
+	// result = system->release();
+	// ERRCHECK(result);
+	// Common_Close();
 
-	result = system->close();
-	ERRCHECK(result);
-	result = system->release();
-	ERRCHECK(result);
-
-	Common_Close();
 	instance = nullptr;
 }
 const sf::Texture& Sltn::GetTexture(const std::string& path){
@@ -168,7 +168,7 @@ int Sltn::fmod_mainFunction(){ return 0; }
 void Sltn::playSound(FMOD::Sound* soundPtr){}
 void Sltn::playSound(FMOD::Sound* soundPtr, FMOD_VECTOR pos, FMOD_VECTOR vel){}
 
-#elif
+#else
 
 const int   INTERFACE_UPDATETIME = 50;      // 50ms update for interface
 

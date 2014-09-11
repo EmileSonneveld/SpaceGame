@@ -38,13 +38,13 @@ public:
 		//return;
 		if (*impulse->normalImpulses > 120.0f)
 		{
-			auto bodyA = contact->GetFixtureA()->GetBody();
-			auto bodyB = contact->GetFixtureB()->GetBody();
+			b2Body* bodyA = contact->GetFixtureA()->GetBody();
+			b2Body* bodyB = contact->GetFixtureB()->GetBody();
 
 			// Detroy stuff
-			auto udA = (UserData*)bodyA->GetUserData();
+			UserData* udA = (UserData*)bodyA->GetUserData();
 			if (udA == nullptr) return;
-			auto udB = (UserData*)contact->GetFixtureB()->GetBody()->GetUserData();
+			UserData* udB = (UserData*)contact->GetFixtureB()->GetBody()->GetUserData();
 
 
 			if ((udA->kind == UserData::player || udB->kind == UserData::player)){
@@ -82,14 +82,14 @@ public:
 				// }
 
 				if (udA->kind == UserData::Ball || udA->kind == UserData::Enemy || udA->kind == UserData::player) {
-					auto bullet = ((Bullet*)udB->creator);
+					Bullet* bullet = (Bullet*)udB->creator;
 					((BallBase*)udA->creator)->DoDammage(bullet->GetDammage());
 					bullet->StartToDie();
 					//Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureB()->GetBody());
 				}
 
 				if (udB->kind == UserData::Ball || udA->kind == UserData::Enemy || udA->kind == UserData::player) {
-					auto bullet = ((Bullet*)udA->creator);
+					Bullet* bullet = (Bullet*)udA->creator;
 					((BallBase*)udB->creator)->DoDammage(bullet->GetDammage());
 					bullet->StartToDie();
 					//Sltn::getInst().EnqueDestroyPhysicsEntity(contact->GetFixtureA()->GetBody());
@@ -122,12 +122,12 @@ class MyDestructionListener : public b2DestructionListener
 {
 	void 	SayGoodbye(b2Joint *joint)
 	{
-		auto ud = (UserData*)joint->GetUserData();
+		UserData* ud = (UserData*)joint->GetUserData();
 	}
 
 	void 	SayGoodbye(b2Fixture *fixture)
 	{
-		auto ud = (UserData*)fixture->GetUserData();
+		UserData* ud = (UserData*)fixture->GetUserData();
 	}
 
 };

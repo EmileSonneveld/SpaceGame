@@ -79,6 +79,9 @@ struct NoAssert { \
 */
 
 
+#include <Box2D/Box2D.h>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics.hpp>
 
 void AddThickLine(sf::VertexArray& vertices, const sf::Vector2f& point1, const sf::Vector2f& point2);
 bool AreLinqued(b2Body* bodyA, b2Body* bodyB);
