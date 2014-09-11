@@ -30,3 +30,5 @@ Debug/
 Release/
 Documentation/
 doc/
+.sconsign.dblite
+
