@@ -31,4 +31,5 @@ Release/
 Documentation/
 doc/
 .sconsign.dblite
-
+*.exe
+sublime.sublime-workspace

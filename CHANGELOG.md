@@ -37,3 +37,8 @@ Box2D in project
 stronger balls + variable size
 easier to construct stuff
 project compiles fast enouf to not use Lua
+
+
+2014 09 11
+After a long time I decided to try and port this to Linux.
+It works on my machine now, but I didn't test elsewhere.
