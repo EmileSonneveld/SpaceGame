@@ -1,12 +1,8 @@
-#env = Environment()
-env=Environment(CPPPATH='',
-                CPPDEFINES=[],
-                LIBS=[],
-                CXXFLAGS="-std=c++0x -std=gnu++11 ",
-                )
-#GCC_VERSION = commands.getoutput(env['CXX'] + ' -dumpversion')
+
+env=Environment()
+
 env.Append(LIBS = ["libBox2D"]);
 env.Append(LIBS = ["sfml-graphics","sfml-window","sfml-system"]);
-env.Append(CCFLAGS = '-g -std=c++0x')
+env.Append(CXXFLAGS = '-std=gnu++11')
 
-env.Program("my_game", Glob("source/*.cpp") + Glob("source/pugiXml/*.cpp") )
+env.Program("SpaceGame", Glob("source/*.cpp") + Glob("source/pugiXml/*.cpp") )

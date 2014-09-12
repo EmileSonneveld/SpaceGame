@@ -1,175 +1,168 @@
-/*
-    Copyright (C) 2010 Allen Jordan ()
-    Copyright (C) 2011 Xabier Larrakoetxea (slok)
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "DebugDraw.h"
 
-DebugDraw::DebugDraw(sf::RenderWindow &window)
+MyDebugDraw::MyDebugDraw()
 {
-        this->window = &window;
+    SetFlags( b2Draw::e_shapeBit or b2Draw::e_shapeBit );
 }
 
-DebugDraw::~DebugDraw()
+MyDebugDraw::~MyDebugDraw()
 {
 
 }
 
 //convert a Box2D (float 0.0f - 1.0f range) color to a SFML color (uint8 0 - 255 range)
-sf::Color DebugDraw::B2SFColor(const b2Color &color, int alpha = 255)
+sf::Color MyDebugDraw::B2SFColor(const b2Color &color, int alpha = 255)
 {
 	sf::Color result((sf::Uint8)(color.r*255), (sf::Uint8)(color.g*255), (sf::Uint8)(color.b*255), (sf::Uint8) alpha);
 	return result;
 }
-/*
-void DebugDraw::DrawAABB(b2AABB* aabb, const b2Color& color)
-{
-	sf::Shape polygon;
-    polygon.AddPoint(aabb->lowerBound.x*RATIO, aabb->lowerBound.y*RATIO, this->B2SFColor(color, 50), this->B2SFColor(color));
-    polygon.AddPoint(aabb->upperBound.x*RATIO, aabb->lowerBound.y*RATIO, this->B2SFColor(color, 50), this->B2SFColor(color));
-    polygon.AddPoint(aabb->upperBound.x*RATIO, aabb->upperBound.y*RATIO, this->B2SFColor(color, 50), this->B2SFColor(color));
-    polygon.AddPoint(aabb->lowerBound.x*RATIO, aabb->upperBound.y*RATIO, this->B2SFColor(color, 50), this->B2SFColor(color));
 
-    polygon.SetOutlineWidth(1.0f);
-	this->window->Draw(polygon);
-    std::cout << "DrawAABB\n";
+void MyDebugDraw::DrawAABB(b2AABB* aabb, const b2Color& color)
+{
+    sf::ConvexShape convex;
+    convex.setOutlineColor(B2SFColor(color));
+    convex.setFillColor(B2SFColor(color));
+    convex.setPointCount(4);
+
+    convex.setPoint(0, sf::Vector2f(aabb->lowerBound.x, aabb->lowerBound.y));
+    convex.setPoint(1, sf::Vector2f(aabb->upperBound.x, aabb->lowerBound.y));
+    convex.setPoint(2, sf::Vector2f(aabb->upperBound.x, aabb->upperBound.y));
+    convex.setPoint(3, sf::Vector2f(aabb->lowerBound.x, aabb->upperBound.y));
+
+    convex.setOutlineThickness(1.0f);
+    this->m_window->draw(convex);
 }
 
 
-void DebugDraw::DrawString(int x, int y, const char* string)
+void MyDebugDraw::DrawString(int x, int y, const char* string)
 {
-    sf::String fpsText;
-    fpsText.SetFont(sf::Font::GetDefaultFont());
-    fpsText.SetSize(15);
-    fpsText.SetPosition(x,y);
-    fpsText.SetText(string);
-    this->window->Draw(fpsText);
+    // sf::String fpsText;
+    // fpsText.setFont(sf::Font::getDefaultFont());
+    // fpsText.setSize(15);
+    // fpsText.setPosition(x,y);
+    // fpsText.setText(string);
+    // this->m_window->draw(fpsText);
 }
 
-void DebugDraw::DrawPoint(const b2Vec2& p, float32 size, const b2Color& color)
+void MyDebugDraw::DrawPoint(const b2Vec2& p, float32 size, const b2Color& color)
 {
-    std::cout << "DrawPoint\n";
+    std::cout << "MyDebugDraw::DrawPoint is stub\n";
 }
 
-void DebugDraw::DrawTransform(const b2Transform& xf)
+void MyDebugDraw::DrawTransform(const b2Transform& xf)
 {
-    float x,y, lineSize, lineProportion;
-    x = xf.position.x * RATIO;
-    y = xf.position.y * RATIO;
-    lineProportion = 0.15; // 0.15 ~ 10 pixels
-    b2Vec2 p1 = xf.position, p2;
-
-	//red (X axis)
-	p2 = p1 + (lineProportion * xf.R.col1);
-    sf::Shape redLine = sf::Shape::Line(p1.x*RATIO, p1.y*RATIO, p2.x*RATIO, p2.y*RATIO, 1, sf::Color::Red);
-
-	//green (Y axis)
-	p2 = p1 - (lineProportion * xf.R.col2);
-	sf::Shape greenLine = sf::Shape::Line(p1.x*RATIO, p1.y*RATIO, p2.x*RATIO, p2.y*RATIO, 1, sf::Color::Green);
-
-    this->window->Draw(redLine);
-    this->window->Draw(greenLine);
+    std::cout << "MyDebugDraw::DrawTransform is stub\n";
+    // float x,y, lineSize, lineProportion;
+    // x = xf.position.x * RATIO;
+    // y = xf.position.y * RATIO;
+    // lineProportion = 0.15; // 0.15 ~ 10 pixels
+    // b2Vec2 p1 = xf.position, p2;
+//
+	// //red (X axis)
+	// p2 = p1 + (lineProportion * xf.R.col1);
+    // sf::Shape redLine = sf::Line(p1.x, p1.y, p2.x, p2.y, 1, sf::Color::Red);
+//
+	// //green (Y axis)
+	// p2 = p1 - (lineProportion * xf.R.col2);
+	// sf::Shape greenLine = sf::Line(p1.x, p1.y, p2.x, p2.y, 1, sf::Color::Green);
+//
+    // this->m_window->draw(redLine);
+    // this->m_window->draw(greenLine);
 }
 
-void DebugDraw::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color)
+void MyDebugDraw::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color)
 {
+    std::cout << "MyDebugDraw::DrawSegment is stub\n";
 
-    sf::Shape line = sf::Shape::Line(p1.x*RATIO, p1.y*RATIO, p2.x*RATIO, p2.y*RATIO, 1, this->B2SFColor(color));
-    line.EnableFill(true);
-    this->window->Draw(line);
+    // sf::Shape line = sf::Line(p1.x, p1.y, p2.x, p2.y, 1, this->B2SFColor(color));
+    // line.EnableFill(true);
+    // this->m_window->draw(line);
 }
 
-void DebugDraw::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color)
+void MyDebugDraw::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color)
 {
     //no converion in cordinates of center and upper left corner, Circle in sfml is managed by default with the center
-    sf::Shape circle = sf::Shape::Circle(center.x*RATIO, center.y*RATIO, (radius*RATIO), this->B2SFColor(color, 50), 1.0f,this->B2SFColor(color));
-
+    auto circle = sf::CircleShape(radius);
+    circle.setPosition(center.x - radius, center.y - radius);
     // line of the circle wich shows the angle
     b2Vec2 p = center + (radius * axis);
-    sf::Shape line = sf::Shape::Line(center.x*RATIO, center.y*RATIO, p.x*RATIO, p.y*RATIO, 1, this->B2SFColor(color));
 
-    this->window->Draw(circle);
-    this->window->Draw(line);
+    sf::VertexArray lines(sf::Lines, 2);
+    lines[0].position = sf::Vector2f(center.x, center.y);
+    lines[1].position = sf::Vector2f(p.x, p.y);
+    this->m_window->draw(lines);
+
+    this->m_window->draw(circle);
 }
 
-void DebugDraw::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color)
+void MyDebugDraw::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color)
 {
-    sf::Shape circle = sf::Shape::Circle(center.x*RATIO, center.y*RATIO, radius*RATIO, this->B2SFColor(color, 50), 1.0f,this->B2SFColor(color));
-    circle.EnableFill(false);
-    this->window->Draw(circle);
+    auto circle = sf::CircleShape( radius );
+    circle.setPosition(center.x - radius, center.y - radius);
+    circle.setFillColor(sf::Color::Transparent);
+    this->m_window->draw(circle);
 }
 
-void DebugDraw::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
+void MyDebugDraw::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
 {
+    sf::ConvexShape convex;
+    convex.setOutlineColor(B2SFColor(color));
+    convex.setPointCount(vertexCount);
 
-    sf::Shape polygon;
-	for (int32 i=0; i<vertexCount; i++)
-	{
-		b2Vec2 vertex = vertices[i];
-		polygon.AddPoint(vertex.x*RATIO, vertex.y*RATIO, this->B2SFColor(color, 50), this->B2SFColor(color));
-	}
-	polygon.SetOutlineWidth(1.0f);
-	this->window->Draw(polygon);
+    for (int32 i=0; i<vertexCount; i++)
+    {
+        convex.setPoint(i, sf::Vector2f(vertices[i].x, vertices[i].y));
+    }
+
+    convex.setOutlineThickness(1.0f);
+    this->m_window->draw(convex);
 }
 
-void DebugDraw::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
+void MyDebugDraw::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
 {
-    sf::Shape polygon;
-	for (int32 i=0; i<vertexCount; i++)
-	{
-		b2Vec2 vertex = vertices[i];
-		polygon.AddPoint(vertex.x*RATIO, vertex.y*RATIO, this->B2SFColor(color, 50), this->B2SFColor(color, 255));
-	}
-	polygon.SetOutlineWidth(1.0f);
-	polygon.EnableFill(false);
-	this->window->Draw(polygon);
+    sf::VertexArray lines(sf::Lines, vertexCount);
+
+    for (int32 i=0; i<vertexCount; i++)
+    {
+        lines[i].position = sf::Vector2f(30, 5);
+        lines[i].color= B2SFColor(color);
+    }
+
+    this->m_window->draw(lines);
 }
 
 
-void DebugDraw::DrawMouseJoint(b2Vec2& p1, b2Vec2& p2, const b2Color &boxColor, const b2Color &lineColor)
+void MyDebugDraw::DrawMouseJoint(b2Vec2& p1, b2Vec2& p2, const b2Color &boxColor, const b2Color &lineColor)
 {
-    sf::Shape polygon;
-    sf::Shape polygon2;
-    float p1x = p1.x * RATIO;
-    float p1y = p1.y * RATIO;
-    float p2x = p2.x * RATIO;
-    float p2y = p2.y * RATIO;
-    float size = 4.0f;
+    std::cout << "MyDebugDraw::DrawMouseJoint is stub";
 
-    sf::Color boxClr = this->B2SFColor(boxColor);
-    sf::Color lineClr = this->B2SFColor(lineColor);
-
-    //first green box for the joint
-    polygon.AddPoint(p1x-size/2, p1y-size/2, boxClr);
-    polygon.AddPoint(p1x+size/2, p1y-size/2, boxClr);
-    polygon.AddPoint(p1x+size/2, p1y+size/2, boxClr);
-    polygon.AddPoint(p1x-size/2, p1y+size/2, boxClr);
-
-    //second green box for the joint
-    polygon2.AddPoint(p2x-size/2, p2y-size/2, boxClr);
-    polygon2.AddPoint(p2x+size/2, p2y-size/2, boxClr);
-    polygon2.AddPoint(p2x+size/2, p2y+size/2, boxClr);
-    polygon2.AddPoint(p2x-size/2, p2y+size/2, boxClr);
-
-    sf::Shape line = sf::Shape::Line(p1x, p1y, p2x, p2y, 1, lineClr);
-    line.EnableFill(true);
-
-    this->window->Draw(polygon);
-    this->window->Draw(polygon2);
-    this->window->Draw(line);
+    // sf::Shape polygon;
+    // sf::Shape polygon2;
+    // float p1x = p1.x * RATIO;
+    // float p1y = p1.y * RATIO;
+    // float p2x = p2.x * RATIO;
+    // float p2y = p2.y * RATIO;
+    // float size = 4.0f;
+    //
+    // sf::Color boxClr = this->B2SFColor(boxColor);
+    // sf::Color lineClr = this->B2SFColor(lineColor);
+    //
+    // //first green box for the joint
+    // polygon.AddPoint(p1x-size/2, p1y-size/2, boxClr);
+    // polygon.AddPoint(p1x+size/2, p1y-size/2, boxClr);
+    // polygon.AddPoint(p1x+size/2, p1y+size/2, boxClr);
+    // polygon.AddPoint(p1x-size/2, p1y+size/2, boxClr);
+    //
+    // //second green box for the joint
+    // polygon2.AddPoint(p2x-size/2, p2y-size/2, boxClr);
+    // polygon2.AddPoint(p2x+size/2, p2y-size/2, boxClr);
+    // polygon2.AddPoint(p2x+size/2, p2y+size/2, boxClr);
+    // polygon2.AddPoint(p2x-size/2, p2y+size/2, boxClr);
+    //
+    // sf::Shape line = sf::Line(p1x, p1y, p2x, p2y, 1, lineClr);
+    // line.EnableFill(true);
+    //
+    // this->m_window->draw(polygon);
+    // this->m_window->draw(polygon2);
+    // this->m_window->draw(line);
 }
-
-//*/

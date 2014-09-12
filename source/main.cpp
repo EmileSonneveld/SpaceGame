@@ -4,6 +4,7 @@
 #include <vector>
 #include "main.h"
 #include "MyWorldCallbacks.hpp"
+#include "DebugDraw.h"
 #include "Gameplay.h"
 #include "Sltn.h"
 
@@ -102,9 +103,12 @@ m_window(sf::VideoMode(1280, 720), "SFML Space game By Emile")
 {
 	m_window.setVerticalSyncEnabled(true);
 	Sltn::getInst().m_ScreenSize = m_window.getSize();
-
+	// this 'new'-stuff needs to be freed at the end
 	Sltn::getInst().m_world->SetContactListener(new MyContactListener());
 	Sltn::getInst().m_world->SetDestructionListener(new MyDestructionListener());
+	auto dbgDraw = new MyDebugDraw();
+	dbgDraw->SetRenderWindow(&m_window);
+	Sltn::getInst().m_world->SetDebugDraw(dbgDraw);
 	m_window.setView(sf::View(sf::FloatRect()));
 
 
@@ -178,6 +182,7 @@ int MainClass::gameLoop(){
 
 		Gameplay::getInst().Tick(deltaTime);
 		Gameplay::getInst().Paint(m_window);
+		Sltn::getInst().m_world->DrawDebugData();
 
 		Sltn::getInst().SetMousePos(
 			m_window.mapPixelToCoords(sf::Mouse::getPosition(m_window))
