@@ -1,8 +1,14 @@
 #include "DebugDraw.h"
 
-MyDebugDraw::MyDebugDraw()
+MyDebugDraw::MyDebugDraw(): m_Font()
 {
-    SetFlags( b2Draw::e_shapeBit or b2Draw::e_shapeBit );
+    m_Font.loadFromFile("recources/Dream MMA.ttf");
+    SetFlags( b2Draw::e_shapeBit
+        || b2Draw::e_jointBit
+        || b2Draw::e_aabbBit
+        || b2Draw::e_pairBit
+        || b2Draw::e_centerOfMassBit
+    );
 }
 
 MyDebugDraw::~MyDebugDraw()
@@ -36,12 +42,12 @@ void MyDebugDraw::DrawAABB(b2AABB* aabb, const b2Color& color)
 
 void MyDebugDraw::DrawString(int x, int y, const char* string)
 {
-    // sf::String fpsText;
-    // fpsText.setFont(sf::Font::getDefaultFont());
-    // fpsText.setSize(15);
-    // fpsText.setPosition(x,y);
-    // fpsText.setText(string);
-    // this->m_window->draw(fpsText);
+    std::cout << "MyDebugDraw::DrawPoint is not tested\n";
+
+    auto text = sf::Text(sf::String(string), m_Font, 30);
+    text.setPosition(sf::Vector2f(x, y));
+    text.setColor(sf::Color(0, 0, 0));
+    this->m_window->draw(text);
 }
 
 void MyDebugDraw::DrawPoint(const b2Vec2& p, float32 size, const b2Color& color)
@@ -81,18 +87,18 @@ void MyDebugDraw::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color&
 
 void MyDebugDraw::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color)
 {
-    //no converion in cordinates of center and upper left corner, Circle in sfml is managed by default with the center
     auto circle = sf::CircleShape(radius);
     circle.setPosition(center.x - radius, center.y - radius);
+    circle.setFillColor(B2SFColor(color));
+    this->m_window->draw(circle);
+
     // line of the circle wich shows the angle
     b2Vec2 p = center + (radius * axis);
-
     sf::VertexArray lines(sf::Lines, 2);
+    lines[0].color = sf::Color(0,0,0);
     lines[0].position = sf::Vector2f(center.x, center.y);
     lines[1].position = sf::Vector2f(p.x, p.y);
     this->m_window->draw(lines);
-
-    this->m_window->draw(circle);
 }
 
 void MyDebugDraw::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color)

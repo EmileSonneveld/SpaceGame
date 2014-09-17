@@ -48,6 +48,7 @@ public:
 	void SetRenderWindow(sf::RenderWindow *window){m_window = window;}
 private:
 	sf::RenderWindow *m_window;
+	sf::Font m_Font;
 };
 
 #endif // MyDebugDraw_H
